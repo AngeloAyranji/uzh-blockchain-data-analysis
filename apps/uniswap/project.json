@@ -1,0 +1,24 @@
+{
+  "name": "uniswap",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/uniswap/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "uniswap:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "uniswap:build:development"
+        },
+        "production": {
+          "buildTarget": "uniswap:build:production"
+        }
+      }
+    }
+  }
+}
