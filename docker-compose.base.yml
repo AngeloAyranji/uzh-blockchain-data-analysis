@@ -12,7 +12,7 @@ services:
       - ./:/app
       - uzh-blockchain-data-analysis-node-modules:/app/node_modules
     
-  collection_db:
+  collection-db:
     image: postgres
     restart: always
     environment:
