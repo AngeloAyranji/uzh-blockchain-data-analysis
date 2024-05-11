@@ -7,7 +7,25 @@ services:
     command: npm run uniswap:dev:docker
     ports:
       - '4003:4003'
+  
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    user: "${DATA_UID}:${DATA_GID}"
+    group_add:
+      - ${DATA_GID}
+    ports:
+      - "${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ${DATA_DIR}/postgresql-data:/var/lib/postgresql/data
 
 volumes:
+  postgres-volume:
   uzh-blockchain-data-analysis-node-modules: null
   nx-cache: null
