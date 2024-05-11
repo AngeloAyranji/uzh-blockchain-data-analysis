@@ -7,8 +7,13 @@ services:
     command: npm run uniswap:dev:docker
     ports:
       - '4003:4003'
+    depends_on:
+      - collection_db
+    env_file:
+      - ./apps/uniswap/.env
+    profiles: ["uniswap", "all"]
   
-  postgres:
+  collection_db:
     image: postgres
     restart: always
     environment:
