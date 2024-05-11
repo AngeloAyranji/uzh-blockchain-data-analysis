@@ -15,9 +15,7 @@ docker compose \
     -p $PROJECT_NAME \
     -f docker-compose.base.yml \
     -f docker-compose.yml \
-    --force-recreate \
     --build \
-    --remove-orphans \
     -d
 
 # attach the logs only to uniswap
