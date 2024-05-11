@@ -7,7 +7,13 @@ services:
     command: npm run uniswap:dev:docker
     ports:
       - '4003:4003'
+    depends_on:
+      - collection-db
+    env_file:
+      - ./apps/uniswap/.env
+    profiles: ["uniswap", "all"]
 
 volumes:
+  postgres-volume:
   uzh-blockchain-data-analysis-node-modules: null
   nx-cache: null
