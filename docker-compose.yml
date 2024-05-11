@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  uniswap:
+    extends:
+      file: docker-compose.base.yml
+      service: uzh-blockchain-data-analysis-base
+    command: npm run uniswap:dev:docker
+    ports:
+      - '4003:4003'
+
+volumes:
+  uzh-blockchain-data-analysis-node-modules: null
+  nx-cache: null

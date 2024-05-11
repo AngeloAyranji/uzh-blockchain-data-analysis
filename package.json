@@ -2,7 +2,9 @@
   "name": "uzh-blockchain-data-analysis",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "uniswap:dev:docker": "NX_REJECT_UNKNOWN_LOCAL_CACHE=0 nx serve uniswap"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",

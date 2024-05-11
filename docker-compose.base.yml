@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  uzh-blockchain-data-analysis-base:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DEV_PLATFORM=DOCKER
+    volumes:
+      - ./:/app
+      - uzh-blockchain-data-analysis-node-modules:/app/node_modules
