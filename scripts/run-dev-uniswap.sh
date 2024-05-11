@@ -18,6 +18,4 @@ docker compose \
     --profile uniswap up --build -d
 
 echo "Attaching logs to uniswap..."
-docker compose \
-    -p $PROJECT_NAME \
-    logs -f uniswap &
+docker compose -p $PROJECT_NAME logs -f uniswap
