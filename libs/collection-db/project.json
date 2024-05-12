@@ -1,0 +1,32 @@
+{
+  "name": "collection-db",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/collection-db/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/collection-db",
+        "main": "libs/collection-db/src/index.ts",
+        "tsConfig": "libs/collection-db/tsconfig.lib.json",
+        "assets": ["libs/collection-db/*.md"]
+      }
+    },
+    "prisma-generate": {
+      "executor": "@nx-tools/nx-prisma:generate",
+      "options": {
+        "schema": "libs/collection-db/prisma/schema.prisma"
+      }
+    },
+    "prisma-deploy": {
+      "executor": "@nx-tools/nx-prisma:deploy",
+      "options": {
+        "schema": "libs/collection-db/prisma/schema.prisma"
+      },
+      "dependsOn": ["prisma-generate"]
+    }
+  }
+}

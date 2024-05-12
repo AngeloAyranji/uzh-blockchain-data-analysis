@@ -19,6 +19,18 @@
           "buildTarget": "uniswap:build:production"
         }
       }
+    },
+    "prisma-generate": {
+      "executor": "@nx-tools/nx-prisma:generate",
+      "options": {
+        "schema": "apps/uniswap/prisma/schema.prisma"
+      }
+    },
+    "prisma-push": {
+      "executor": "@nx-tools/nx-prisma:push",
+      "options": {
+        "schema": "apps/uniswap/prisma/schema.prisma"
+      }
     }
   }
 }
