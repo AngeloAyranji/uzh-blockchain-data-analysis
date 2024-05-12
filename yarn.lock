@@ -2,14 +2,14 @@
 # yarn lockfile v1
 
 
-"@actions/exec@^1.1.1":
+"@actions/exec@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@actions/exec/-/exec-1.1.1.tgz#2e43f28c54022537172819a7cf886c844221a611"
   integrity sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==
   dependencies:
     "@actions/io" "^1.0.1"
 
-"@actions/io@^1.0.1", "@actions/io@^1.1.3":
+"@actions/io@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@actions/io/-/io-1.1.3.tgz#4cdb6254da7962b07473ff5c335f3da485d94d71"
   integrity sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==
@@ -1628,23 +1628,22 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@nx-tools/core@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@nx-tools/core/-/core-6.0.0.tgz#ab42f12dd18bcff439acd9f22ae0834d9d4e1397"
-  integrity sha512-rvjIkPaf8nCRsaHX/S/8CQth0o/frVBoiCEyN7+f3nB0BinSHcoSsOASCphKlELT+Yojz39NZ2IIeSfXzl0nxA==
+"@nx-tools/core@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@nx-tools/core/-/core-5.2.0.tgz#34c0166e00ca32b0d9f9c89d26d6b2608a63b2e0"
+  integrity sha512-SJQhy48Eim76Xx+KVsEnuQ4s0UDKBKs1norverRfIhM/Da687BIqTXOv4b0XFOFxJmbqHXYxvphfEcUKYluvGQ==
   dependencies:
-    "@actions/exec" "^1.1.1"
-    "@actions/io" "^1.1.3"
-    chalk "^4.1.2"
-    ci-info "^4.0.0"
-    csv-parse "^5.5.5"
+    "@actions/exec" "1.1.1"
+    chalk "4.1.2"
+    ci-info "3.8.0"
 
-"@nx-tools/nx-prisma@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@nx-tools/nx-prisma/-/nx-prisma-6.0.0.tgz#3cc9812bbe5ceadbb0676e6e85735c5f07abb306"
-  integrity sha512-S25JIa7gc+zUcI+hv9Yookmf/oJ4Ua6wRmImWeOo0rgVzasNKJ+dM35gYowpjXHquWsuH6511FWkO4UxSgaYlA==
+"@nx-tools/nx-prisma@5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@nx-tools/nx-prisma/-/nx-prisma-5.2.0.tgz#92369b4a373bb7027bcec07ce3dc60ad9dafea1a"
+  integrity sha512-U8WUfHE0XFyfJ6N1RzqvquVxRrSeRsJz84C3q94Nf8YXHK3ErniF1yxCu3LHI1Fg2IyV0fVnt6TVbbqdnOXuNg==
   dependencies:
-    "@nx-tools/core" "6.0.0"
+    "@nx-tools/core" "5.2.0"
+    semver "7.5.4"
 
 "@nx/devkit@18.3.4":
   version "18.3.4"
@@ -3109,6 +3108,14 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001587, caniuse-lite@^1.0.30001599:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001613.tgz#dd84a547458df22c4d2435711a8c957ed88332b8"
   integrity sha512-BNjJULJfOONQERivfxte7alLfeLW4QnwHvNW4wEcLEbXfV6VSCYvr+REbf2Sojv8tC1THpjPXBxWgDbq4NtLWg==
 
+chalk@4.1.2, chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.0, chalk@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
+  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
 chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -3117,14 +3124,6 @@ chalk@^2.4.2:
     ansi-styles "^3.2.1"
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
-
-chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.0, chalk@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
-  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
-  dependencies:
-    ansi-styles "^4.1.0"
-    supports-color "^7.1.0"
 
 char-regex@^1.0.2:
   version "1.0.2"
@@ -3151,15 +3150,15 @@ chrome-trace-event@^1.0.2:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
   integrity sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==
 
+ci-info@3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.8.0.tgz#81408265a5380c929f0bc665d62256628ce9ef91"
+  integrity sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==
+
 ci-info@^3.2.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.9.0.tgz#4279a62028a7b1f262f3473fc9605f5e218c59b4"
   integrity sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==
-
-ci-info@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-4.0.0.tgz#65466f8b280fc019b9f50a5388115d17a63a44f2"
-  integrity sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==
 
 cjs-module-lexer@^1.0.0:
   version "1.3.1"
@@ -3601,11 +3600,6 @@ csso@^5.0.5:
   integrity sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==
   dependencies:
     css-tree "~2.2.0"
-
-csv-parse@^5.5.5:
-  version "5.5.5"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-5.5.5.tgz#68a271a9092877b830541805e14c8a80e6a22517"
-  integrity sha512-erCk7tyU3yLWAhk6wvKxnyPtftuy/6Ak622gOO7BCJ05+TYffnPCJF905wmOQm+BpkX54OdAl8pveJwUdpnCXQ==
 
 debug@2.6.9:
   version "2.6.9"
@@ -6888,6 +6882,13 @@ selfsigned@^2.1.1:
   dependencies:
     "@types/node-forge" "^1.3.0"
     node-forge "^1"
+
+semver@7.5.4:
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
+  integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
+  dependencies:
+    lru-cache "^6.0.0"
 
 semver@^5.6.0:
   version "5.7.2"
