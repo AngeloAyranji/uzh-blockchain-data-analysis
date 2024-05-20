@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "uniswap:generate:collection-db": "prisma generate --schema=apps/uniswap/prisma/data-collection-db/schema.prisma",
-    "uniswap:generate:analysis-db": "prisma generate --schema=apps/uniswap/prisma/data-analysis-db/schema.prisma",
-    "uniswap:dev:docker": "npm run uniswap:generate:collection-db && npm run uniswap:generate:analysis-db && nx serve uniswap"
+    "uniswap:collection-db": "prisma db pull --schema=apps/uniswap/prisma/data-collection-db/schema.prisma",
+    "uniswap:analysis-db": "prisma generate --schema=apps/uniswap/prisma/data-analysis-db/schema.prisma",
+    "uniswap:dev": "npm run uniswap:collection-db && npm run uniswap:analysis-db && nx serve uniswap"
   },
   "private": true,
   "dependencies": {
