@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
-  output        = "node_modules/@prisma/client-workspace"
+  output        = "../../..node_modules/@prisma/client-collection"
   binaryTargets = ["native", "linux-musl"]
 }
 
