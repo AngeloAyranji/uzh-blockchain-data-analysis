@@ -9,6 +9,7 @@ services:
       - '4003:4003'
     depends_on:
       - collection-db
+      - analysis-db
     env_file:
       - ./apps/uniswap/.env
     profiles: ["uniswap", "all"]
@@ -29,6 +30,23 @@ services:
       - .env
     volumes:
       - ${DATA_DIR}/postgresql-data:/var/lib/postgresql/data
+  
+  analysis-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_ANALYSIS_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ANALYSIS_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_ANALYSIS_DB}
+    user: "${DATA_UID}:${DATA_GID}"
+    group_add:
+      - ${DATA_GID}
+    ports:
+      - "${POSTGRES_ANALYSIS_HOST_PORT}:${POSTGRES_ANALYSIS_CONTAINER_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ${ANALYSIS_DATA_DIR}/postgresql-data:/var/lib/postgresql/data
 
 volumes:
   postgres-volume:

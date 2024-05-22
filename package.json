@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "uniswap:collection-db": "prisma db pull --schema=apps/uniswap/prisma/data-collection-db/schema.prisma",
-    "uniswap:analysis-db": "prisma generate --schema=apps/uniswap/prisma/data-analysis-db/schema.prisma",
+    "uniswap:analysis-db": "prisma db push --schema=apps/uniswap/prisma/data-analysis-db/schema.prisma",
     "uniswap:dev": "npm run uniswap:collection-db && npm run uniswap:analysis-db && nx serve uniswap"
   },
   "private": true,
