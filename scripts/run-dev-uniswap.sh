@@ -7,6 +7,7 @@ source scripts/util/prepare-env.sh
 # Add dev prefix
 export PROJECT_NAME="$PROJECT_NAME-dev"
 export DATA_DIR="$DATA_DIR-dev"
+export ANALYSIS_DATA_DIR="$ANALYSIS_DATA_DIR-dev"
 
 source scripts/util/compose-cleanup.sh
 
