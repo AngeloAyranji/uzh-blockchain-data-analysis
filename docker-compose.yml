@@ -15,12 +15,8 @@ services:
     profiles: ["uniswap", "all"]
   
   collection-db:
-    build:
-      context: ./scripts/dockerfiles/analysis-db
-      # PostgreSQL data dir permissions (user + bdlt group)
-      args:
-        UID: "${DATA_UID}"
-        GID: "${DATA_GID}"
+    image: postgres
+    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
