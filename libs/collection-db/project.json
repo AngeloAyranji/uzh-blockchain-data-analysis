@@ -1,0 +1,9 @@
+{
+  "name": "collection-db",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/collection-db/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project collection-db --web",
+  "targets": {}
+}
