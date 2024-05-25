@@ -1,7 +1,8 @@
 import { Module } from "@nestjs/common";
+import { CollectionDbModule } from "@uzh/collection-db";
 
 @Module({
-    imports: [],
+    imports: [CollectionDbModule],
     controllers: [],
     providers: [],
     exports: []

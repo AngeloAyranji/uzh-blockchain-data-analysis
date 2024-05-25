@@ -1,17 +1,17 @@
 version: '3.7'
 services:
-  uniswap:
-    extends:
-      file: docker-compose.base.yml
-      service: uzh-blockchain-data-analysis-base
-    command: npm run uniswap:dev
-    ports:
-      - '4003:4003'
-    depends_on:
-      - collection-db
-      - analysis-db
-    env_file:
-      - ./apps/uniswap/.env
+  # uniswap:
+  #   extends:
+  #     file: docker-compose.base.yml
+  #     service: uzh-blockchain-data-analysis-base
+  #   command: npm run uniswap:dev
+  #   ports:
+  #     - '4000:4000'
+  #   depends_on:
+  #     - collection-db
+  #     - analysis-db
+  #   env_file:
+  #     - ./apps/uniswap/.env
     # profiles: ["uniswap", "all"]
   
   collection-db:

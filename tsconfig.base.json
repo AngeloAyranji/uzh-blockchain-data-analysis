@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "collection-db": ["libs/collection-db/src/index.ts"]
+      "@uzh/collection-db": ["libs/collection-db/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
