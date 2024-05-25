@@ -2,6 +2,6 @@
 
 This library was generated with [Nx](https://nx.dev).
 
-## Building
+## Running unit tests
 
-Run `nx build collection-db` to build the library.
+Run `nx test collection-db` to execute the unit tests via [Jest](https://jestjs.io).

@@ -1,20 +1,10 @@
-import { BullModule } from "@nestjs/bull";
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
+import { CollectionDbModule } from '@uzh/collection-db';
+import { UniswapDbHandler } from './infra/db/uniswap-db.handler';
 
 @Module({
-    imports: [
-        BullModule.forRoot({
-            redis: {
-              host: 'localhost',
-              port: 6379,
-            },
-          }),
-          BullModule.registerQueue({
-            name: 'extract',
-          }),
-    ],
-    controllers: [],
-    providers: [],
-    exports: []
+  imports: [CollectionDbModule],
+  controllers: [],
+  providers: [UniswapDbHandler],
 })
 export class UniswapModule {}

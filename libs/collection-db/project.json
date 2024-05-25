@@ -4,29 +4,14 @@
   "sourceRoot": "libs/collection-db/src",
   "projectType": "library",
   "tags": [],
+  "// targets": "to see all targets run: nx show project collection-db --web",
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "options": {
-        "outputPath": "dist/libs/collection-db",
-        "main": "libs/collection-db/src/index.ts",
-        "tsConfig": "libs/collection-db/tsconfig.lib.json",
-        "assets": ["libs/collection-db/*.md"]
+        "fix": true,
+        "lintFilePatterns": ["libs/collection-db/src/**/*.ts"]
       }
-    },
-    "prisma-generate": {
-      "executor": "@nx-tools/nx-prisma:generate",
-      "options": {
-        "schema": "libs/collection-db/prisma/schema.prisma"
-      }
-    },
-    "prisma-deploy": {
-      "executor": "@nx-tools/nx-prisma:deploy",
-      "options": {
-        "schema": "libs/collection-db/prisma/schema.prisma"
-      },
-      "dependsOn": ["prisma-generate"]
     }
   }
 }

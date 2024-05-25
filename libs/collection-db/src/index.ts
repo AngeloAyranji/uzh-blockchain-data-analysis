@@ -1,1 +1,2 @@
-export * from './lib/collection-db';
+export * from './collection-db.module';
+export * from './collection-db.handler';

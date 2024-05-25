@@ -1,0 +1,355 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../../../node_modules/@prisma/client-collection"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATA_COLLECTION_DATABASE_URL")
+}
+
+model bsc_block {
+  block_number BigInt    @id
+  block_hash   String?   @db.VarChar
+  nonce        String?   @db.VarChar
+  difficulty   Decimal?  @db.Decimal(78, 0)
+  gas_limit    BigInt?
+  gas_used     BigInt?
+  timestamp    DateTime? @db.Timestamp(6)
+  miner        String?   @db.VarChar
+  parent_hash  String?   @db.VarChar
+  block_reward Decimal?  @db.Decimal(78, 18)
+  uncles       String[]  @db.VarChar
+  updated_at   DateTime? @db.Timestamp(6)
+}
+
+model bsc_contract {
+  address            String              @id @db.VarChar
+  transaction_hash   String?             @db.VarChar
+  is_pair_contract   Boolean?
+  bsc_pair_contract  bsc_pair_contract?
+  bsc_token_contract bsc_token_contract?
+}
+
+model bsc_contract_supply_change {
+  address          String   @db.VarChar
+  amount_changed   Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model bsc_internal_transaction {
+  transaction_hash String?   @db.VarChar
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  gas_limit        BigInt?
+  gas_used         BigInt?
+  input_data       String?   @db.VarChar
+  call_type        String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@index([transaction_hash])
+  @@ignore
+}
+
+model bsc_nft_transfer {
+  transaction_hash String   @db.VarChar
+  log_index        Int
+  address          String?  @db.VarChar
+  to_address       String?  @db.VarChar
+  from_address     String?  @db.VarChar
+  token_id         Decimal? @db.Decimal(78, 0)
+
+  @@id([transaction_hash, log_index])
+}
+
+model bsc_pair_contract {
+  address        String       @id @db.VarChar
+  token0_address String?      @db.VarChar
+  token1_address String?      @db.VarChar
+  reserve0       Decimal?     @db.Decimal(78, 0)
+  reserve1       Decimal?     @db.Decimal(78, 0)
+  factory        String?      @db.VarChar
+  bsc_contract   bsc_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model bsc_pair_liquidity_change {
+  address          String   @db.VarChar
+  amount0          Decimal? @db.Decimal(78, 0)
+  amount1          Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+model bsc_token_contract {
+  address        String       @id @db.VarChar
+  symbol         String?      @db.VarChar
+  name           String?      @db.VarChar
+  decimals       Int?
+  total_supply   Decimal?     @db.Decimal(78, 0)
+  token_category String?      @db.VarChar
+  bsc_contract   bsc_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model bsc_transaction {
+  transaction_hash String    @id @db.VarChar
+  block_number     BigInt?
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  transaction_fee  Decimal?  @db.Decimal(78, 18)
+  gas_price        Decimal?  @db.Decimal(78, 18)
+  gas_limit        Decimal?  @db.Decimal(78, 0)
+  gas_used         Decimal?  @db.Decimal(78, 0)
+  is_token_tx      Boolean?
+  input_data       String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+}
+
+model bsc_transaction_logs {
+  transaction_hash String    @db.VarChar
+  address          String?   @db.VarChar
+  log_index        Int
+  data             String?   @db.VarChar
+  removed          Boolean?
+  topic_0          String?   @db.VarChar
+  topics           String[]  @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@id([transaction_hash, log_index])
+}
+
+model etc_block {
+  block_number BigInt    @id
+  block_hash   String?   @db.VarChar
+  nonce        String?   @db.VarChar
+  difficulty   Decimal?  @db.Decimal(78, 0)
+  gas_limit    BigInt?
+  gas_used     BigInt?
+  timestamp    DateTime? @db.Timestamp(6)
+  miner        String?   @db.VarChar
+  parent_hash  String?   @db.VarChar
+  block_reward Decimal?  @db.Decimal(78, 18)
+  uncles       String[]  @db.VarChar
+  updated_at   DateTime? @db.Timestamp(6)
+}
+
+model etc_contract {
+  address            String              @id @db.VarChar
+  transaction_hash   String?             @db.VarChar
+  is_pair_contract   Boolean?
+  etc_pair_contract  etc_pair_contract?
+  etc_token_contract etc_token_contract?
+}
+
+model etc_contract_supply_change {
+  address          String   @db.VarChar
+  amount_changed   Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model etc_internal_transaction {
+  transaction_hash String?   @db.VarChar
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  gas_limit        BigInt?
+  gas_used         BigInt?
+  input_data       String?   @db.VarChar
+  call_type        String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@index([transaction_hash])
+  @@ignore
+}
+
+model etc_nft_transfer {
+  transaction_hash String   @db.VarChar
+  log_index        Int
+  address          String?  @db.VarChar
+  to_address       String?  @db.VarChar
+  from_address     String?  @db.VarChar
+  token_id         Decimal? @db.Decimal(78, 0)
+
+  @@id([transaction_hash, log_index])
+}
+
+model etc_pair_contract {
+  address        String       @id @db.VarChar
+  token0_address String?      @db.VarChar
+  token1_address String?      @db.VarChar
+  reserve0       Decimal?     @db.Decimal(78, 0)
+  reserve1       Decimal?     @db.Decimal(78, 0)
+  factory        String?      @db.VarChar
+  etc_contract   etc_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model etc_pair_liquidity_change {
+  address          String   @db.VarChar
+  amount0          Decimal? @db.Decimal(78, 0)
+  amount1          Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+model etc_token_contract {
+  address        String       @id @db.VarChar
+  symbol         String?      @db.VarChar
+  name           String?      @db.VarChar
+  decimals       Int?
+  total_supply   Decimal?     @db.Decimal(78, 0)
+  token_category String?      @db.VarChar
+  etc_contract   etc_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model etc_transaction {
+  transaction_hash String    @id @db.VarChar
+  block_number     BigInt?
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  transaction_fee  Decimal?  @db.Decimal(78, 18)
+  gas_price        Decimal?  @db.Decimal(78, 18)
+  gas_limit        Decimal?  @db.Decimal(78, 0)
+  gas_used         Decimal?  @db.Decimal(78, 0)
+  is_token_tx      Boolean?
+  input_data       String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+}
+
+model etc_transaction_logs {
+  transaction_hash String    @db.VarChar
+  address          String?   @db.VarChar
+  log_index        Int
+  data             String?   @db.VarChar
+  removed          Boolean?
+  topic_0          String?   @db.VarChar
+  topics           String[]  @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@id([transaction_hash, log_index])
+}
+
+model eth_block {
+  block_number BigInt    @id
+  block_hash   String?   @db.VarChar
+  nonce        String?   @db.VarChar
+  difficulty   Decimal?  @db.Decimal(78, 0)
+  gas_limit    BigInt?
+  gas_used     BigInt?
+  timestamp    DateTime? @db.Timestamp(6)
+  miner        String?   @db.VarChar
+  parent_hash  String?   @db.VarChar
+  block_reward Decimal?  @db.Decimal(78, 18)
+  uncles       String[]  @db.VarChar
+  updated_at   DateTime? @db.Timestamp(6)
+}
+
+model eth_contract {
+  address            String              @id @db.VarChar
+  transaction_hash   String?             @db.VarChar
+  is_pair_contract   Boolean?
+  eth_pair_contract  eth_pair_contract?
+  eth_token_contract eth_token_contract?
+}
+
+model eth_contract_supply_change {
+  address          String   @db.VarChar
+  amount_changed   Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model eth_internal_transaction {
+  transaction_hash String?   @db.VarChar
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  gas_limit        BigInt?
+  gas_used         BigInt?
+  input_data       String?   @db.VarChar
+  call_type        String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@index([transaction_hash])
+  @@ignore
+}
+
+model eth_nft_transfer {
+  transaction_hash String   @db.VarChar
+  log_index        Int
+  address          String?  @db.VarChar
+  to_address       String?  @db.VarChar
+  from_address     String?  @db.VarChar
+  token_id         Decimal? @db.Decimal(78, 0)
+
+  @@id([transaction_hash, log_index])
+}
+
+model eth_pair_contract {
+  address        String       @id @db.VarChar
+  token0_address String?      @db.VarChar
+  token1_address String?      @db.VarChar
+  reserve0       Decimal?     @db.Decimal(78, 0)
+  reserve1       Decimal?     @db.Decimal(78, 0)
+  factory        String?      @db.VarChar
+  eth_contract   eth_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model eth_pair_liquidity_change {
+  address          String   @db.VarChar
+  amount0          Decimal? @db.Decimal(78, 0)
+  amount1          Decimal? @db.Decimal(78, 0)
+  transaction_hash String   @db.VarChar
+
+  @@id([address, transaction_hash])
+}
+
+model eth_token_contract {
+  address        String       @id @db.VarChar
+  symbol         String?      @db.VarChar
+  name           String?      @db.VarChar
+  decimals       Int?
+  total_supply   Decimal?     @db.Decimal(78, 0)
+  token_category String?      @db.VarChar
+  eth_contract   eth_contract @relation(fields: [address], references: [address], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model eth_transaction {
+  transaction_hash String    @id @db.VarChar
+  block_number     BigInt?
+  from_address     String?   @db.VarChar
+  to_address       String?   @db.VarChar
+  value            Decimal?  @db.Decimal(78, 18)
+  transaction_fee  Decimal?  @db.Decimal(78, 18)
+  gas_price        Decimal?  @db.Decimal(78, 18)
+  gas_limit        Decimal?  @db.Decimal(78, 0)
+  gas_used         Decimal?  @db.Decimal(78, 0)
+  is_token_tx      Boolean?
+  input_data       String?   @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+}
+
+model eth_transaction_logs {
+  transaction_hash String    @db.VarChar
+  address          String?   @db.VarChar
+  log_index        Int
+  data             String?   @db.VarChar
+  removed          Boolean?
+  topic_0          String?   @db.VarChar
+  topics           String[]  @db.VarChar
+  updated_at       DateTime? @db.Timestamp(6)
+
+  @@id([transaction_hash, log_index])
+}
