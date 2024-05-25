@@ -14,9 +14,12 @@ model Factory {
   version              Version
   swapSignature        String
   poolCreatedSignature String
+  chainId              Int
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   poolAddress          Pool[]
+
+  @@unique([chainId, version], name: "unique_chain_id_version")
 }
 
 model Pool {

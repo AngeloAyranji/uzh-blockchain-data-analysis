@@ -5,6 +5,31 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/uniswap",
+        "main": "apps/uniswap/src/main.ts",
+        "tsConfig": "apps/uniswap/tsconfig.app.json",
+        "webpackConfig": "apps/uniswap/webpack.config.js",
+        "generatePackageJson": true,
+        "additionalEntryPoints": [
+          {
+            "entryName": "seed",
+            "entryPath": "apps/uniswap/prisma/seed.ts"
+          }
+        ]
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      },
+      "dependsOn": ["prisma-generate", "lint", "^test", "test"]
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
@@ -20,16 +45,10 @@
         }
       }
     },
-    "prisma-generate": {
-      "executor": "@nx-tools/nx-prisma:generate",
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "options": {
-        "schema": "apps/uniswap/prisma/schema.prisma"
-      }
-    },
-    "prisma-push": {
-      "executor": "@nx-tools/nx-prisma:push",
-      "options": {
-        "schema": "apps/uniswap/prisma/schema.prisma"
+        "fix": true
       }
     }
   }
