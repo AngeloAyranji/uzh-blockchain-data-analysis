@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client-uniswap';
 import * as dotenv from 'dotenv'
-
 dotenv.config();
+
 const prisma = new PrismaClient();
 
 let chainId: number;

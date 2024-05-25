@@ -8,6 +8,8 @@ import { FACTORY_MAPPER } from './infra/factory/mapper/ifactory.mapper';
 import { FactoryMapper } from './infra/factory/mapper/factory.mapper';
 import { FACTORY_PROVIDER } from './core/applications/factory/read/ifactory.provider';
 import { FactoryRepository } from './infra/factory/factory.repository';
+import { MIGRATION_PROCESSOR_SERVICE } from './core/applications/migration/processor/imigration.processor.service';
+import { MigrationProcessorService } from './core/applications/migration/processor/migration.processor.service';
 
 @Module({
   controllers: [],
@@ -31,6 +33,10 @@ import { FactoryRepository } from './infra/factory/factory.repository';
   ],
   providers: [
     UniswapDbHandler,
+    {
+      provide: MIGRATION_PROCESSOR_SERVICE,
+      useClass: MigrationProcessorService,
+    },
     // FACTORY
     {
       provide: FACTORY_READ_SERVICE,
