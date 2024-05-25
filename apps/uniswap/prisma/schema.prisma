@@ -9,8 +9,42 @@ datasource db {
   url      = env("DATA_ANALYSIS_DATABASE_URL")
 }
 
-model SwapVolume {
-  id            String   @id @default(cuid())
-  timestamp     DateTime
-  volume        Float
+model Factory {
+  address              String   @id
+  version              Version
+  swapSignature        String
+  poolCreatedSignature String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  poolAddress          Pool[]
+}
+
+model Pool {
+  poolAddress    String   @id
+  factory        Factory  @relation(fields: [factoryAddress], references: [address])
+  factoryAddress String
+  token0         String
+  token1         String
+  deployedAt     DateTime
+  swaps          Swap[]
+}
+
+model Swap {
+  id              String   @id
+  pool            Pool     @relation(fields: [poolAddress], references: [poolAddress])
+  poolAddress     String
+  transactionHash String
+  sender          String
+  recipient       String
+  amountIn        String
+  amountOut       String
+  reversed        Boolean
+  timestamp       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum Version {
+  V2
+  V3
 }
