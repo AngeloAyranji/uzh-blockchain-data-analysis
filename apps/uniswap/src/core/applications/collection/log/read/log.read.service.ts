@@ -13,4 +13,9 @@ export class LogReadService implements ILogReadService {
     async findLogsByTopic0AndAddress(address: string, topic0: string): Promise<Log[]> {
         return this.logProvider.findLogsByTopic0AndAddress(address, topic0);
     }
+
+    async findTotalCountByTopic0AndAddress(address: string, topic0: string): Promise<number> {
+        return this.logProvider.findTotalCountByTopic0AndAddress(address, topic0);
+    }
+
 }

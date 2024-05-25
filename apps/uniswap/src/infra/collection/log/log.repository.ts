@@ -22,4 +22,13 @@ export class LogRepository implements ILogProvider {
     });
     return this.logMapper.mapEntitiesToDomains(logs);
   }
+
+  async findTotalCountByTopic0AndAddress(address: string, topic0: string): Promise<number> {
+    return this.collectionDbHandler.eth_transaction_logs.count({
+        where: {
+            address: address,
+            topic_0: topic0
+        }
+    });
+  }
 }   
