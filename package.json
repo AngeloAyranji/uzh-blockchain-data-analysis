@@ -3,17 +3,19 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "uniswap:collection-db": "prisma db pull --schema=libs/collection-db/prisma/schema.prisma",
-    "uniswap:analysis-db": "prisma db push --schema=apps/uniswap/prisma/schema.prisma",
+    "setup:collection-db": "prisma db pull --schema=libs/collection-db/prisma/schema.prisma && prisma generate --schema=libs/collection-db/prisma/schema.prisma",
+    "setup:uniswap:analysis-db": "prisma db push --schema=apps/uniswap/prisma/schema.prisma",
     "uniswap:dev": "npm run uniswap:collection-db && npm run uniswap:analysis-db && nx serve uniswap"
   },
   "private": true,
   "dependencies": {
+    "@nestjs/bull": "^10.1.1",
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
     "@prisma/client": "5.4.2",
     "axios": "^1.6.0",
+    "bull": "^4.12.9",
     "prisma": "5.4.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
