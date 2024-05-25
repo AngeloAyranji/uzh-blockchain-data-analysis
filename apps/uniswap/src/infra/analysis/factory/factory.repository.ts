@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FACTORY_MAPPER, IFactoryMapper } from './mapper/ifactory.mapper';
-import { UniswapDbHandler } from '../db/uniswap-db.handler';
-import { Factory } from '../../core/domains/factory';
+import { UniswapDbHandler } from '../../db/uniswap-db.handler';
+import { Factory } from '../../../core/domains/analysis/factory';
 
 @Injectable()
 export class FactoryRepository {

@@ -1,4 +1,4 @@
-import { Factory } from "../../../domains/factory";
+import { Factory } from "../../../../domains/analysis/factory";
 
 export const FACTORY_READ_SERVICE = 'FACTORY_READ_SERVICE';
 

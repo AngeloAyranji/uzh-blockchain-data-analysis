@@ -1,4 +1,4 @@
-import { Factory } from "../../../core/domains/factory";
+import { Factory } from "../../../../core/domains/analysis/factory";
 import { FactoryEntity } from "../factory.entity";
 
 export const FACTORY_MAPPER = 'FACTORY_MAPPER';

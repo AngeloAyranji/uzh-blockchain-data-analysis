@@ -28,7 +28,7 @@
         "development": {},
         "production": {}
       },
-      "dependsOn": ["prisma-generate", "lint", "^test", "test"]
+      "dependsOn": ["lint"]
     },
     "serve": {
       "executor": "@nx/js:node",

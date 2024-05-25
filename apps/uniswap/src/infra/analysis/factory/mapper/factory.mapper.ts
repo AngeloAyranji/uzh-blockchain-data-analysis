@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IFactoryMapper } from './ifactory.mapper';
 import { FactoryEntity } from '../factory.entity';
-import { Factory, VersionEnum } from '../../../core/domains/factory';
+import { Factory, VersionEnum } from '../../../../core/domains/analysis/factory';
 
 @Injectable()
 export class FactoryMapper implements IFactoryMapper {

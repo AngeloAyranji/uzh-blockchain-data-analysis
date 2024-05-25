@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
+import { ConfigModule } from '@nestjs/config';
 import { CollectionDbModule } from '@uzh/collection-db';
 import { UniswapDbHandler } from './infra/db/uniswap-db.handler';
-import { BullModule } from '@nestjs/bull';
 import { FACTORY_READ_SERVICE } from './core/applications/factory/read/ifactory.read.service';
 import { FactoryReadService } from './core/applications/factory/read/factory.read.service';
-import { FACTORY_MAPPER } from './infra/factory/mapper/ifactory.mapper';
-import { FactoryMapper } from './infra/factory/mapper/factory.mapper';
+import { FACTORY_MAPPER } from './infra/analysis/factory/mapper/ifactory.mapper';
+import { FactoryMapper } from './infra/analysis/factory/mapper/factory.mapper';
 import { FACTORY_PROVIDER } from './core/applications/factory/read/ifactory.provider';
-import { FactoryRepository } from './infra/factory/factory.repository';
+import { FactoryRepository } from './infra/analysis/factory/factory.repository';
 import { MIGRATION_PROCESSOR_SERVICE } from './core/applications/migration/processor/imigration.processor.service';
 import { MigrationProcessorService } from './core/applications/migration/processor/migration.processor.service';
 
@@ -15,6 +16,9 @@ import { MigrationProcessorService } from './core/applications/migration/process
   controllers: [],
   imports: [
     CollectionDbModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     BullModule.forRoot({
       redis: {
         host: 'localhost',
