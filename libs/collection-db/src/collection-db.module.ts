@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CollectionDbService } from './collection-db.service';
+import { CollectionDbHandler } from './collection-db.handler';
 
 @Module({
-  providers: [CollectionDbService],
-  exports: [CollectionDbService],
+  providers: [CollectionDbHandler],
+  exports: [CollectionDbHandler],
 })
 export class CollectionDbModule {}
