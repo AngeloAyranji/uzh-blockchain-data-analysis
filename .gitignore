@@ -3,6 +3,9 @@
 #dumps
 dumps
 
+#redis data
+redis-data
+
 #postgres data
 pg-data
 

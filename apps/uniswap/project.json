@@ -28,7 +28,7 @@
         "development": {},
         "production": {}
       },
-      "dependsOn": ["prisma-generate", "lint", "^test", "test"]
+      "dependsOn": ["lint"]
     },
     "serve": {
       "executor": "@nx/js:node",
@@ -43,13 +43,21 @@
         "production": {
           "buildTarget": "uniswap:build:production"
         }
-      }
+      },
+      "dependsOn": ["seed"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
         "fix": true
       }
+    },
+    "seed": {
+      "executor": "nx:run-script",
+      "options": {
+        "script": "node ../../dist/apps/uniswap/seed.js"
+      },
+      "dependsOn": ["build"]
     }
   }
 }

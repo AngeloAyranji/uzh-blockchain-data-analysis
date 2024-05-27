@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client-uniswap';
 import * as dotenv from 'dotenv'
-
 dotenv.config();
+
 const prisma = new PrismaClient();
 
 let chainId: number;
@@ -35,7 +35,7 @@ async function seed(chainId: number, factoryV2Address: string, factoryV3Address:
         },
         update: {},
         create: {
-            address: factoryV2Address,
+            address: factoryV2Address.toLowerCase(),
             version: "V2",
             chainId: chainId,
             swapSignature: "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
@@ -52,7 +52,7 @@ async function seed(chainId: number, factoryV2Address: string, factoryV3Address:
         },
         update: {},
         create: {
-            address: factoryV3Address,
+            address: factoryV3Address.toLowerCase(),
             version: "V3",
             chainId: chainId,
             swapSignature: "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67",
