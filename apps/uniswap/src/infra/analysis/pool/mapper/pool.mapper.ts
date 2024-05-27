@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IPoolMapper } from './ipool.mapper';
 import { PoolEntity } from '../pool.entity';
 import { Pool } from '../../../../core/domains/analysis/pool';

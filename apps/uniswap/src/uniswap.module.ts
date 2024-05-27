@@ -29,9 +29,14 @@ import { POOL_MODIFIER } from './core/applications/analysis/pool/write/ipool.mod
 import { PoolRepository } from './infra/analysis/pool/pool.repository';
 import { POOL_MAPPER } from './infra/analysis/pool/mapper/ipool.mapper';
 import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
+import { PoolReadController } from './api/pool/read/pool.read.controller';
+import { POOL_READ_SERVICE } from './core/applications/analysis/pool/read/ipool.read.service';
+import { PoolReadService } from './core/applications/analysis/pool/read/pool.service';
+import { POOL_PROVIDER } from './core/applications/analysis/pool/read/ipool.provider';
+import { POOL_CONTROLLER_READ_MAPPER } from './api/pool/read/mapper/ipool.read.mapper';
+import { PoolControllerReadMapper } from './api/pool/read/mapper/pool.read.mapper';
 
 @Module({
-  controllers: [],
   imports: [
     CollectionDbModule,
     ConfigModule.forRoot({
@@ -44,14 +49,14 @@ import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
       },
     }),
     BullModule.registerQueue({
-      name: 'extract',
-    }),
-    BullModule.registerQueue({
       name: 'transform',
     }),
     BullModule.registerQueue({
       name: 'load',
     }),
+  ],
+  controllers: [
+    PoolReadController,
   ],
   providers: [
     UniswapDbHandler,
@@ -80,6 +85,15 @@ import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
       provide: FACTORY_MAPPER,
       useClass: FactoryMapper,
     },
+    // POOL
+    {
+      provide: POOL_CONTROLLER_READ_MAPPER,
+      useClass: PoolControllerReadMapper,
+    },
+    {
+      provide: POOL_READ_SERVICE,
+      useClass: PoolReadService,
+    },
     {
       provide: POOL_REQUEST_MAPPER,
       useClass: PoolRequestMapper,
@@ -87,6 +101,10 @@ import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
     {
       provide: POOL_WRITE_SERVICE,
       useClass: PoolWriteService,
+    },
+    {
+      provide: POOL_PROVIDER,
+      useClass: PoolRepository,
     },
     {
       provide: POOL_MODIFIER,
