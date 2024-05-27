@@ -37,7 +37,7 @@ export class ExtractProcessor implements IExtractProcessor {
       let count = 0;
 
       while (count < totalCount) {
-        const logs = await this.logReadService.findLogsByTopic0AndAddress(factory.swapSignature, factory.address, count);
+        const logs = await this.logReadService.findLogsByTopic0AndAddress(factory.swapSignature, factory.address);
         count += logs.length;
 
         await this.transformQueue.add('SWAP', logs, { removeOnComplete: true });
