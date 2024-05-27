@@ -16,5 +16,8 @@ export class TransformProcessor implements ITransformProcessor {
   ) {}
 
   @Process('PAIR_CREATED')
-  async transformPairCreated(job: Job<any>): Promise<void> {}
+  async transformPairCreated(job: Job<any>): Promise<void> {
+    console.log('Transforming pair created');
+    await this.loadQueue.add('PAIR_CREATED', job.data, { removeOnComplete: true });
+  }
 }

@@ -32,17 +32,16 @@ export class ExtractProcessor implements IExtractProcessor {
     const factories = await this.factoryReadService.findAllByChainId(chainId);
 
     for (const factory of factories) {
-      const totalCount = await this.logReadService.findTotalCountByTopic0AndAddress(factory.address, factory.swapSignature);
-      console.log(`Total count for ${factory.version} is ${totalCount}`);
-      let count = 0;
+      const totalCount = await this.logReadService.findTotalCountByTopic0AndAddress(factory.address, factory.poolCreatedSignature);
+      const count = 0;
 
-      while (count < totalCount) {
-        const logs = await this.logReadService.findLogsByTopic0AndAddress(factory.swapSignature, factory.address);
-        count += logs.length;
+      // while (count < totalCount) {
+      //   const logs = await this.logReadService.findLogsByTopic0AndAddress(factory.swapSignature, factory.address);
+      //   count += logs.length;
 
-        await this.transformQueue.add('SWAP', logs, { removeOnComplete: true });
+      //   await this.transformQueue.add('SWAP', logs, { removeOnComplete: true });
 
-      }
+      // }
     }
   }
 

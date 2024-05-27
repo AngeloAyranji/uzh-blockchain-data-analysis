@@ -5,5 +5,7 @@ import { ILoadProcessor } from './iload.processor';
 @Processor('load')
 export class LoadProcessor implements ILoadProcessor {
   @Process('PAIR_CREATED')
-  async loadPairCreated(job: Job<any>): Promise<void> {}
+  async loadPairCreated(job: Job<any>): Promise<void> {
+    console.log('Loading pair created');
+  }
 }

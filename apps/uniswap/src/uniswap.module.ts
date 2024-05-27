@@ -17,6 +17,10 @@ import { LOG_PROVIDER } from './core/applications/collection/log/read/ilog.provi
 import { LogRepository } from './infra/collection/log/log.repository';
 import { LOG_MAPPER } from './infra/collection/log/mapper/ilog.mapper';
 import { LogMapper } from './infra/collection/log/mapper/log.mapper';
+import { TRANSFORM_PROCESSOR } from './core/applications/migration/transform/itransform.processor';
+import { TransformProcessor } from './core/applications/migration/transform/transform.processor';
+import { LOAD_PROCESSOR } from './core/applications/migration/load/iload.processor';
+import { LoadProcessor } from './core/applications/migration/load/load.processor';
 
 @Module({
   controllers: [],
@@ -46,6 +50,14 @@ import { LogMapper } from './infra/collection/log/mapper/log.mapper';
     {
       provide: EXTRACT_PROCESSOR,
       useClass: ExtractProcessor,
+    },
+    {
+      provide: TRANSFORM_PROCESSOR,
+      useClass: TransformProcessor,
+    },
+    {
+      provide: LOAD_PROCESSOR,
+      useClass: LoadProcessor,
     },
     // FACTORY
     {
