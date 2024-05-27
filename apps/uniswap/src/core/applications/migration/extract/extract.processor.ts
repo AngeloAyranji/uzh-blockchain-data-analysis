@@ -7,8 +7,11 @@ import {
   FACTORY_READ_SERVICE,
   IFactoryReadService,
 } from '../../analysis/factory/read/ifactory.read.service';
-import { ILogReadService, LOG_READ_SERVICE } from '../../collection/log/read/ilog.read.service';
-import { Log } from '../../../domains/collection/log';
+import {
+  ILogReadService,
+  LOG_READ_SERVICE,
+} from '../../collection/log/read/ilog.read.service';
+import { Factory } from '../../../domains/analysis/factory';
 
 @Injectable()
 export class ExtractProcessor implements IExtractProcessor {
@@ -28,27 +31,46 @@ export class ExtractProcessor implements IExtractProcessor {
   }
 
   async startMigration() {
+    console.log("Migration started")
     const chainId = this.retreiveChainId();
     const factories = await this.factoryReadService.findAllByChainId(chainId);
 
-    for (const factory of factories) {
-      const totalCount = await this.logReadService.findTotalCountByTopic0AndAddress(factory.address, factory.poolCreatedSignature);
-      const count = 0;
-
-      // while (count < totalCount) {
-      //   const logs = await this.logReadService.findLogsByTopic0AndAddress(factory.swapSignature, factory.address);
-      //   count += logs.length;
-
-      //   await this.transformQueue.add('SWAP', logs, { removeOnComplete: true });
-
-      // }
-    }
+    await this.extractPools(factories);
+    console.log("Migration finished")
   }
 
-  async extractAndTransformLogs(topic0: string, factoryAddress: string): Promise<void> {
-    const logs = await this.logReadService.findLogsByTopic0AndAddress(topic0, factoryAddress);
+  async extractPools(factories: Factory[]): Promise<void> {
+    for (const factory of factories) {
+      let lastTransactionHash = undefined;
+      let lastLogIndex = undefined;
+      let moreLogs = true;
+      const pageSize = 100;
 
-    await this.transformQueue.add('POOL_CREATED', logs, { removeOnComplete: true });
+      while (moreLogs) {
+        const logs = await this.logReadService.findLogsByTopic0AndAddress(
+          factory.address,
+          factory.poolCreatedSignature,
+          pageSize,
+          lastTransactionHash,
+          lastLogIndex
+        );
+        
+        if (logs.length > 0) {
+          // TODO: map logs to PairCreatedRequest
+          this.transformQueue.add(`POOL_CREATED_${factory.version}`, {
+            logs: logs,
+            factoryAddress: factory.address,
+          }, {
+            removeOnComplete: true,
+          });
+
+          lastTransactionHash = logs[logs.length - 1].transactionHash;
+          lastLogIndex = logs[logs.length - 1].logIndex;
+        }
+
+        moreLogs = logs.length === pageSize;
+      }
+    }
   }
 
   private retreiveChainId(): number {

@@ -8,6 +8,7 @@ export class LogMapper implements ILogMapper {
   mapEntityToDomain(entity: LogEntity): Log {
     const domain: Log = {
       transactionHash: entity.transaction_hash,
+      logIndex: entity.log_index,
       address: entity.address,
       topic0: entity.topic_0,
       topics: entity.topics,

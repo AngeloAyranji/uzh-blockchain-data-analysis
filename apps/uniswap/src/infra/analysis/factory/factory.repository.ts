@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { FACTORY_MAPPER, IFactoryMapper } from './mapper/ifactory.mapper';
 import { UniswapDbHandler } from '../../db/uniswap-db.handler';
 import { Factory } from '../../../core/domains/analysis/factory';
+import { IFactoryProvider } from '../../../core/applications/analysis/factory/read/ifactory.provider';
 
 @Injectable()
-export class FactoryRepository {
+export class FactoryRepository implements IFactoryProvider {
   constructor(
     @Inject(FACTORY_MAPPER)
     private readonly factoryMapper: IFactoryMapper,

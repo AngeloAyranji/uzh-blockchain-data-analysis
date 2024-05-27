@@ -11,7 +11,8 @@
     "dotenv": "16.4.5",
     "@nestjs/bull": "^10.1.1",
     "bull": "^4.12.9",
-    "@nestjs/config": "^3.2.2"
+    "@nestjs/config": "^3.2.2",
+    "ethers": "5.7.0"
   },
   "devDependencies": {}
 }

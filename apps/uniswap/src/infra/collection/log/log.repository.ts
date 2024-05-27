@@ -13,22 +13,41 @@ export class LogRepository implements ILogProvider {
     private readonly collectionDbHandler: CollectionDbHandler
   ) {}
 
-  async findLogsByTopic0AndAddress(address: string, topic0: string): Promise<Log[]> {
+  async findLogsByTopic0AndAddress(
+    address: string,
+    topic0: string,
+    pageSize = 50,
+    lastTransactionHash?: string,
+    lastLogIndex?: number,
+  ): Promise<Log[]> {
+    console.time('Logs');
     const logs = await this.collectionDbHandler.eth_transaction_logs.findMany({
-        where: {
-            address: address,
-            topic_0: topic0
-        }
+      where: {
+        address: address,
+        topic_0: topic0,
+      },
+      take: pageSize,
+      skip: lastTransactionHash && lastLogIndex ? 1 : 0,
+      cursor: lastLogIndex && lastTransactionHash && {
+        transaction_hash_log_index: {
+          transaction_hash: lastTransactionHash,
+          log_index: lastLogIndex,
+        },
+      },
     });
+    console.timeEnd('Logs');
     return this.logMapper.mapEntitiesToDomains(logs);
   }
 
-  async findTotalCountByTopic0AndAddress(address: string, topic0: string): Promise<number> {
+  async findTotalCountByTopic0AndAddress(
+    address: string,
+    topic0: string
+  ): Promise<number> {
     return this.collectionDbHandler.eth_transaction_logs.count({
-        where: {
-            address: address,
-            topic_0: topic0
-        }
+      where: {
+        address: address,
+        topic_0: topic0,
+      },
     });
   }
-}   
+}

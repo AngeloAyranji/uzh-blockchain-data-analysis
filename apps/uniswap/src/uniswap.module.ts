@@ -21,6 +21,14 @@ import { TRANSFORM_PROCESSOR } from './core/applications/migration/transform/itr
 import { TransformProcessor } from './core/applications/migration/transform/transform.processor';
 import { LOAD_PROCESSOR } from './core/applications/migration/load/iload.processor';
 import { LoadProcessor } from './core/applications/migration/load/load.processor';
+import { POOL_REQUEST_MAPPER } from './core/applications/analysis/pool/write/mapper/ipool.request.mapper';
+import { PoolRequestMapper } from './core/applications/analysis/pool/write/mapper/pool.request.mapper';
+import { POOL_WRITE_SERVICE } from './core/applications/analysis/pool/write/ipool.write.service';
+import { PoolWriteService } from './core/applications/analysis/pool/write/pool.write.service';
+import { POOL_MODIFIER } from './core/applications/analysis/pool/write/ipool.modifier';
+import { PoolRepository } from './infra/analysis/pool/pool.repository';
+import { POOL_MAPPER } from './infra/analysis/pool/mapper/ipool.mapper';
+import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
 
 @Module({
   controllers: [],
@@ -71,6 +79,22 @@ import { LoadProcessor } from './core/applications/migration/load/load.processor
     {
       provide: FACTORY_MAPPER,
       useClass: FactoryMapper,
+    },
+    {
+      provide: POOL_REQUEST_MAPPER,
+      useClass: PoolRequestMapper,
+    },
+    {
+      provide: POOL_WRITE_SERVICE,
+      useClass: PoolWriteService,
+    },
+    {
+      provide: POOL_MODIFIER,
+      useClass: PoolRepository,
+    },
+    {
+      provide: POOL_MAPPER,
+      useClass: PoolMapper,
     },
     // LOG
     {

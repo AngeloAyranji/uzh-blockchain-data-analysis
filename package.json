@@ -17,6 +17,7 @@
     "@prisma/client": "5.4.2",
     "axios": "^1.6.0",
     "bull": "^4.12.9",
+    "ethers": "5.7.0",
     "prisma": "5.4.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",

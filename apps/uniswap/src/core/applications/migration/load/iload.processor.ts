@@ -1,7 +1,8 @@
 import { Job } from "bull";
+import { PoolAddRequest } from "../../analysis/pool/write/request/pool.add.request";
 
 export const LOAD_PROCESSOR = 'LOAD_PROCESSOR';
 
 export interface ILoadProcessor {
-    loadPairCreated(job: Job<any>): Promise<void>;
+    loadPoolCreated(job: Job<PoolAddRequest[]>): Promise<void>;
 }
