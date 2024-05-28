@@ -35,6 +35,14 @@ import { PoolReadService } from './core/applications/analysis/pool/read/pool.ser
 import { POOL_PROVIDER } from './core/applications/analysis/pool/read/ipool.provider';
 import { POOL_CONTROLLER_READ_MAPPER } from './api/pool/read/mapper/ipool.read.mapper';
 import { PoolControllerReadMapper } from './api/pool/read/mapper/pool.read.mapper';
+import { SWAP_REQUEST_MAPPER } from './core/applications/analysis/swap/write/mapper/iswap.request.mapper';
+import { SwapRequestMapper } from './core/applications/analysis/swap/write/mapper/swap.request.mapper';
+import { SWAP_WRITE_SERVICE } from './core/applications/analysis/swap/write/iswap.write.service';
+import { SwapWriteService } from './core/applications/analysis/swap/write/swap.write.service';
+import { SWAP_MODIFIER } from './core/applications/analysis/swap/write/iswap.modifier';
+import { SwapRepository } from './infra/analysis/swap/swap.repository';
+import { SWAP_MAPPER } from './infra/analysis/swap/mapper/iswap.mapper';
+import { SwapMapper } from './infra/analysis/swap/mapper/swap.mapper';
 
 @Module({
   imports: [
@@ -113,6 +121,22 @@ import { PoolControllerReadMapper } from './api/pool/read/mapper/pool.read.mappe
     {
       provide: POOL_MAPPER,
       useClass: PoolMapper,
+    },
+    {
+      provide: SWAP_REQUEST_MAPPER,
+      useClass: SwapRequestMapper,
+    },
+    {
+      provide: SWAP_WRITE_SERVICE,
+      useClass: SwapWriteService,
+    },
+    {
+      provide: SWAP_MODIFIER,
+      useClass: SwapRepository,
+    },
+    {
+      provide: SWAP_MAPPER,
+      useClass: SwapMapper,
     },
     // LOG
     {
