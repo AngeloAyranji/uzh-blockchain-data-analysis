@@ -3,9 +3,10 @@ import { ISwapModifier } from "../../../core/applications/analysis/swap/write/is
 import { ISwapMapper, SWAP_MAPPER } from "./mapper/iswap.mapper";
 import { UniswapDbHandler } from "../../db/uniswap-db.handler";
 import { Swap } from "../../../core/domains/analysis/swap";
+import { ISwapProvider } from "../../../core/applications/analysis/swap/read/iswap.provider.service";
 
 @Injectable()
-export class SwapRepository implements ISwapModifier {
+export class SwapRepository implements ISwapModifier, ISwapProvider {
     constructor(
         @Inject(SWAP_MAPPER)
         private readonly swapMapper: ISwapMapper,

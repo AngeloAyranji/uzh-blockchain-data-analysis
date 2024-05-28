@@ -43,6 +43,9 @@ import { SWAP_MODIFIER } from './core/applications/analysis/swap/write/iswap.mod
 import { SwapRepository } from './infra/analysis/swap/swap.repository';
 import { SWAP_MAPPER } from './infra/analysis/swap/mapper/iswap.mapper';
 import { SwapMapper } from './infra/analysis/swap/mapper/swap.mapper';
+import { SWAP_READ_SERVICE } from './core/applications/analysis/swap/read/iswap.read.service';
+import { SwapReadService } from './core/applications/analysis/swap/read/swap.read.service';
+import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.provider.service';
 
 @Module({
   imports: [
@@ -131,7 +134,15 @@ import { SwapMapper } from './infra/analysis/swap/mapper/swap.mapper';
       useClass: SwapWriteService,
     },
     {
+      provide: SWAP_READ_SERVICE,
+      useClass: SwapReadService,
+    },
+    {
       provide: SWAP_MODIFIER,
+      useClass: SwapRepository,
+    },
+    {
+      provide: SWAP_PROVIDER,
       useClass: SwapRepository,
     },
     {
