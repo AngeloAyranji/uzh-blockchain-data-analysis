@@ -56,4 +56,12 @@ export class TransformProcessor implements ITransformProcessor {
 
     await this.loadQueue.add('POOL_CREATED', pools, { removeOnComplete: true });
   }
+
+  @Process('SWAP_V2')
+  async transformSwapV2(job: Job<any>): Promise<void> {
+  }
+
+  @Process('SWAP_V3')
+  async transformSwapV3(job: Job<any>): Promise<void> {
+  }
 }
