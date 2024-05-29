@@ -6,5 +6,5 @@ export class SwapAddRequest {
     amountIn: string;
     amountOut: string;
     reversed: boolean;
-    timestamp: number;
+    timestamp: Date;
 }
