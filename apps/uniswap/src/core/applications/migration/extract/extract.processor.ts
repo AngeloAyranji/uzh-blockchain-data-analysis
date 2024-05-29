@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
@@ -25,18 +25,18 @@ export class ExtractProcessor implements IExtractProcessor {
     @Inject(LOG_READ_SERVICE)
     private readonly logReadService: ILogReadService,
 
-    private readonly config: ConfigService
+    private readonly config: ConfigService,
   ) {
     this.startMigration();
   }
 
   async startMigration() {
-    console.log("Migration started")
+    Logger.log("Migration started")
     const chainId = this.retreiveChainId();
     const factories = await this.factoryReadService.findAllByChainId(chainId);
 
     await this.extractPools(factories);
-    console.log("Migration finished")
+    Logger.log("Migration finished")
   }
 
   async extractPools(factories: Factory[]): Promise<void> {

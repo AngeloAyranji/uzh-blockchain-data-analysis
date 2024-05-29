@@ -20,7 +20,6 @@ export class LogRepository implements ILogProvider {
     lastTransactionHash?: string,
     lastLogIndex?: number,
   ): Promise<Log[]> {
-    console.time('Logs');
     const logs = await this.collectionDbHandler.eth_transaction_logs.findMany({
       where: {
         address: address,
@@ -35,7 +34,6 @@ export class LogRepository implements ILogProvider {
         },
       },
     });
-    console.timeEnd('Logs');
     return this.logMapper.mapEntitiesToDomains(logs);
   }
 
