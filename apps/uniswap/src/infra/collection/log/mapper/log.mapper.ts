@@ -13,6 +13,7 @@ export class LogMapper implements ILogMapper {
       topic0: entity.topic_0,
       topics: entity.topics,
       data: entity.data,
+      timestamp: entity.block_timestamp,
     };
     return domain;
   }

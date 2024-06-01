@@ -34,7 +34,7 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log("Migration started")
     const chainId = this.retreiveChainId();
     const factories = await this.factoryReadService.findAllByChainId(chainId);
-
+    
     await this.extractPools(factories);
     Logger.log("Migration finished")
   }
@@ -44,7 +44,7 @@ export class ExtractProcessor implements IExtractProcessor {
       let lastTransactionHash = undefined;
       let lastLogIndex = undefined;
       let moreLogs = true;
-      const pageSize = 100;
+      const pageSize = 20;
 
       while (moreLogs) {
         const logs = await this.logReadService.findLogsByTopic0AndAddress(

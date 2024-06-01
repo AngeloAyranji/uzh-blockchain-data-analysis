@@ -1,7 +1,7 @@
-import { eth_transaction_logs } from '@prisma/client-collection';
-
-export class LogEntity implements eth_transaction_logs {
+export class LogEntity {
     transaction_hash: string;
+    block_number: bigint;
+    block_timestamp: Date;
     address: string;
     log_index: number;
     data: string;

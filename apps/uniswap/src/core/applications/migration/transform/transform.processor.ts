@@ -29,7 +29,7 @@ export class TransformProcessor implements ITransformProcessor {
         token1: ethers.utils
           .getAddress('0x' + log.topics[1].slice(26))
           .toLowerCase(),
-        deployedAt: new Date(),
+        deployedAt: new Date(log.timestamp),
       };
     });
 
@@ -50,7 +50,7 @@ export class TransformProcessor implements ITransformProcessor {
         token1: ethers.utils
           .getAddress('0x' + log.topics[1].slice(26))
           .toLowerCase(),
-        deployedAt: new Date(),
+        deployedAt: new Date(log.timestamp),
       };
     });
 

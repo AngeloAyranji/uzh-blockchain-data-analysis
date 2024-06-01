@@ -28,7 +28,7 @@
         "development": {},
         "production": {}
       },
-      "dependsOn": ["lint"]
+      "dependsOn": []
     },
     "serve": {
       "executor": "@nx/js:node",

@@ -73,7 +73,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     });
 
     // Combine both counts into a single list
-    let combinedCounts: { [token: string]: number } = {};
+    const combinedCounts: { [token: string]: number } = {};
     token0Counts.forEach((item) => {
       combinedCounts[item.token0] =
         (combinedCounts[item.token0] || 0) + item._count.token0;
@@ -84,7 +84,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     });
 
     // Convert the combined counts object to an array and sort by count
-    let sortedTokens = Object.entries(combinedCounts)
+    const sortedTokens = Object.entries(combinedCounts)
       .map(([token, count]) => ({ token, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);

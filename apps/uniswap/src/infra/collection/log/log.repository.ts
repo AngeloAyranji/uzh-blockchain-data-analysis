@@ -3,6 +3,9 @@ import { CollectionDbHandler } from '@uzh/collection-db';
 import { Log } from '../../../core/domains/collection/log';
 import { ILogMapper, LOG_MAPPER } from './mapper/ilog.mapper';
 import { ILogProvider } from '../../../core/applications/collection/log/read/ilog.provider';
+import { Sql } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
+import { LogEntity } from './log.entity';
 
 @Injectable()
 export class LogRepository implements ILogProvider {
@@ -18,22 +21,21 @@ export class LogRepository implements ILogProvider {
     topic0: string,
     pageSize = 50,
     lastTransactionHash?: string,
-    lastLogIndex?: number,
+    lastLogIndex?: number
   ): Promise<Log[]> {
-    const logs = await this.collectionDbHandler.eth_transaction_logs.findMany({
-      where: {
-        address: address,
-        topic_0: topic0,
-      },
-      take: pageSize,
-      skip: lastTransactionHash && lastLogIndex ? 1 : 0,
-      cursor: lastLogIndex && lastTransactionHash && {
-        transaction_hash_log_index: {
-          transaction_hash: lastTransactionHash,
-          log_index: lastLogIndex,
-        },
-      },
-    });
+    let query = `
+        SELECT * FROM "eth_transaction_logs_with_timestamp"
+        WHERE "address" = '${address}' AND "topic_0" = '${topic0}' 
+    `;
+
+    if (lastTransactionHash && lastLogIndex) {
+        query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
+    }
+
+    query += ` ORDER BY "transaction_hash", "log_index" ASC
+               LIMIT ${pageSize}`;
+
+    const logs: LogEntity[] = await this.collectionDbHandler.$queryRawUnsafe(query);
     return this.logMapper.mapEntitiesToDomains(logs);
   }
 
@@ -41,11 +43,9 @@ export class LogRepository implements ILogProvider {
     address: string,
     topic0: string
   ): Promise<number> {
-    return this.collectionDbHandler.eth_transaction_logs.count({
-      where: {
-        address: address,
-        topic_0: topic0,
-      },
-    });
+    const result = await this.collectionDbHandler
+      .$queryRaw`SELECT COUNT(*) FROM eth_transaction_logs_with_timestamp WHERE address = ${address} AND topic_0 = ${topic0}`;
+
+    return Number(result[0].count);
   }
 }

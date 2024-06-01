@@ -1,4 +1,3 @@
-
 import { $Enums, Pool } from '@prisma/client-uniswap';
 
 export class PoolEntity implements Pool {

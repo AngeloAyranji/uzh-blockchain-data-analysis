@@ -5,4 +5,5 @@ export class Log {
     data: string;
     topic0: string;
     topics: string[];
+    timestamp: Date;
 }
