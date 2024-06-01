@@ -8,6 +8,7 @@ import {
 } from '../../factory/read/ifactory.read.service';
 import { VersionEnum } from '../../../../domains/analysis/factory';
 import { PoolTokensWithMostPoolsResponse } from './response/pool.tokens-with-most-pools.response';
+import { PoolCountDateEnum, PoolCountByDateResponse } from './response/pool.count-by-date.response';
 
 @Injectable()
 export class PoolReadService implements IPoolReadService {
@@ -67,5 +68,10 @@ export class PoolReadService implements IPoolReadService {
         percentage: token.count / total,
       };
     });
+  }
+  
+  async getPoolCountByDate(chainId: number, dateEnum: PoolCountDateEnum, version: VersionEnum): Promise<PoolCountByDateResponse[]> {
+      const result = await this.poolProvider.getPoolCountByDate(chainId, dateEnum, version);
+      return result;
   }
 }

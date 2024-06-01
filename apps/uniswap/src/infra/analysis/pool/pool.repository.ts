@@ -5,6 +5,10 @@ import { Pool } from '../../../core/domains/analysis/pool';
 import { IPoolModifier } from '../../../core/applications/analysis/pool/write/ipool.modifier';
 import { IPoolProvider } from '../../../core/applications/analysis/pool/read/ipool.provider';
 import { VersionEnum } from '../../../core/domains/analysis/factory';
+import {
+  PoolCountDateEnum,
+  PoolCountByDateResponse,
+} from '../../../core/applications/analysis/pool/read/response/pool.count-by-date.response';
 
 @Injectable()
 export class PoolRepository implements IPoolModifier, IPoolProvider {
@@ -43,7 +47,10 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     });
   }
 
-  async getTokensWithMostPools(chainId: number, version?: VersionEnum): Promise<any[]> {
+  async getTokensWithMostPools(
+    chainId: number,
+    version?: VersionEnum
+  ): Promise<any[]> {
     // Aggregate pools where the token appears as token0
     const token0Counts = await this.uniswapDbHandler.pool.groupBy({
       by: ['token0'],
@@ -54,7 +61,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
         factory: {
           chainId: chainId,
           version: version,
-        }
+        },
       },
     });
 
@@ -68,8 +75,8 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
         factory: {
           chainId: chainId,
           version: version,
-        }
-      }
+        },
+      },
     });
 
     // Combine both counts into a single list
@@ -88,7 +95,22 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
       .map(([token, count]) => ({ token, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
-    
+
     return sortedTokens;
+  }
+
+  async getPoolCountByDate(
+    chainId: number,
+    dateEnum: PoolCountDateEnum,
+    version: VersionEnum
+  ): Promise<PoolCountByDateResponse[]> {
+    const counts: any[] = await this.uniswapDbHandler.$queryRaw`
+    SELECT DATE_TRUNC(${dateEnum}, "deployedAt") AS date, COUNT(*) AS totalCount FROM "Pool"
+    JOIN "Factory" ON "Pool"."factoryAddress" = "Factory"."address"
+    WHERE "Factory"."chainId" = ${chainId} AND "Factory"."version" = ${version}::"Version"
+    GROUP BY date
+    ORDER BY date DESC`;
+
+    return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(counts, version, chainId, dateEnum);
   }
 }

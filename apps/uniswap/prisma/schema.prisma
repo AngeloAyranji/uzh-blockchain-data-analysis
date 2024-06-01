@@ -28,7 +28,7 @@ model Pool {
   factoryAddress String
   token0         String
   token1         String
-  deployedAt     DateTime
+  deployedAt     DateTime @db.Date
   swaps          Swap[]
 }
 

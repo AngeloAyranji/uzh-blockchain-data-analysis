@@ -15,6 +15,7 @@ import { PoolGetTotalCountApiRequest } from './dto/pool.get-total-count.api.requ
 import { IPoolControllerReadMapper, POOL_CONTROLLER_READ_MAPPER } from './mapper/ipool.read.mapper';
 import { PoolTotalCountApiResponse } from './dto/pool.get-total-count.api.response';
 import { PoolGetTokensWithMostPoolsApiRequest } from './dto/pool.get-most-tokens-pools.api.request';
+import { PoolCountByDateApiRequest } from './dto/pool.count-by-date.api.request';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('pool')
@@ -37,5 +38,11 @@ export class PoolReadController {
   async getTokensWithMostPools(@Query() query: PoolGetTokensWithMostPoolsApiRequest): Promise<any> {
     const response = await this.poolReadService.getTokensWithMostPools(Number(query.chainId), query.version);
     return this.poolControllerReadMapper.mapTokensMostPoolsToTokensMostPoolsApiResponse(response);
+  }
+
+  @Get('/count-by-date')
+  async getPoolCountByDate(@Query() query: PoolCountByDateApiRequest): Promise<any> {
+    const response = await this.poolReadService.getPoolCountByDate(Number(query.chainId), query.date, query.version);
+    return this.poolControllerReadMapper.mapPoolCountByDateToPoolCountByDateApiResponse(response);
   }
 }
