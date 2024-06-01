@@ -45,7 +45,7 @@ export class LogRepository implements ILogProvider {
   ): Promise<number> {
     const result = await this.collectionDbHandler
       .$queryRaw`SELECT COUNT(*) FROM eth_transaction_logs_with_timestamp WHERE address = ${address} AND topic_0 = ${topic0}`;
-
+    
     return Number(result[0].count);
   }
 }

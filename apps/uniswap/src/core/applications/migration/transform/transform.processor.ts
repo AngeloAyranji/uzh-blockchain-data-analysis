@@ -22,7 +22,7 @@ export class TransformProcessor implements ITransformProcessor {
         poolAddress: ethers.utils
           .getAddress('0x' + log.data.substring(26, 66))
           .toLowerCase(),
-        factoryAddress: job.data.factoryAddress,
+        factoryId: job.data.factoryId,
         token0: ethers.utils
           .getAddress('0x' + log.topics[0].slice(26))
           .toLowerCase(),
@@ -43,7 +43,7 @@ export class TransformProcessor implements ITransformProcessor {
         poolAddress: ethers.utils
           .getAddress('0x' + log.data.substring(128, 168))
           .toLowerCase(),
-        factoryAddress: job.data.factoryAddress,
+        factoryId: job.data.factoryId,
         token0: ethers.utils
           .getAddress('0x' + log.topics[0].slice(26))
           .toLowerCase(),

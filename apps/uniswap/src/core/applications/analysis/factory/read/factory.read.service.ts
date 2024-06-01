@@ -14,8 +14,8 @@ export class FactoryReadService implements IFactoryReadService {
         return await this.factoryProvider.findAllByChainId(chainId);
     }
 
-    async findByAddress(factoryAddress: string): Promise<Factory> {
-        const factory = await this.factoryProvider.findByAddress(factoryAddress);
+    async findByAddressAndChainId(factoryAddress: string, chainId: number): Promise<Factory> {
+        const factory = await this.factoryProvider.findByAddressAndChainId(factoryAddress, chainId);
 
         if (!factory) {
             // TODO: Create a custom exception

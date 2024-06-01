@@ -1,6 +1,6 @@
 export class Swap {
     id: string;
-    poolAddress: string;
+    poolId: string;
     transactionHash: string;
     sender: string;
     recipient: string;

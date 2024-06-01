@@ -10,7 +10,7 @@ export class SwapRequestMapper implements ISwapRequestMapper {
     mapSwapAddRequestToDomain(swapAddRequest: SwapAddRequest): Swap {
         return {
             id: uuidv4(),
-            poolAddress: swapAddRequest.poolAddress,
+            poolId: swapAddRequest.poolId,
             transactionHash: swapAddRequest.transactionHash,
             sender: swapAddRequest.sender,
             recipient: swapAddRequest.recipient,

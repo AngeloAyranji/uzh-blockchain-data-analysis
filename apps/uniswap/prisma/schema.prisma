@@ -10,7 +10,8 @@ datasource db {
 }
 
 model Factory {
-  address              String   @id
+  id                   String   @id
+  address              String
   version              Version
   swapSignature        String
   poolCreatedSignature String
@@ -20,12 +21,14 @@ model Factory {
   poolAddress          Pool[]
 
   @@unique([chainId, version], name: "unique_chain_id_version")
+  @@unique([chainId, address], name: "unique_chain_id_address")
 }
 
 model Pool {
-  poolAddress    String   @id
-  factory        Factory  @relation(fields: [factoryAddress], references: [address])
-  factoryAddress String
+  id             String   @id
+  poolAddress    String   
+  factory        Factory  @relation(fields: [factoryId], references: [id])
+  factoryId      String
   token0         String
   token1         String
   deployedAt     DateTime @db.Date
@@ -34,8 +37,8 @@ model Pool {
 
 model Swap {
   id              String   @id
-  pool            Pool     @relation(fields: [poolAddress], references: [poolAddress])
-  poolAddress     String
+  pool            Pool     @relation(fields: [poolId], references: [id])
+  poolId          String
   transactionHash String
   sender          String
   recipient       String

@@ -10,7 +10,7 @@ export class PoolRequestMapper implements IPoolRequestMapper {
       poolAddress: request.poolAddress,
       token0: request.token0,
       token1: request.token1,
-      factoryAddress: request.factoryAddress,
+      factoryId: request.factoryId,
       deployedAt: request.deployedAt,
     };
   }

@@ -8,7 +8,10 @@ import {
 } from '../../factory/read/ifactory.read.service';
 import { VersionEnum } from '../../../../domains/analysis/factory';
 import { PoolTokensWithMostPoolsResponse } from './response/pool.tokens-with-most-pools.response';
-import { PoolCountDateEnum, PoolCountByDateResponse } from './response/pool.count-by-date.response';
+import {
+  PoolCountDateEnum,
+  PoolCountByDateResponse,
+} from './response/pool.count-by-date.response';
 
 @Injectable()
 export class PoolReadService implements IPoolReadService {
@@ -33,7 +36,10 @@ export class PoolReadService implements IPoolReadService {
       groupedPools.map(async (res) => {
         const factory =
           !version &&
-          (await this.factoryReadService.findByAddress(res.factoryAddress));
+          (await this.factoryReadService.findByAddressAndChainId(
+            res.factoryAddress,
+            chainId
+          ));
 
         return {
           totalCount: res.totalCount,
@@ -69,9 +75,17 @@ export class PoolReadService implements IPoolReadService {
       };
     });
   }
-  
-  async getPoolCountByDate(chainId: number, dateEnum: PoolCountDateEnum, version: VersionEnum): Promise<PoolCountByDateResponse[]> {
-      const result = await this.poolProvider.getPoolCountByDate(chainId, dateEnum, version);
-      return result;
+
+  async getPoolCountByDate(
+    chainId: number,
+    dateEnum: PoolCountDateEnum,
+    version: VersionEnum
+  ): Promise<PoolCountByDateResponse[]> {
+    const result = await this.poolProvider.getPoolCountByDate(
+      chainId,
+      dateEnum,
+      version
+    );
+    return result;
   }
 }

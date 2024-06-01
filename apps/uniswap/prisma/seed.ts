@@ -1,5 +1,6 @@
 import { PrismaClient as PrismaClientAnalysis } from '@prisma/client-uniswap';
 import { PrismaClient as PrismaClientCollection } from '@prisma/client-collection';
+import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -20,6 +21,7 @@ async function seedAnalysisDB(
     },
     update: {},
     create: {
+      id: uuidv4(),
       address: factoryV2Address.toLowerCase(),
       version: 'V2',
       chainId: chainId,
@@ -39,6 +41,7 @@ async function seedAnalysisDB(
     },
     update: {},
     create: {
+      id: uuidv4(),
       address: factoryV3Address.toLowerCase(),
       version: 'V3',
       chainId: chainId,
