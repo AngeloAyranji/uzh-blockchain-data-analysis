@@ -22,7 +22,7 @@ async function seedAnalysisDB(
     update: {},
     create: {
       id: uuidv4(),
-      address: factoryV2Address.toLowerCase(),
+      address: factoryV2Address,
       version: 'V2',
       chainId: chainId,
       swapSignature:
@@ -42,7 +42,7 @@ async function seedAnalysisDB(
     update: {},
     create: {
       id: uuidv4(),
-      address: factoryV3Address.toLowerCase(),
+      address: factoryV3Address,
       version: 'V3',
       chainId: chainId,
       swapSignature:

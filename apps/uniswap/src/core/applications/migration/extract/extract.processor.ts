@@ -45,7 +45,7 @@ export class ExtractProcessor implements IExtractProcessor {
       let lastLogIndex = undefined;
       let moreLogs = true;
       const pageSize = 20;
-      
+
       while (moreLogs) {
         const logs = await this.logReadService.findLogsByTopic0AndAddress(
           factory.address,
