@@ -32,4 +32,13 @@ export class FactoryRepository implements IFactoryProvider {
     });
     return this.factoryMapper.mapEntityToDomain(entity);
   }
+
+  async findById(id: string): Promise<Factory> {
+    const entity = await this.uniswapDbHandler.factory.findUnique({
+        where: {
+            id: id
+        }
+    });
+    return this.factoryMapper.mapEntityToDomain(entity);
+  }
 }

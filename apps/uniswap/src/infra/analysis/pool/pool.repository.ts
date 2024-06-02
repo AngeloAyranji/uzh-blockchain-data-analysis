@@ -41,7 +41,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
 
     return groupedPools.map((groupedPool) => {
       return {
-        factoryAddress: groupedPool.factoryId,
+        factoryId: groupedPool.factoryId,
         totalCount: groupedPool._count._all,
       };
     });

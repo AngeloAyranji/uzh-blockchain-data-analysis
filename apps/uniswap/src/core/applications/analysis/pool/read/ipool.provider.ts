@@ -5,7 +5,7 @@ import { PoolTotalCountResponse } from "./response/pool.total-count.response";
 export const POOL_PROVIDER = 'POOL_PROVIDER';
 
 export interface IPoolProvider {
-    getTotalCount(chainId: number, version?: VersionEnum): Promise<PoolTotalCountResponse[]>;
+    getTotalCount(chainId: number, version?: VersionEnum): Promise<any[]>;
     getTokensWithMostPools(chainId: number, version?: VersionEnum): Promise<any[]>;
     getPoolCountByDate(chainId: number, dateEnum: PoolCountDateEnum, version: VersionEnum): Promise<PoolCountByDateResponse[]>;
 }

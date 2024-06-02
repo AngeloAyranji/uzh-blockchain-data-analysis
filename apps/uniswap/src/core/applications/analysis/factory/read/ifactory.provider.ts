@@ -5,4 +5,5 @@ export const FACTORY_PROVIDER = 'FACTORY_PROVIDER';
 export interface IFactoryProvider {
     findAllByChainId(chainId: number): Promise<Factory[]>;
     findByAddressAndChainId(factoryAddress: string, chainId: number): Promise<Factory>;
+    findById(id: string): Promise<Factory>;
 }

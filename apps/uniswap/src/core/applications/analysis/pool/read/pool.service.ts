@@ -36,14 +36,13 @@ export class PoolReadService implements IPoolReadService {
       groupedPools.map(async (res) => {
         const factory =
           !version &&
-          (await this.factoryReadService.findByAddressAndChainId(
-            res.factoryAddress,
-            chainId
+          (await this.factoryReadService.findById(
+            res.factoryId
           ));
 
         return {
           totalCount: res.totalCount,
-          factoryAddress: res.factoryAddress,
+          factoryAddress: factory.address,
           factoryVersion: version ? version : factory.version,
         };
       })
