@@ -1,4 +1,5 @@
 export class Factory {
+    id: string;
     address: string;
     version: VersionEnum;
     swapSignature: string;

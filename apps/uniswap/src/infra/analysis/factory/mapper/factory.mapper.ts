@@ -7,6 +7,7 @@ import { Factory, VersionEnum } from '../../../../core/domains/analysis/factory'
 export class FactoryMapper implements IFactoryMapper {
   mapEntityToDomain(entity: FactoryEntity): Factory {
     const domain: Factory = {
+      id: entity.id,
       address: entity.address,
       version: VersionEnum[entity.version],
       swapSignature: entity.swapSignature,

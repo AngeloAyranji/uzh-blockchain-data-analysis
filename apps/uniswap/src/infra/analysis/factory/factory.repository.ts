@@ -21,10 +21,13 @@ export class FactoryRepository implements IFactoryProvider {
     return this.factoryMapper.mapEntitiesToDomains(entities);
   }
 
-  async findByAddress(factoryAddress: string): Promise<Factory> {
+  async findByAddressAndChainId(factoryAddress: string, chainId: number): Promise<Factory> {
     const entity = await this.uniswapDbHandler.factory.findUnique({
         where: {
-            address: factoryAddress
+            unique_chain_id_address: {
+              chainId: chainId,
+              address: factoryAddress
+            }
         }
     });
     return this.factoryMapper.mapEntityToDomain(entity);

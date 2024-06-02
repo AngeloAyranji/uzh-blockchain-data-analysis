@@ -8,7 +8,7 @@ export class SwapMapper implements ISwapMapper {
     mapDomainToEntity(domain: Swap): SwapEntity {
         return {
             id: domain.id,
-            poolAddress: domain.poolAddress,
+            poolId: domain.poolId,
             transactionHash: domain.transactionHash,
             sender: domain.sender,
             recipient: domain.recipient,
@@ -24,7 +24,7 @@ export class SwapMapper implements ISwapMapper {
     mapEntityToDomain(entity: SwapEntity): Swap {
         return {
             id: entity.id,
-            poolAddress: entity.poolAddress,
+            poolId: entity.poolId,
             transactionHash: entity.transactionHash,
             sender: entity.sender,
             recipient: entity.recipient,

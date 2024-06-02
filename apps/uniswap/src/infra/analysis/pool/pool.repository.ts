@@ -33,7 +33,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
           version: version,
         },
       },
-      by: ['factoryAddress'],
+      by: ['factoryId'],
       _count: {
         _all: true,
       },
@@ -41,7 +41,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
 
     return groupedPools.map((groupedPool) => {
       return {
-        factoryAddress: groupedPool.factoryAddress,
+        factoryAddress: groupedPool.factoryId,
         totalCount: groupedPool._count._all,
       };
     });
@@ -106,7 +106,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
   ): Promise<PoolCountByDateResponse[]> {
     const counts: any[] = await this.uniswapDbHandler.$queryRaw`
     SELECT DATE_TRUNC(${dateEnum}, "deployedAt") AS date, COUNT(*) AS totalCount FROM "Pool"
-    JOIN "Factory" ON "Pool"."factoryAddress" = "Factory"."address"
+    JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
     WHERE "Factory"."chainId" = ${chainId} AND "Factory"."version" = ${version}::"Version"
     GROUP BY date
     ORDER BY date DESC`;

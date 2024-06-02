@@ -38,7 +38,7 @@ export class ExtractProcessor implements IExtractProcessor {
     await this.extractPools(factories);
     Logger.log("Migration finished")
   }
-
+  
   async extractPools(factories: Factory[]): Promise<void> {
     for (const factory of factories) {
       let lastTransactionHash = undefined;
@@ -54,12 +54,12 @@ export class ExtractProcessor implements IExtractProcessor {
           lastTransactionHash,
           lastLogIndex
         );
-        
+        console.log(logs.length)
         if (logs.length > 0) {
           // TODO: map logs to PairCreatedRequest
           this.transformQueue.add(`POOL_CREATED_${factory.version}`, {
             logs: logs,
-            factoryAddress: factory.address,
+            factoryId: factory.id,
           }, {
             removeOnComplete: true,
           });

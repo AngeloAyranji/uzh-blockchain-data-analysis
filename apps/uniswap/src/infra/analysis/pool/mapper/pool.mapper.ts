@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { IPoolMapper } from './ipool.mapper';
 import { PoolEntity } from '../pool.entity';
 import { Pool } from '../../../../core/domains/analysis/pool';
@@ -12,7 +13,7 @@ export class PoolMapper implements IPoolMapper {
       poolAddress: entity.poolAddress,
       token0: entity.token0,
       token1: entity.token1,
-      factoryAddress: entity.factoryAddress,
+      factoryId: entity.factoryId,
       deployedAt: entity.deployedAt,
     };
   }
@@ -23,10 +24,11 @@ export class PoolMapper implements IPoolMapper {
 
   mapDomainToEntity(domain: Pool): PoolEntity {
     return {
+      id: uuidv4(),
       poolAddress: domain.poolAddress,
       token0: domain.token0,
       token1: domain.token1,
-      factoryAddress: domain.factoryAddress,
+      factoryId: domain.factoryId,
       deployedAt: domain.deployedAt,
     };
   }
