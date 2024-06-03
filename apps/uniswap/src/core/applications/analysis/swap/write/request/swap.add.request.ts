@@ -6,5 +6,6 @@ export class SwapAddRequest {
     amountIn: string;
     amountOut: string;
     reversed: boolean;
-    timestamp: Date;
+    price: string | null;
+    swapAt: Date;
 }

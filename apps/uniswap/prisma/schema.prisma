@@ -45,7 +45,8 @@ model Swap {
   amountIn        String
   amountOut       String
   reversed        Boolean
-  timestamp       DateTime
+  price           String?
+  swapAt          DateTime @db.Date
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

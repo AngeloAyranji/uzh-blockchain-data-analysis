@@ -9,7 +9,8 @@ export class SwapEntity implements Swap {
   amountIn: string;
   amountOut: string;
   reversed: boolean;
-  timestamp: Date;
+  price: string | null;
+  swapAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }

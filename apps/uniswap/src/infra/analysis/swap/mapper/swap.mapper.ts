@@ -15,7 +15,8 @@ export class SwapMapper implements ISwapMapper {
             amountIn: domain.amountIn,
             amountOut: domain.amountOut,
             reversed: domain.reversed,
-            timestamp: domain.timestamp,
+            price: domain.price,
+            swapAt: domain.swapAt,
             createdAt: new Date(),
             updatedAt: new Date()
         }
@@ -31,7 +32,8 @@ export class SwapMapper implements ISwapMapper {
             amountIn: entity.amountIn,
             amountOut: entity.amountOut,
             reversed: entity.reversed,
-            timestamp: entity.timestamp
+            price: entity.price,
+            swapAt: entity.swapAt
         }
     }
 

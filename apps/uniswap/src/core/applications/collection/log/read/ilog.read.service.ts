@@ -14,4 +14,10 @@ export interface ILogReadService {
     address: string,
     topic0: string
   ): Promise<number>;
+  findLogsByTopic0(
+    topic0: string,
+    pageSize: number,
+    lastTransactionHash?: string,
+    lastLogIndex?: number,
+  ): Promise<Log[]>;
 }

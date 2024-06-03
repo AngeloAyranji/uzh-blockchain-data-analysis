@@ -17,7 +17,13 @@ export class LogReadService implements ILogReadService {
     lastTransactionHash?: string,
     lastLogIndex?: number
   ): Promise<Log[]> {
-    return this.logProvider.findLogsByTopic0AndAddress(address, topic0, pageSize, lastTransactionHash, lastLogIndex);
+    return this.logProvider.findLogsByTopic0AndAddress(
+      address,
+      topic0,
+      pageSize,
+      lastTransactionHash,
+      lastLogIndex
+    );
   }
 
   async findTotalCountByTopic0AndAddress(
@@ -25,5 +31,19 @@ export class LogReadService implements ILogReadService {
     topic0: string
   ): Promise<number> {
     return this.logProvider.findTotalCountByTopic0AndAddress(address, topic0);
+  }
+
+  async findLogsByTopic0(
+    topic0: string,
+    pageSize: number,
+    lastTransactionHash?: string,
+    lastLogIndex?: number
+  ): Promise<Log[]> {
+    return this.logProvider.findLogsByTopic0(
+      topic0,
+      pageSize,
+      lastTransactionHash,
+      lastLogIndex
+    );
   }
 }

@@ -17,7 +17,8 @@ export class SwapRequestMapper implements ISwapRequestMapper {
             amountIn: swapAddRequest.amountIn,
             amountOut: swapAddRequest.amountOut,
             reversed: swapAddRequest.reversed,
-            timestamp: swapAddRequest.timestamp
+            price: swapAddRequest.price,
+            swapAt: swapAddRequest.swapAt
         }
     }
 

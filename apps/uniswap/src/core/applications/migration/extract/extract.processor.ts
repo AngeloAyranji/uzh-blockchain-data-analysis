@@ -59,12 +59,10 @@ export class ExtractProcessor implements IExtractProcessor {
     this.nextPhaseIntervalId = setInterval(async () => {
       const transformCount = await this.transformQueue.count();
       const loadCount = await this.loadQueue.count();
-
       if (transformCount === 0 && loadCount === 0) {
-        const chainId = this.retreiveChainId();
-        const factories = await this.factoryReadService.findAllByChainId(chainId);
-
         if (phase === 'SWAP') {
+          const chainId = this.retreiveChainId();
+          const factories = await this.factoryReadService.findAllByChainId(chainId);
           await this.extractSwaps(factories);
         }
       }
@@ -87,7 +85,7 @@ export class ExtractProcessor implements IExtractProcessor {
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-        console.log(logs.length);
+
         if (logs.length > 0) {
           // TODO: map logs to PairCreatedRequest
           this.transformQueue.add(
@@ -122,38 +120,35 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log('Extracting swaps');
     for (const factory of factories) {
       let moreLogs = true;
-      const pageSize = 20;
+      const pageSize = 100;
 
       while (moreLogs) {
         const cursor = this.getCursor('swap');
 
-        const logs = await this.logReadService.findLogsByTopic0AndAddress(
-          factory.address,
+        const logs = await this.logReadService.findLogsByTopic0(
           factory.swapSignature,
           pageSize,
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-        console.log(logs.length);
-        console.log(logs[0]);
+
         if (logs.length > 0) {
-          // TODO: map logs to PairCreatedRequest
-          // this.transformQueue.add(
-          //   `SWAP_${factory.version}`,
-          //   {
-          //     logs: logs,
-          //     factoryId: factory.id,
-          //   },
-          //   {
-          //     removeOnComplete: true,
-          //   }
-          // );
+          this.transformQueue.add(
+            `SWAP_${factory.version}`,
+            {
+              logs: logs,
+              factoryId: factory.id,
+            },
+            {
+              removeOnComplete: true,
+            }
+          );
           const lastTransactionHash = logs[logs.length - 1].transactionHash;
           const lastLogIndex = logs[logs.length - 1].logIndex;
-          // this.setCursor('swap', {
-          //   lastTransactionHash,
-          //   lastLogIndex,
-          // });
+          this.setCursor('swap', {
+            lastTransactionHash,
+            lastLogIndex,
+          });
         }
 
         moreLogs = logs.length === pageSize;
@@ -180,7 +175,7 @@ export class ExtractProcessor implements IExtractProcessor {
         console.log(pools.length);
         if (pools.length > 0) {
           for (const pool of pools) {
-            this.cacheManager.set(pool.id, true, 0);
+            this.cacheManager.set(pool.poolAddress, pool.id, 0);
           }
 
           lastId = pools[pools.length - 1].id;
