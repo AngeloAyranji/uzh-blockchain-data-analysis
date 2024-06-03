@@ -3,8 +3,6 @@ import { CollectionDbHandler } from '@uzh/collection-db';
 import { Log } from '../../../core/domains/collection/log';
 import { ILogMapper, LOG_MAPPER } from './mapper/ilog.mapper';
 import { ILogProvider } from '../../../core/applications/collection/log/read/ilog.provider';
-import { Sql } from '@prisma/client/runtime/library';
-import { Prisma } from '@prisma/client';
 import { LogEntity } from './log.entity';
 
 @Injectable()

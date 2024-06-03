@@ -10,6 +10,7 @@ import { VersionEnum } from '../../../../core/domains/analysis/factory';
 export class PoolMapper implements IPoolMapper {
   mapEntityToDomain(entity: PoolEntity): Pool {
     return {
+      id: entity.id,
       poolAddress: entity.poolAddress,
       token0: entity.token0,
       token1: entity.token1,

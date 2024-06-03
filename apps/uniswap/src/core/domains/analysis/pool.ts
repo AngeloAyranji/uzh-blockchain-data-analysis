@@ -1,4 +1,5 @@
 export class Pool {
+    id: string;
     poolAddress: string;
     factoryId: string;
     token0: string;

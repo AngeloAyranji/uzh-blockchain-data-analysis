@@ -125,9 +125,6 @@ async function main() {
   }
 
   try {
-    await analysisPrisma.swap.deleteMany();
-    await analysisPrisma.pool.deleteMany();
-    await analysisPrisma.factory.deleteMany();
     await seedAnalysisDB(chainId, factoryV2Address, factoryV3Address);
     await seedCollectionDB();
     await analysisPrisma.$disconnect();

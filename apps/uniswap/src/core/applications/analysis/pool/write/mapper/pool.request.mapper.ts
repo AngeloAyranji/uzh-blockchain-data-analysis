@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { IPoolRequestMapper } from './ipool.request.mapper';
 import { PoolAddRequest } from '../request/pool.add.request';
 import { Pool } from '../../../../../domains/analysis/pool';
@@ -7,6 +8,7 @@ import { Pool } from '../../../../../domains/analysis/pool';
 export class PoolRequestMapper implements IPoolRequestMapper {
   mapAddRequestToDomain(request: PoolAddRequest): Pool {
     return {
+      id: new uuidv4(),
       poolAddress: request.poolAddress,
       token0: request.token0,
       token1: request.token1,

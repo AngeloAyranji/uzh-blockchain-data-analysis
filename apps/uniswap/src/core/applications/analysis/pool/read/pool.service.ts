@@ -12,6 +12,7 @@ import {
   PoolCountDateEnum,
   PoolCountByDateResponse,
 } from './response/pool.count-by-date.response';
+import { Pool } from '../../../../../core/domains/analysis/pool';
 
 @Injectable()
 export class PoolReadService implements IPoolReadService {
@@ -22,6 +23,10 @@ export class PoolReadService implements IPoolReadService {
     @Inject(FACTORY_READ_SERVICE)
     private readonly factoryReadService: IFactoryReadService
   ) {}
+  
+  async getPoolsWithCursor(chainId: number, pageSize: number, lastId?: string): Promise<Pool[]> {
+      return this.poolProvider.getPoolsWithCursor(chainId, pageSize, lastId);
+  }
 
   async getTotalCount(
     chainId: number,

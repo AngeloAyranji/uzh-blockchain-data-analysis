@@ -25,6 +25,26 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     });
   }
 
+  async getPoolsWithCursor(
+    chainId: number,
+    pageSize: number,
+    lastId?: string
+  ): Promise<Pool[]> {
+    const pools = await this.uniswapDbHandler.pool.findMany({
+      take: pageSize,
+      skip: lastId ? 1 : 0,
+      cursor: lastId && {
+        id: lastId,
+      },
+      where: {
+        factory: {
+          chainId: chainId,
+        },
+      },
+    });
+    return this.poolMapper.mapEntitiesToDomains(pools);
+  }
+
   async getTotalCount(chainId: number, version?: VersionEnum): Promise<any> {
     const groupedPools = await this.uniswapDbHandler.pool.groupBy({
       where: {
@@ -111,6 +131,11 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     GROUP BY date
     ORDER BY date DESC`;
 
-    return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(counts, version, chainId, dateEnum);
+    return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(
+      counts,
+      version,
+      chainId,
+      dateEnum
+    );
   }
 }

@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager';
+import type { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
 import { CollectionDbModule } from '@uzh/collection-db';
 import { UniswapDbHandler } from './infra/db/uniswap-db.handler';
 import { FACTORY_READ_SERVICE } from './core/applications/analysis/factory/read/ifactory.read.service';
@@ -52,6 +55,12 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
     CollectionDbModule,
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    CacheModule.register<RedisClientOptions>({
+      isGlobal: true,
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
     }),
     BullModule.forRoot({
       redis: {

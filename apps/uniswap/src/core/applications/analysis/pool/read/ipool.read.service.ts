@@ -1,3 +1,4 @@
+import { Pool } from '../../../../../core/domains/analysis/pool';
 import { VersionEnum } from '../../../../domains/analysis/factory';
 import {
   PoolCountByDateResponse,
@@ -22,4 +23,9 @@ export interface IPoolReadService {
     dateEnum: PoolCountDateEnum,
     version: VersionEnum
   ): Promise<PoolCountByDateResponse[]>;
+  getPoolsWithCursor(
+    chainId: number,
+    pageSize: number,
+    lastId?: string,
+  ): Promise<Pool[]>;
 }
