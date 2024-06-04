@@ -70,10 +70,12 @@ export class TransformProcessor implements ITransformProcessor {
 
   @Process('SWAP_V2')
   async transformSwapV2(job: Job<SwapTransformRequest>): Promise<void> {
-    const swaps: SwapAddRequest[] = job.data.logs.map((log: Log) => {
-      const poolId = this.cacheManager.get(log.address);
+    const swaps: SwapAddRequest[] = [];
 
-      if (poolId) {
+    for (const log of job.data.logs) {
+      const poolId = await this.cacheManager.get(log.address.toLowerCase());
+
+      if (poolId != null) {
         const decodedValues = ethers.utils.defaultAbiCoder.decode(
           ['uint', 'uint', 'uint', 'uint'],
           log.data
@@ -85,7 +87,7 @@ export class TransformProcessor implements ITransformProcessor {
         const amount1Out = decodedValues[3].toString();
         const reversed = amount0In === '0' && amount1Out === '0';
 
-        return {
+        swaps.push({
           poolId: poolId,
           transactionHash: log.transactionHash,
           sender: ethers.utils
@@ -99,25 +101,27 @@ export class TransformProcessor implements ITransformProcessor {
           reversed: reversed,
           price: null,
           swapAt: new Date(log.timestamp),
-        };
+        });
       }
-    });
+    }
 
+    console.log('transformation', swaps.length);
     await this.loadQueue.add('SWAP', swaps, { removeOnComplete: true });
   }
 
   @Process('SWAP_V3')
   async transformSwapV3(job: Job<SwapTransformRequest>): Promise<void> {
-    const swaps: SwapAddRequest[] = job.data.logs.map((log: Log) => {
-      const poolId = this.cacheManager.get(log.address);
+    const swaps: SwapAddRequest[] = [];
+    for (const log of job.data.logs) {
+      const poolId = await this.cacheManager.get(log.address);
 
-      if (poolId) {
+      if (poolId != null) {
         const decodedValues = ethers.utils.defaultAbiCoder.decode(
           ['int256', 'int256', 'uint160', 'uint128', 'int24'],
           log.data
         );
 
-        return {
+        swaps.push({
           poolId: poolId,
           transactionHash: log.transactionHash,
           sender: ethers.utils
@@ -131,9 +135,9 @@ export class TransformProcessor implements ITransformProcessor {
           reversed: new BigNumber(decodedValues[0].toString()).isNegative(),
           price: this.priceFromPriceSqrtX96(decodedValues[2].toString()),
           swapAt: new Date(log.timestamp),
-        };
+        });
       }
-    });
+    }
 
     await this.loadQueue.add('SWAP', swaps, { removeOnComplete: true });
   }

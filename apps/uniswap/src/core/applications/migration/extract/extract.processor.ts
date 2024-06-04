@@ -45,7 +45,7 @@ export class ExtractProcessor implements IExtractProcessor {
 
     private readonly config: ConfigService
   ) {
-    this.startMigration();
+    // this.startMigration();
   }
 
   async startMigration() {
@@ -120,7 +120,7 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log('Extracting swaps');
     for (const factory of factories) {
       let moreLogs = true;
-      const pageSize = 100;
+      const pageSize = 250;
 
       while (moreLogs) {
         const cursor = this.getCursor('swap');

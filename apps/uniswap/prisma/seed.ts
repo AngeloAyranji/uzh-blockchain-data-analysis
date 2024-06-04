@@ -12,7 +12,7 @@ async function seedAnalysisDB(
   factoryV2Address: string,
   factoryV3Address: string
 ) {
-  await analysisPrisma.factory.upsert({
+  const y = await analysisPrisma.factory.upsert({
     where: {
       unique_chain_id_version: {
         chainId: chainId,
@@ -31,6 +31,17 @@ async function seedAnalysisDB(
         '0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9',
     },
   });
+
+  await analysisPrisma.pool.create({
+    data: {
+      id: uuidv4(),
+      poolAddress: '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc'.toLowerCase(),
+      factoryId: y.id,
+      token0: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase(),
+      token1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase(),
+      deployedAt: new Date(),
+    }
+  })
 
   await analysisPrisma.factory.upsert({
     where: {

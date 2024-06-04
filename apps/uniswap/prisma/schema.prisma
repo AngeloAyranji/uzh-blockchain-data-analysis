@@ -33,6 +33,8 @@ model Pool {
   token1         String
   deployedAt     DateTime @db.Date
   swaps          Swap[]
+
+  @@unique([poolAddress, factoryId], name: "unique_pool_address_factory_id")
 }
 
 model Swap {

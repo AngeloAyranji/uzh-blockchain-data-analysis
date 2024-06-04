@@ -28,5 +28,6 @@ export class LoadProcessor implements ILoadProcessor {
   @Process('SWAP')
   async loadSwap(job: Job<SwapAddRequest[]>): Promise<void> {
     await this.swapWriteService.addMany(job.data);
+    console.log("Loaded");
   }
 }

@@ -23,8 +23,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
     async findSwapsWithPagination(chainId: number, page: number, limit: number): Promise<PaginationContext<Swap>> {
         const offset = (page - 1) * limit;
-        const x = await this.uniswapDbHandler.swap.count();
-        console.log(x)
+
         const totalCount = await this.uniswapDbHandler.swap.count({
             where: {
                 pool: {
@@ -32,11 +31,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
                         chainId: chainId,
                     }
                 }
-            },
-            take: limit,
-            skip: offset,
-            orderBy: {
-                swapAt: 'desc',
             }
         });
 
