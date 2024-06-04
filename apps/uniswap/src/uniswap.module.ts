@@ -49,6 +49,9 @@ import { SwapMapper } from './infra/analysis/swap/mapper/swap.mapper';
 import { SWAP_READ_SERVICE } from './core/applications/analysis/swap/read/iswap.read.service';
 import { SwapReadService } from './core/applications/analysis/swap/read/swap.read.service';
 import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.provider.service';
+import { SwapReadController } from './api/swap/read/swap.read.controller';
+import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.mapper';
+import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
 
 @Module({
   imports: [
@@ -77,6 +80,7 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
   ],
   controllers: [
     PoolReadController,
+    SwapReadController,
   ],
   providers: [
     UniswapDbHandler,
@@ -134,6 +138,7 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
       provide: POOL_MAPPER,
       useClass: PoolMapper,
     },
+    // SWAP
     {
       provide: SWAP_REQUEST_MAPPER,
       useClass: SwapRequestMapper,
@@ -157,6 +162,10 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
     {
       provide: SWAP_MAPPER,
       useClass: SwapMapper,
+    },
+    {
+      provide: SWAP_CONTROLLER_READ_MAPPER,
+      useClass: SwapControllerReadMapper,
     },
     // LOG
     {

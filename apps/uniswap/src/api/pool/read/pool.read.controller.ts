@@ -3,7 +3,6 @@ import {
   Inject,
   UseInterceptors,
   Get,
-  Param,
   Query,
 } from '@nestjs/common';
 import { ResponseTransformInterceptor } from '../../interceptors/response-transform.interceptor';
