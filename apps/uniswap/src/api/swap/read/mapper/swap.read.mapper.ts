@@ -4,6 +4,7 @@ import { Swap } from "../../../../core/domains/analysis/swap";
 import { SwapApiResponse, SwapGetAllWithPaginationApiResponse } from "../dto/swap.get-all-with-pagination.api.response";
 import { PaginationContext } from "../../../../core/domains/valueobject/paginationContext";
 import { SwapGetActivePoolsApiResponse } from "../dto/swap.get-active-pools.api.response";
+import { SwapGetActiveAddressesApiResponse } from "../dto/swap.get-active-addresses.api.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -44,6 +45,16 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
                 poolAddress: activePool.poolAddress,
                 count: activePool.count,
                 percentage: activePool.percentage,
+            }
+        });
+    }
+
+    mapTopActiveAddressesToTopActiveAddressesApiResponse(activeAddresses: any[]): SwapGetActiveAddressesApiResponse[] {
+        return activeAddresses.map((activeAddress) => {
+            return {
+                address: activeAddress.address,
+                count: activeAddress.count,
+                percentage: activeAddress.percentage,
             }
         });
     }

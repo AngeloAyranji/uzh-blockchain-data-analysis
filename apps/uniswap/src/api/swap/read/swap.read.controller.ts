@@ -15,6 +15,8 @@ import { ISwapControllerReadMapper, SWAP_CONTROLLER_READ_MAPPER } from './mapper
 import { SwapGetAllWithPaginationApiResponse } from './dto/swap.get-all-with-pagination.api.response';
 import { SwapGetActivePoolsApiRequest } from './dto/swap.get-active-pools.api.request';
 import { SwapGetActivePoolsApiResponse } from './dto/swap.get-active-pools.api.response';
+import { SwapGetActiveAddressesApiResponse } from './dto/swap.get-active-addresses.api.response';
+import { SwapGetActiveAddressesApiRequest } from './dto/swap.get-active-addresses.api.request';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('swap')
@@ -37,5 +39,11 @@ export class SwapReadController {
     async getTopActivePools(@Query() query: SwapGetActivePoolsApiRequest): Promise<SwapGetActivePoolsApiResponse[]> {
         const response = await this.swapReadService.getTopActivePools(Number(query.chainId), query.version);
         return this.swapControllerReadMapper.mapTopActivePoolsToTopActivePoolsApiResponse(response);
+    }
+
+    @Get('/active-addresses')
+    async getTopActiveAddresses(@Query() query: SwapGetActiveAddressesApiRequest): Promise<SwapGetActiveAddressesApiResponse[]> {
+        const response = await this.swapReadService.getTopActiveAddresses(Number(query.chainId), query.version);
+        return this.swapControllerReadMapper.mapTopActiveAddressesToTopActiveAddressesApiResponse(response);
     }
 }

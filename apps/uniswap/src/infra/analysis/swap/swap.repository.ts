@@ -119,4 +119,47 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       };
     });
   }
+
+  async getTopActiveAddresses(
+    chainId: number,
+    version?: VersionEnum
+  ): Promise<any> {
+    const totalCount = await this.uniswapDbHandler.swap.count({
+      where: {
+        pool: {
+          factory: {
+            chainId: chainId,
+            version: version && version,
+          },
+        },
+      },
+    });
+
+    const addresses = await this.uniswapDbHandler.swap.groupBy({
+      by: ['sender'],
+      _count: {
+        sender: true,
+      },
+      where: {
+        pool: {
+          factory: {
+            chainId: chainId,
+            version: version && version,
+          },
+        },
+      },
+    });
+
+    const sortedAddresses = addresses
+      .sort((a, b) => b._count.sender - a._count.sender)
+      .slice(0, 5);
+
+    return sortedAddresses.map((address) => {
+      return {
+        address: address.sender,
+        count: address._count.sender,
+        percentage: address._count.sender / totalCount,
+      };
+    });
+  }
 }
