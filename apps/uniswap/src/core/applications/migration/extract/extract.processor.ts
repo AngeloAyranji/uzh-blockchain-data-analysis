@@ -124,20 +124,18 @@ export class ExtractProcessor implements IExtractProcessor {
 
       while (moreLogs) {
         const cursor = this.getCursor('swap');
-
         const logs = await this.logReadService.findLogsByTopic0(
           factory.swapSignature,
           pageSize,
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-
+        console.log(logs.length)
         if (logs.length > 0) {
           this.transformQueue.add(
             `SWAP_${factory.version}`,
             {
               logs: logs,
-              factoryId: factory.id,
             },
             {
               removeOnComplete: true,

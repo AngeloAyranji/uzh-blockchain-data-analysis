@@ -91,7 +91,18 @@ async function seedCollectionDB() {
   JOIN
       bsc_transaction_logs l ON t.transaction_hash = l.transaction_hash;
   `;
-  console.log("Creating indexes")
+  console.log('Creating indexes');
+  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS eth_idx_topic_0
+    ON eth_transaction_logs (topic_0)
+    WHERE topic_0 = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822' 
+       OR topic_0 = '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67';
+    `;
+
+  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_topic_0
+    ON bsc_transaction_logs (topic_0)
+    WHERE topic_0 = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822' 
+       OR topic_0 = '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67';
+    `;
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS eth_idx_address_topic_0
     ON eth_transaction_logs (address, topic_0);
     `;
@@ -99,7 +110,18 @@ async function seedCollectionDB() {
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_address_topic_0
     ON bsc_transaction_logs (address, topic_0);
     `;
-  console.log("Indexes created")
+  
+  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_eth_topic_transhash_logindex_partial
+  ON eth_transaction_logs (topic_0, transaction_hash, log_index)
+  WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
+  `;
+
+await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
+  ON bsc_transaction_logs (topic_0, transaction_hash, log_index)
+  WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
+  `;
+
+  console.log('Indexes created');
 }
 
 async function main() {

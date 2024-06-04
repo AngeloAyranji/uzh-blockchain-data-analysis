@@ -55,7 +55,7 @@ export class LogRepository implements ILogProvider {
   ): Promise<Log[]> {
     let query = `
         SELECT * FROM "eth_transaction_logs_with_timestamp"
-        WHERE "topic_0" = '${topic0}' 
+        WHERE "topic_0" = '${topic0}'
     `;
 
     if (lastTransactionHash && lastLogIndex) {
