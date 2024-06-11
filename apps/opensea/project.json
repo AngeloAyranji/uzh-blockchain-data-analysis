@@ -1,0 +1,63 @@
+{
+  "name": "opensea",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/opensea/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/opensea",
+        "main": "apps/opensea/src/main.ts",
+        "tsConfig": "apps/opensea/tsconfig.app.json",
+        "webpackConfig": "apps/opensea/webpack.config.js",
+        "generatePackageJson": true,
+        "additionalEntryPoints": [
+          {
+            "entryName": "seed",
+            "entryPath": "apps/opensea/prisma/seed.ts"
+          }
+        ]
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      },
+      "dependsOn": []
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "opensea:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "opensea:build:development"
+        },
+        "production": {
+          "buildTarget": "opensea:build:production"
+        }
+      },
+      "dependsOn": []
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "fix": true
+      }
+    },
+    "seed": {
+      "executor": "nx:run-script",
+      "options": {
+        "script": "node ../../dist/apps/opensea/seed.js"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}
