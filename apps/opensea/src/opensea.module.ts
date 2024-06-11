@@ -8,6 +8,12 @@ import { LogReadService } from './core/applications/collection/log/read/log.read
 import { LogRepository } from './infra/log/log.repository';
 import { LOG_MAPPER } from './infra/log/mapper/ilog.mapper';
 import { LogMapper } from './infra/log/mapper/log.mapper';
+import { EXTRACT_PROCESSOR } from './core/applications/migration/extract/iextract.processor';
+import { ExtractProcessor } from './core/applications/migration/extract/extract.processor';
+import { TRANSFORM_PROCESSOR } from './core/applications/migration/transform/itransform.processor';
+import { TransformProcessor } from './core/applications/migration/transform/transform.processor';
+import { LOAD_PROCESSOR } from './core/applications/migration/load/iload.processor';
+import { LoadProcessor } from './core/applications/migration/load/load.processor';
 
 @Module({
   imports: [
@@ -30,6 +36,18 @@ import { LogMapper } from './infra/log/mapper/log.mapper';
   ],
   controllers: [],
   providers: [
+    {
+      provide: EXTRACT_PROCESSOR,
+      useClass: ExtractProcessor,
+    },
+    {
+      provide: TRANSFORM_PROCESSOR,
+      useClass: TransformProcessor,
+    },
+    {
+      provide: LOAD_PROCESSOR,
+      useClass: LoadProcessor,
+    },
     // LOG
     {
       provide: LOG_READ_SERVICE,
