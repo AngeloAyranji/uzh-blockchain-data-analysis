@@ -39,19 +39,32 @@ export class PoolMapper implements IPoolMapper {
   }
 
   mapPoolCountByDateToPoolCountByDateResponse(
-    poolCountByDate: any[],
-    version: VersionEnum,
-    chainId: number,
-    dateType: PoolCountDateEnum
+    counts: any[]
   ): PoolCountByDateResponse[] {
-    return poolCountByDate.map((poolCount) => {
-      return {
-        date: poolCount.date,
-        totalCount: Number(poolCount.totalCount),
-        version: version,
-        chainId: chainId,
-        poolCountDateEnum: dateType,
-      };
+    const dateMap: Map<string, { totalCountV2: bigint; totalCountV3: bigint }> = new Map();
+
+    counts.forEach(count => {
+      const date = count.date.toISOString().split('T')[0]; // Convert date to string format
+      const version = count.version;
+      const totalCount = count.totalcount;
+      console.log(date, version, totalCount)
+      if (!dateMap.has(date)) {
+        dateMap.set(date, { totalCountV2: 0n, totalCountV3: 0n });
+      }
+  
+      const dateCounts = dateMap.get(date);
+      if (version === 'V2') {
+        dateCounts.totalCountV2 = totalCount;
+      } else if (version === 'V3') {
+        dateCounts.totalCountV3 = totalCount;
+      }
     });
+  
+    // Convert map to array of responses
+    return Array.from(dateMap.entries()).map(([date, counts]) => ({
+      date,
+      totalCountV2: counts.totalCountV2,
+      totalCountV3: counts.totalCountV3,
+    }));
   }
 }

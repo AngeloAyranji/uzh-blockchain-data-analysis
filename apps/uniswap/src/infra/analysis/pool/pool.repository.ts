@@ -16,7 +16,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     @Inject(POOL_MAPPER)
     private readonly poolMapper: IPoolMapper,
     private readonly uniswapDbHandler: UniswapDbHandler
-  ) {}
+  ) { }
 
   async createMany(pools: Pool[]): Promise<void> {
     const entities = this.poolMapper.mapDomainsToEntities(pools);
@@ -35,11 +35,11 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
         poolAddress: poolAddress,
       },
     });
-    
+
     if (!pool) {
       return null;
     }
-    
+
     return this.poolMapper.mapEntityToDomain(pool);
   }
 
@@ -143,11 +143,16 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     version: VersionEnum
   ): Promise<PoolCountByDateResponse[]> {
     const counts: any[] = await this.uniswapDbHandler.$queryRaw`
-    SELECT DATE_TRUNC(${dateEnum}, "deployedAt") AS date, COUNT(*) AS totalCount FROM "Pool"
-    JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
-    WHERE "Factory"."chainId" = ${chainId} AND "Factory"."version" = ${version}::"Version"
-    GROUP BY date
-    ORDER BY date DESC`;
+  SELECT 
+    DATE_TRUNC(${dateEnum}, "deployedAt") AS date, 
+    "Factory"."version" AS version, 
+    COUNT(*) AS totalCount 
+  FROM "Pool"
+  JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
+  WHERE "Factory"."chainId" = ${chainId}
+  GROUP BY date, "Factory"."version"
+  ORDER BY date DESC, "Factory"."version"`;
+    console.log(counts);
 
     return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(
       counts,

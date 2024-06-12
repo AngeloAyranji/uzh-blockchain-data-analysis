@@ -38,11 +38,9 @@ export class PoolControllerReadMapper implements IPoolControllerReadMapper {
   ): PoolCountByDateApiResponse[] {
     return response.map((res) => {
       return {
-        chainId: res.chainId,
-        version: res.version,
-        totalCount: res.totalCount,
+        totalCountV2: Number(res.totalCountV2),
+        totalCountV3: Number(res.totalCountV3),
         date: res.date,
-        poolCountDateEnum: res.poolCountDateEnum,
       };
     });
   }

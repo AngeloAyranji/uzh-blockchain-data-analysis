@@ -122,8 +122,6 @@ model bsc_transaction_logs {
   updated_at       DateTime? @db.Timestamp(6)
 
   @@id([transaction_hash, log_index])
-  @@index([address, topic_0], map: "bsc_idx_address_topic_0")
-  @@index([topic_0], map: "bsc_idx_topic_0")
 }
 
 model etc_block {
@@ -354,6 +352,4 @@ model eth_transaction_logs {
   updated_at       DateTime? @db.Timestamp(6)
 
   @@id([transaction_hash, log_index])
-  @@index([address, topic_0], map: "eth_idx_address_topic_0")
-  @@index([topic_0], map: "eth_idx_topic_0")
 }

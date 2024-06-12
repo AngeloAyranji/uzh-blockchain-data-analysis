@@ -45,7 +45,7 @@ export class ExtractProcessor implements IExtractProcessor {
 
     private readonly config: ConfigService
   ) {
-    // this.startMigration();
+    this.startMigration();
   }
 
   async startMigration() {

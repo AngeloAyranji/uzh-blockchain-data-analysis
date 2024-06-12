@@ -1,11 +1,9 @@
 import { VersionEnum } from "../../../../../domains/analysis/factory";
 
 export class PoolCountByDateResponse {
-    chainId: number;
-    version: VersionEnum;
-    totalCount: number;
-    date: Date;
-    poolCountDateEnum: PoolCountDateEnum;
+    totalCountV2: bigint;
+    totalCountV3: bigint;
+    date: string;
 }
 
 export enum PoolCountDateEnum {

@@ -19,7 +19,7 @@ import { PoolCountByDateApiRequest } from './dto/pool.count-by-date.api.request'
 import { PoolTokensWithMostPoolsApiResponse } from './dto/pool.get-most-tokens-pools.api.response';
 import { PoolCountByDateApiResponse } from './dto/pool.count-by-date.api.response';
 
-@UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
+@UseInterceptors(ResponseTransformInterceptor)
 @Controller('pool')
 export class PoolReadController {
   constructor(

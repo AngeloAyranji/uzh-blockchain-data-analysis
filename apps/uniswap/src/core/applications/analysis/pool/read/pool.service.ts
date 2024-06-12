@@ -95,6 +95,7 @@ export class PoolReadService implements IPoolReadService {
       dateEnum,
       version
     );
+    
     return result;
   }
 }
