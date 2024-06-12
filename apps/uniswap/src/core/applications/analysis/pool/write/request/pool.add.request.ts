@@ -1,7 +1,7 @@
 export class PoolAddRequest {
     poolAddress: string;
     factoryId: string;
-    token0: string;
-    token1: string;
+    token0Id: string;
+    token1Id: string;
     deployedAt: Date;
 }

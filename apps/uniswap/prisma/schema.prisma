@@ -25,16 +25,31 @@ model Factory {
 }
 
 model Pool {
-  id             String   @id
-  poolAddress    String   
-  factory        Factory  @relation(fields: [factoryId], references: [id])
-  factoryId      String
-  token0         String
-  token1         String
-  deployedAt     DateTime @db.Date
-  swaps          Swap[]
+  id          String   @id
+  poolAddress String
+  factory     Factory  @relation(fields: [factoryId], references: [id])
+  factoryId   String
+  token0      Token    @relation("Token0Relation", fields: [token0Id], references: [id])
+  token0Id    String
+  token1      Token    @relation("Token1Relation", fields: [token1Id], references: [id])
+  token1Id    String
+  deployedAt  DateTime @db.Date
+  swaps       Swap[]
 
   @@unique([poolAddress, factoryId], name: "unique_pool_address_factory_id")
+}
+
+model Token {
+  id       String @id
+  address  String
+  name     String
+  symbol   String
+  decimals Int
+  chainId  Int
+  pools0   Pool[] @relation(name: "Token0Relation")
+  pools1   Pool[] @relation(name: "Token1Relation")
+
+  @@unique([chainId, address], name: "unique_chain_id_address")
 }
 
 model Swap {

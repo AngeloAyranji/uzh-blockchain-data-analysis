@@ -10,8 +10,8 @@ export class PoolRequestMapper implements IPoolRequestMapper {
     return {
       id: new uuidv4(),
       poolAddress: request.poolAddress,
-      token0: request.token0,
-      token1: request.token1,
+      token0Id: request.token0Id,
+      token1Id: request.token1Id,
       factoryId: request.factoryId,
       deployedAt: request.deployedAt,
     };

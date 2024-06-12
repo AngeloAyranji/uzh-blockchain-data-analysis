@@ -53,6 +53,17 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
 import { SwapReadController } from './api/swap/read/swap.read.controller';
 import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.mapper';
 import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
+import { TOKEN_MAPPER } from './infra/analysis/token/mapper/itoken.mapper';
+import { TokenMapper } from './infra/analysis/token/mapper/token.mapper';
+import { TOKEN_MODIFIER } from './core/applications/analysis/token/write/itoken.modifier.service';
+import { TokenRepository } from './infra/analysis/token/token.repository';
+import { TOKEN_REQUEST_MAPPER } from './core/applications/analysis/token/write/mapper/itoken.request.mapper';
+import { TokenRequestMapper } from './core/applications/analysis/token/write/mapper/token.request.mapper';
+import { TOKEN_WRITE_SERVICE } from './core/applications/analysis/token/write/itoken.write.service';
+import { TokenWriteService } from './core/applications/analysis/token/write/token.write.service';
+import { TOKEN_READ_SERVICE } from './core/applications/analysis/token/read/itoken.read.service';
+import { TokenReadService } from './core/applications/analysis/token/read/token.read.service';
+import { TOKEN_PROVIDER } from './core/applications/analysis/token/read/itoken.provider';
 
 @Module({
   imports: [
@@ -184,6 +195,31 @@ import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mappe
     {
       provide: LOG_MAPPER,
       useClass: LogMapper,
+    },
+    // TOKEN
+    {
+      provide: TOKEN_MAPPER,
+      useClass: TokenMapper,
+    },
+    {
+      provide: TOKEN_MODIFIER,
+      useClass: TokenRepository,
+    },
+    {
+      provide: TOKEN_PROVIDER,
+      useClass: TokenRepository,
+    },
+    {
+      provide: TOKEN_REQUEST_MAPPER,
+      useClass: TokenRequestMapper,
+    },
+    {
+      provide: TOKEN_WRITE_SERVICE,
+      useClass: TokenWriteService,
+    },
+    {
+      provide: TOKEN_READ_SERVICE,
+      useClass: TokenReadService,
     },
   ],
 })

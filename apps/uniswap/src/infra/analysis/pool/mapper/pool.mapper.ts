@@ -12,8 +12,8 @@ export class PoolMapper implements IPoolMapper {
     return {
       id: entity.id,
       poolAddress: entity.poolAddress,
-      token0: entity.token0,
-      token1: entity.token1,
+      token0Id: entity.token0Id,
+      token1Id: entity.token1Id,
       factoryId: entity.factoryId,
       deployedAt: entity.deployedAt,
     };
@@ -27,8 +27,8 @@ export class PoolMapper implements IPoolMapper {
     return {
       id: uuidv4(),
       poolAddress: domain.poolAddress,
-      token0: domain.token0,
-      token1: domain.token1,
+      token0Id: domain.token0Id,
+      token1Id: domain.token1Id,
       factoryId: domain.factoryId,
       deployedAt: domain.deployedAt,
     };
@@ -47,7 +47,7 @@ export class PoolMapper implements IPoolMapper {
       const date = count.date.toISOString().split('T')[0]; // Convert date to string format
       const version = count.version;
       const totalCount = count.totalcount;
-      console.log(date, version, totalCount)
+      
       if (!dateMap.has(date)) {
         dateMap.set(date, { totalCountV2: 0n, totalCountV3: 0n });
       }
