@@ -15,7 +15,14 @@
     "ethers": "5.7.0",
     "rxjs": "^7.8.0",
     "class-validator": "^0.14.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "class-transformer": "^0.5.1",
+    "@nestjs/cache-manager": "^2.2.2",
+    "simple-json-db": "^2.0.0",
+    "cache-manager": "4.1.0",
+    "bignumber.js": "^9.1.2",
+    "redis": "3.0.0",
+    "cache-manager-redis-store": "2.0.0"
   },
   "devDependencies": {}
 }
