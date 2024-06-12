@@ -17,6 +17,8 @@ import { SwapGetActivePoolsApiRequest } from './dto/swap.get-active-pools.api.re
 import { SwapGetActivePoolsApiResponse } from './dto/swap.get-active-pools.api.response';
 import { SwapGetActiveAddressesApiResponse } from './dto/swap.get-active-addresses.api.response';
 import { SwapGetActiveAddressesApiRequest } from './dto/swap.get-active-addresses.api.request';
+import { SwapGetPriceApiRequest } from './dto/swap.get-price.api.request';
+import { SwapGetPriceApiResponse } from './dto/swap.get-price.api.response';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('swap')
@@ -45,5 +47,11 @@ export class SwapReadController {
     async getTopActiveAddresses(@Query() query: SwapGetActiveAddressesApiRequest): Promise<SwapGetActiveAddressesApiResponse[]> {
         const response = await this.swapReadService.getTopActiveAddresses(Number(query.chainId), query.version);
         return this.swapControllerReadMapper.mapTopActiveAddressesToTopActiveAddressesApiResponse(response);
+    }
+
+    @Get('/daily-price')
+    async getDailyPriceOfPool(@Query() query: SwapGetPriceApiRequest): Promise<SwapGetPriceApiResponse[]> {
+        const response = await this.swapReadService.getDailyPriceOfPool(Number(query.chainId), query.poolAddress);
+        return this.swapControllerReadMapper.mapPricetoPriceApiResponse(response);
     }
 }

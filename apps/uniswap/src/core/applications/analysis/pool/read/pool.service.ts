@@ -28,6 +28,11 @@ export class PoolReadService implements IPoolReadService {
       return this.poolProvider.getPoolsWithCursor(chainId, pageSize, lastId);
   }
 
+  async checkIfPoolIsVersion(chainId: number, poolAddress: string, version: VersionEnum): Promise<boolean> {
+    const pool = await this.poolProvider.getPoolByChainIdAddressAndVersion(chainId, poolAddress, version);
+    return !!pool;
+  }
+
   async getTotalCount(
     chainId: number,
     version?: VersionEnum

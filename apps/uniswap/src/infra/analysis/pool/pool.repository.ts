@@ -25,6 +25,24 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     });
   }
 
+  async getPoolByChainIdAddressAndVersion(chainId: number, poolAddress: string, version: VersionEnum): Promise<Pool> {
+    const pool = await this.uniswapDbHandler.pool.findFirst({
+      where: {
+        factory: {
+          chainId: chainId,
+          version: version,
+        },
+        poolAddress: poolAddress,
+      },
+    });
+    
+    if (!pool) {
+      return null;
+    }
+    
+    return this.poolMapper.mapEntityToDomain(pool);
+  }
+
   async getPoolsWithCursor(
     chainId: number,
     pageSize: number,

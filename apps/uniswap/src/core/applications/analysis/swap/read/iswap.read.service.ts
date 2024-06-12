@@ -12,4 +12,5 @@ export interface ISwapReadService {
   ): Promise<PaginationContext<Swap>>;
   getTopActivePools(chainId: number, version?: VersionEnum): Promise<any>;
   getTopActiveAddresses(chainId: number, version?: VersionEnum): Promise<any>;
+  getDailyPriceOfPool(chainId: number, poolAddress: string): Promise<any>;
 }

@@ -5,6 +5,7 @@ import { SwapApiResponse, SwapGetAllWithPaginationApiResponse } from "../dto/swa
 import { PaginationContext } from "../../../../core/domains/valueobject/paginationContext";
 import { SwapGetActivePoolsApiResponse } from "../dto/swap.get-active-pools.api.response";
 import { SwapGetActiveAddressesApiResponse } from "../dto/swap.get-active-addresses.api.response";
+import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -55,6 +56,15 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
                 address: activeAddress.address,
                 count: activeAddress.count,
                 percentage: activeAddress.percentage,
+            }
+        });
+    }
+
+    mapPricetoPriceApiResponse(price: any[]): SwapGetPriceApiResponse[] {
+        return price.map((price) => {
+            return {
+                date: price.date,
+                averagePrice: price.averagePrice,
             }
         });
     }

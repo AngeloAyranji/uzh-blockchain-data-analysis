@@ -22,6 +22,11 @@ export interface IPoolProvider {
   getPoolsWithCursor(
     chainId: number,
     pageSize: number,
-    lastId?: string,
+    lastId?: string
   ): Promise<Pool[]>;
+  getPoolByChainIdAddressAndVersion(
+    chainId: number,
+    poolAddress: string,
+    version: VersionEnum
+  ): Promise<Pool>;
 }

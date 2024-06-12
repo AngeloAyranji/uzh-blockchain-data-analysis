@@ -162,4 +162,30 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       };
     });
   }
+
+  async getDailyPriceOfPool(
+    chainId: number,
+    poolAddress: string
+  ): Promise<any> {
+    const result = await this.uniswapDbHandler.$queryRaw`
+    SELECT
+      DATE("Swap"."swapAt") as date,
+      AVG(CAST("Swap"."price" as FLOAT)) as averagePrice
+    FROM
+      "Swap"
+    JOIN
+      "Pool" ON "Swap"."poolId" = "Pool"."id"
+    JOIN
+      "Factory" ON "Pool"."factoryId" = "Factory"."id"
+    WHERE
+      "Pool"."poolAddress" = ${poolAddress} AND
+      "Factory"."chainId" = ${chainId}
+    GROUP BY
+      DATE("Swap"."swapAt")
+    ORDER BY
+      DATE("Swap"."swapAt");
+  `;
+
+    return result;
+  }
 }

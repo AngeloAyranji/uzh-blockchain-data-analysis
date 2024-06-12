@@ -26,6 +26,11 @@ export interface IPoolReadService {
   getPoolsWithCursor(
     chainId: number,
     pageSize: number,
-    lastId?: string,
+    lastId?: string
   ): Promise<Pool[]>;
+  checkIfPoolIsVersion(
+    chainId: number,
+    poolAddress: string,
+    version: VersionEnum
+  ): Promise<boolean>;
 }

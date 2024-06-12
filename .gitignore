@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-
+/apps/opensea/contracts
 # json db
 /apps/uniswap/json-db.json
+/apps/opensea/json-db.json
 
 #dumps
 dumps
