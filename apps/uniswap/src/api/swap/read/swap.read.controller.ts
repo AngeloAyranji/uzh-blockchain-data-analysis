@@ -4,7 +4,8 @@ import {
     UseInterceptors,
     Get,
     Query,
-  } from '@nestjs/common';
+    } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { ResponseTransformInterceptor } from '../../interceptors/response-transform.interceptor';
 import {
     ISwapReadService,
@@ -20,7 +21,7 @@ import { SwapGetActiveAddressesApiRequest } from './dto/swap.get-active-addresse
 import { SwapGetPriceApiRequest } from './dto/swap.get-price.api.request';
 import { SwapGetPriceApiResponse } from './dto/swap.get-price.api.response';
 
-@UseInterceptors(ResponseTransformInterceptor)
+@UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
 @Controller('swap')
 export class SwapReadController {
     constructor(
@@ -31,24 +32,28 @@ export class SwapReadController {
         private readonly swapControllerReadMapper: ISwapControllerReadMapper,
     ) {}
 
+    @CacheTTL(600)
     @Get('/all')
     async getAllSwaps(@Query() query: SwapGetAllWithPaginationApiRequest): Promise<SwapGetAllWithPaginationApiResponse> {
         const response = await this.swapReadService.findSwapsWithPagination(Number(query.chainId), Number(query.page), Number(query.limit));
         return this.swapControllerReadMapper.mapPaginatedSwapsToPaginatedSwapsApiResponse(response);
     }
 
+    @CacheTTL(600)
     @Get('/active-pools')
     async getTopActivePools(@Query() query: SwapGetActivePoolsApiRequest): Promise<SwapGetActivePoolsApiResponse[]> {
         const response = await this.swapReadService.getTopActivePools(Number(query.chainId), query.version);
         return this.swapControllerReadMapper.mapTopActivePoolsToTopActivePoolsApiResponse(response);
     }
 
+    @CacheTTL(600)
     @Get('/active-addresses')
     async getTopActiveAddresses(@Query() query: SwapGetActiveAddressesApiRequest): Promise<SwapGetActiveAddressesApiResponse[]> {
         const response = await this.swapReadService.getTopActiveAddresses(Number(query.chainId), query.version);
         return this.swapControllerReadMapper.mapTopActiveAddressesToTopActiveAddressesApiResponse(response);
     }
 
+    @CacheTTL(600)
     @Get('/daily-price')
     async getDailyPriceOfPool(@Query() query: SwapGetPriceApiRequest): Promise<SwapGetPriceApiResponse[]> {
         const response = await this.swapReadService.getDailyPriceOfPool(Number(query.chainId), query.poolAddress);
