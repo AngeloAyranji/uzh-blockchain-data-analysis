@@ -7,6 +7,7 @@ async function bootstrap() {
 
   const globalPrefix = 'api/opensea';
   app.setGlobalPrefix(globalPrefix);
+  app.enableCors();
 
   const port = 4001;
   

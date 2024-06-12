@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const globalPrefix = 'api/uniswap';
   app.setGlobalPrefix(globalPrefix);
-
+  app.enableCors();
   const port = 4000;
 
   await app.listen(port);
