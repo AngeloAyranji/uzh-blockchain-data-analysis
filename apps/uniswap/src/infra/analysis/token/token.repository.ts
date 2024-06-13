@@ -3,7 +3,7 @@ import { ITokenModifier } from "../../../core/applications/analysis/token/write/
 import { ITokenMapper, TOKEN_MAPPER } from "./mapper/itoken.mapper";
 import { UniswapDbHandler } from "../../db/uniswap-db.handler";
 import { Token } from "../../../core/domains/analysis/token";
-import { ITokenProvider } from "apps/uniswap/src/core/applications/analysis/token/read/itoken.provider";
+import { ITokenProvider } from "../../../core/applications/analysis/token/read/itoken.provider";
 
 @Injectable()
 export class TokenRepository implements ITokenModifier, ITokenProvider {

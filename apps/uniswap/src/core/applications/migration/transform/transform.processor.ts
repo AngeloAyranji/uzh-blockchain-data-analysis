@@ -38,7 +38,7 @@ export class TransformProcessor implements ITransformProcessor {
   async transformPoolCreatedV2(
     job: Job<PoolCreatedTransformRequest>
   ): Promise<void> {
-    const pools: any[] = job.data.logs.map((log: Log) => {
+    const pools: PoolAddRequest[] = job.data.logs.map((log: Log) => {
 
       const token0Address = ethers.utils
       .getAddress('0x' + log.topics[0].slice(26))
@@ -47,17 +47,6 @@ export class TransformProcessor implements ITransformProcessor {
       const token1Address = ethers.utils
       .getAddress('0x' + log.topics[1].slice(26))
       .toLowerCase();
-
-      // const token0Exists = await this.tokenReadService.checkIfTokenExistsByChainIdAndAddress(1, token0Address);
-      // const token1Exists = await this.tokenReadService.checkIfTokenExistsByChainIdAndAddress(1, token1Address);
-
-      // if (!token0Exists) {
-      //   await this.retrieveTokenMetadata(token0Address);
-      // } else {
-      //   const token0 = await this.tokenReadService.findByChainIdAndAddress(1, token0Address);
-      // }
-
-
 
       return {
         poolAddress: ethers.utils

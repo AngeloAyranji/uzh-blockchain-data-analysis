@@ -12,8 +12,8 @@ export class PoolMapper implements IPoolMapper {
     return {
       id: entity.id,
       poolAddress: entity.poolAddress,
-      token0Id: entity.token0Id,
-      token1Id: entity.token1Id,
+      token0: entity.token0,
+      token1: entity.token1,
       factoryId: entity.factoryId,
       deployedAt: entity.deployedAt,
     };
@@ -27,8 +27,8 @@ export class PoolMapper implements IPoolMapper {
     return {
       id: uuidv4(),
       poolAddress: domain.poolAddress,
-      token0Id: domain.token0Id,
-      token1Id: domain.token1Id,
+      token0: domain.token0,
+      token1: domain.token1,
       factoryId: domain.factoryId,
       deployedAt: domain.deployedAt,
     };

@@ -91,9 +91,9 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
   ): Promise<any[]> {
     // Aggregate pools where the token appears as token0
     const token0Counts = await this.uniswapDbHandler.pool.groupBy({
-      by: ['token0Id'],
+      by: ['token0'],
       _count: {
-        token0Id: true,
+        token0: true,
       },
       where: {
         factory: {
@@ -105,9 +105,9 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
 
     // Aggregate pools where the token appears as token1
     const token1Counts = await this.uniswapDbHandler.pool.groupBy({
-      by: ['token1Id'],
+      by: ['token1'],
       _count: {
-        token1Id: true,
+        token1: true,
       },
       where: {
         factory: {
@@ -120,12 +120,12 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     // Combine both counts into a single list
     const combinedCounts: { [token: string]: number } = {};
     token0Counts.forEach((item) => {
-      combinedCounts[item.token0Id] =
-        (combinedCounts[item.token0Id] || 0) + item._count.token0Id;
+      combinedCounts[item.token0] =
+        (combinedCounts[item.token0] || 0) + item._count.token0;
     });
     token1Counts.forEach((item) => {
-      combinedCounts[item.token1Id] =
-        (combinedCounts[item.token1Id] || 0) + item._count.token1Id;
+      combinedCounts[item.token1] =
+        (combinedCounts[item.token1] || 0) + item._count.token1;
     });
 
     // Convert the combined counts object to an array and sort by count
