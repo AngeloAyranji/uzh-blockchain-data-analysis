@@ -9,6 +9,8 @@ import {
 import { PoolAddRequest } from '../../analysis/pool/write/request/pool.add.request';
 import { SwapAddRequest } from '../../analysis/swap/write/request/swap.add.request';
 import { ISwapWriteService, SWAP_WRITE_SERVICE } from '../../analysis/swap/write/iswap.write.service';
+import { ITokenWriteService, TOKEN_WRITE_SERVICE } from '../../analysis/token/write/itoken.write.service';
+import { TokenAddRequest } from '../../analysis/token/write/request/token.add.request';
 
 @Processor('load')
 export class LoadProcessor implements ILoadProcessor {
@@ -17,7 +19,10 @@ export class LoadProcessor implements ILoadProcessor {
     private readonly poolWriteService: IPoolWriteService,
 
     @Inject(SWAP_WRITE_SERVICE)
-    private readonly swapWriteService: ISwapWriteService
+    private readonly swapWriteService: ISwapWriteService,
+
+    @Inject(TOKEN_WRITE_SERVICE)
+    private readonly tokenWriteService: ITokenWriteService,
   ) {}
 
   @Process('POOL_CREATED')
@@ -28,6 +33,10 @@ export class LoadProcessor implements ILoadProcessor {
   @Process('SWAP')
   async loadSwap(job: Job<SwapAddRequest[]>): Promise<void> {
     await this.swapWriteService.addMany(job.data);
-    console.log("Loaded");
+  }
+
+  @Process('TOKEN')
+  async loadToken(job: Job<TokenAddRequest>): Promise<void> {
+    await this.tokenWriteService.add(job.data);
   }
 }

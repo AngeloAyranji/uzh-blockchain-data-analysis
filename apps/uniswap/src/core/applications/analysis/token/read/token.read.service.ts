@@ -13,6 +13,7 @@ export class TokenReadService implements ITokenReadService {
 
     async checkIfTokenExistsByChainIdAndAddress(chainId: number, address: string): Promise<boolean> {
         const tokenExists = await  this.tokenProvider.findTokenByChainIdAndAddress(chainId, address);
+        
         return !!tokenExists;
     }
 

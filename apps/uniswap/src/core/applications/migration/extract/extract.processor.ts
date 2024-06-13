@@ -63,7 +63,7 @@ export class ExtractProcessor implements IExtractProcessor {
         if (phase === 'SWAP') {
           const chainId = this.retreiveChainId();
           const factories = await this.factoryReadService.findAllByChainId(chainId);
-          await this.extractSwaps(factories);
+          // await this.extractSwaps(factories);
         }
       }
     }, 15000)
@@ -85,7 +85,7 @@ export class ExtractProcessor implements IExtractProcessor {
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-
+        
         if (logs.length > 0) {
           // TODO: map logs to PairCreatedRequest
           this.transformQueue.add(
@@ -93,6 +93,7 @@ export class ExtractProcessor implements IExtractProcessor {
             {
               logs: logs,
               factoryId: factory.id,
+              chainId: factory.chainId,
             },
             {
               removeOnComplete: true,

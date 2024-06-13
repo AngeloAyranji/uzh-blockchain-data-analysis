@@ -116,7 +116,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
         },
       },
     });
-
+    console.log(token0Counts, token1Counts)
     // Combine both counts into a single list
     const combinedCounts: { [token: string]: number } = {};
     token0Counts.forEach((item) => {

@@ -18,6 +18,7 @@ export class TokenRepository implements ITokenModifier, ITokenProvider {
         await this.uniswapDbHandler.token.create({
             data: entity
         });
+        console.log("added")
     }
 
     async findTokenByChainIdAndAddress(chainId: number, address: string): Promise<Token> {
