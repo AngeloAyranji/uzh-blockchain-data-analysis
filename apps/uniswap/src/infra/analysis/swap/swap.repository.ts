@@ -91,31 +91,33 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       },
     });
 
-    const pools = await this.uniswapDbHandler.swap.groupBy({
-      by: ['poolId'],
-      _count: {
-        poolId: true,
-      },
-      where: {
-        pool: {
-          factory: {
-            chainId: chainId,
-            version: version && version,
-          },
-        },
-      },
-    });
+    const query = `
+    SELECT 
+        p."id" AS poolId, 
+        p."poolAddress" AS poolAddress, 
+        COUNT(s."id") AS swapCount
+    FROM 
+        "Swap" s
+    JOIN 
+        "Pool" p ON s."poolId" = p."id"
+    JOIN 
+        "Factory" f ON p."factoryId" = f."id"
+    WHERE 
+        f."chainId" = ${chainId}
+        ${version ? `AND f."version" = '${version}'` : ''}
+    GROUP BY 
+        p."id"
+    ORDER BY 
+        swapCount DESC
+    LIMIT 5
+`;
+    const pools: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
 
-    const sortedTokens = pools
-      .sort((a, b) => b._count.poolId - a._count.poolId)
-      .slice(0, 5);
-
-    // TODO: here should be poolAddress no ID
-    return sortedTokens.map((pool) => {
+    return pools.map((pool) => {
       return {
-        poolAddress: pool.poolId,
-        count: pool._count.poolId,
-        percentage: pool._count.poolId / totalCount,
+        poolAddress: pool.pooladdress,
+        count: Number(pool.swapcount),
+        percentage: Number(pool.swapcount) / totalCount,
       };
     });
   }
