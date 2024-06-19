@@ -44,7 +44,7 @@
           "buildTarget": "uniswap:build:production"
         }
       },
-      "dependsOn": ["seed"]
+      "dependsOn": []
     },
     "lint": {
       "executor": "@nx/eslint:lint",

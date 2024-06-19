@@ -1,4 +1,4 @@
-import { $Enums, Swap } from '@prisma/client-uniswap';
+import { Swap } from '@prisma/client-uniswap';
 
 export class SwapEntity implements Swap {
   id: string;

@@ -7,6 +7,7 @@ import { ISwapProvider } from '../../../core/applications/analysis/swap/read/isw
 import { PaginationContext } from '../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../core/domains/analysis/factory';
 import { SwapCriteriaFilterRequest } from './request/swap.criteria-filter.request';
+import { SwapCriteriaResponse } from '../../../core/applications/analysis/swap/read/requests/swap.criteria.response';
 
 @Injectable()
 export class SwapRepository implements ISwapModifier, ISwapProvider {
@@ -25,8 +26,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async findSwapsWithPagination(
     swapCriteriaFilterRequest: SwapCriteriaFilterRequest
-  ): Promise<PaginationContext<Swap>> {
-    console.log(swapCriteriaFilterRequest);
+  ): Promise<PaginationContext<SwapCriteriaResponse>> {
     const chainId = Number(swapCriteriaFilterRequest.chainId);
     const page = Number(swapCriteriaFilterRequest.page);
     const limit = Number(swapCriteriaFilterRequest.limit);
@@ -39,15 +39,23 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
+          OR: [
+            {
+              token0: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+            },
+            {
+              token1: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+            },
+          ],
         },
         poolId:
           swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
-        sender:
-          swapCriteriaFilterRequest.tokenIn &&
-          swapCriteriaFilterRequest.tokenIn,
-        recipient:
-          swapCriteriaFilterRequest.tokenOut &&
-          swapCriteriaFilterRequest.tokenOut,
+        // sender:
+        //   swapCriteriaFilterRequest.tokenIn &&
+        //   swapCriteriaFilterRequest.tokenIn,
+        // recipient:
+        //   swapCriteriaFilterRequest.tokenOut &&
+        //   swapCriteriaFilterRequest.tokenOut,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -65,15 +73,23 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
+          OR: [
+            {
+              token0: swapCriteriaFilterRequest.token,
+            },
+            {
+              token1: swapCriteriaFilterRequest.token,
+            },
+          ],
         },
         poolId:
           swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
-        sender:
-          swapCriteriaFilterRequest.tokenIn &&
-          swapCriteriaFilterRequest.tokenIn,
-        recipient:
-          swapCriteriaFilterRequest.tokenOut &&
-          swapCriteriaFilterRequest.tokenOut,
+        // sender:
+        //   swapCriteriaFilterRequest.tokenIn &&
+        //   swapCriteriaFilterRequest.tokenIn,
+        // recipient:
+        //   swapCriteriaFilterRequest.tokenOut &&
+        //   swapCriteriaFilterRequest.tokenOut,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -83,6 +99,23 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             swapCriteriaFilterRequest.endDate,
         },
       },
+      select: {
+        id: true,
+        pool: {
+          select: {
+            token0: true,
+            token1: true,
+          },
+        },
+        transactionHash: true,
+        sender: true,
+        recipient: true,
+        amountIn: true,
+        amountOut: true,
+        reversed: true,
+        price: true,
+        swapAt: true,
+      },
       take: limit,
       skip: offset,
       orderBy: {
@@ -90,14 +123,14 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       },
     });
 
-    const swapDomains = this.swapMapper.mapEntitiesToDomains(entities);
+    const swaps = this.swapMapper.mapSwapWithPoolEntitytoSwapWithPool(entities);
 
     const totalPages = Math.ceil(totalCount / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
-
+    console.log(swaps);
     return {
-      payload: swapDomains,
+      payload: swaps,
       pagination: {
         totalCount,
         page: page,

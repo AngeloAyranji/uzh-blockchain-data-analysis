@@ -8,6 +8,20 @@ export class SwapApiResponse {
     price: string | null;
     swapAt: Date;
 }
+export class SwapWithPoolApiResponse {
+    transactionHash: string;
+    sender: string;
+    recipient: string;
+    amountIn: string;
+    amountOut: string;
+    reversed: boolean;
+    price: string | null;
+    swapAt: Date;
+    pool: {
+        tokenIn: string;
+        tokenOut: string;
+    };
+}
 
 export class PaginationApiResponse {
     totalCount: number;
@@ -21,6 +35,6 @@ export class PaginationApiResponse {
 }
 
 export class SwapGetAllWithPaginationApiResponse {
-    swaps: SwapApiResponse[];
+    swaps: SwapWithPoolApiResponse[];
     pagination: PaginationApiResponse;
 }

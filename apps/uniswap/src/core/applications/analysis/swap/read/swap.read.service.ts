@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ISwapReadService } from './iswap.read.service';
 import { ISwapProvider, SWAP_PROVIDER } from './iswap.provider.service';
-import { Swap } from '../../../../../core/domains/analysis/swap';
 import { PaginationContext } from '../../../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../../../core/domains/analysis/factory';
 import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.service';
 import { SwapCriteriaRequest } from './requests/swap.criteria.request';
+import { SwapCriteriaResponse } from './requests/swap.criteria.response';
 
 @Injectable()
 export class SwapReadService implements ISwapReadService {
@@ -17,7 +17,7 @@ export class SwapReadService implements ISwapReadService {
     private readonly poolReadService: IPoolReadService
   ) {}
 
-  async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<Swap>> {
+  async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>> {
     return this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
   }
 

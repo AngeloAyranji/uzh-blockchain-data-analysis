@@ -8,4 +8,5 @@ export interface ISwapMapper {
     mapDomainToEntity(domain: Swap): SwapEntity;
     mapEntitiesToDomains(entities: SwapEntity[]): Swap[];
     mapDomainsToEntities(domains: Swap[]): SwapEntity[];
+    mapSwapWithPoolEntitytoSwapWithPool(entities: any[]): any[];
 }

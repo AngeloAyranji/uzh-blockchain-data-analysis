@@ -11,11 +11,7 @@ export class SwapGetAllWithPaginationApiRequest {
 
     @IsOptional()
     @IsString()
-    tokenIn?: string;
-
-    @IsOptional()
-    @IsString()
-    tokenOut?: string;
+    token?: string;
 
     @IsOptional()
     @IsDateString()
