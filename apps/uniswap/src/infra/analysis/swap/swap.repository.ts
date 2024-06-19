@@ -50,12 +50,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         },
         poolId:
           swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
-        // sender:
-        //   swapCriteriaFilterRequest.tokenIn &&
-        //   swapCriteriaFilterRequest.tokenIn,
-        // recipient:
-        //   swapCriteriaFilterRequest.tokenOut &&
-        //   swapCriteriaFilterRequest.tokenOut,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -84,12 +78,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         },
         poolId:
           swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
-        // sender:
-        //   swapCriteriaFilterRequest.tokenIn &&
-        //   swapCriteriaFilterRequest.tokenIn,
-        // recipient:
-        //   swapCriteriaFilterRequest.tokenOut &&
-        //   swapCriteriaFilterRequest.tokenOut,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
