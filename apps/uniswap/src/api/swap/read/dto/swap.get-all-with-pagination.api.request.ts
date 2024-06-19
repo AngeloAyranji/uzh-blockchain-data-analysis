@@ -1,15 +1,35 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SwapGetAllWithPaginationApiRequest {
     @IsNotEmpty()
     @IsNumber()
     chainId: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    page: number;
+    @IsOptional()
+    @IsString()
+    poolId?: string;
+
+    @IsOptional()
+    @IsString()
+    tokenIn?: string;
+
+    @IsOptional()
+    @IsString()
+    tokenOut?: string;
+
+    @IsOptional()
+    @IsDateString()
+    startDate?: Date;
+
+    @IsOptional()
+    @IsDateString()
+    endDate?: Date;
 
     @IsNotEmpty()
     @IsNumber()
-    limit: number;
+    page = 1;
+
+    @IsNotEmpty()
+    @IsNumber()
+    limit = 20;
 }

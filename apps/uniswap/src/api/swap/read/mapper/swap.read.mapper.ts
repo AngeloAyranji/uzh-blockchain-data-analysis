@@ -6,6 +6,8 @@ import { PaginationContext } from "../../../../core/domains/valueobject/paginati
 import { SwapGetActivePoolsApiResponse } from "../dto/swap.get-active-pools.api.response";
 import { SwapGetActiveAddressesApiResponse } from "../dto/swap.get-active-addresses.api.response";
 import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
+import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pagination.api.request";
+import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -68,4 +70,18 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
             }
         });
     }
+
+    mapSwapGetAllWithPaginationApiRequestToSwapCriteriaRequest(request: SwapGetAllWithPaginationApiRequest): SwapCriteriaRequest {
+        return {
+            chainId: request.chainId,
+            poolId: request.poolId,
+            tokenIn: request.tokenIn,
+            tokenOut: request.tokenOut,
+            startDate: request.startDate,
+            endDate: request.endDate,
+            page: request.page,
+            limit: request.limit,
+        }
+    }
+
 }

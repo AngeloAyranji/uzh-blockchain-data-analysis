@@ -6,6 +6,7 @@ import { Swap } from '../../../core/domains/analysis/swap';
 import { ISwapProvider } from '../../../core/applications/analysis/swap/read/iswap.provider.service';
 import { PaginationContext } from '../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../core/domains/analysis/factory';
+import { SwapCriteriaFilterRequest } from './request/swap.criteria-filter.request';
 
 @Injectable()
 export class SwapRepository implements ISwapModifier, ISwapProvider {
@@ -23,10 +24,13 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
   }
 
   async findSwapsWithPagination(
-    chainId: number,
-    page: number,
-    limit: number
+    swapCriteriaFilterRequest: SwapCriteriaFilterRequest
   ): Promise<PaginationContext<Swap>> {
+    console.log(swapCriteriaFilterRequest);
+    const chainId = Number(swapCriteriaFilterRequest.chainId);
+    const page = Number(swapCriteriaFilterRequest.page);
+    const limit = Number(swapCriteriaFilterRequest.limit);
+
     const offset = (page - 1) * limit;
 
     const totalCount = await this.uniswapDbHandler.swap.count({
@@ -35,6 +39,22 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
+        },
+        poolId:
+          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
+        sender:
+          swapCriteriaFilterRequest.tokenIn &&
+          swapCriteriaFilterRequest.tokenIn,
+        recipient:
+          swapCriteriaFilterRequest.tokenOut &&
+          swapCriteriaFilterRequest.tokenOut,
+        swapAt: {
+          gte:
+            swapCriteriaFilterRequest.startDate &&
+            swapCriteriaFilterRequest.startDate,
+          lte:
+            swapCriteriaFilterRequest.endDate &&
+            swapCriteriaFilterRequest.endDate,
         },
       },
     });
@@ -46,6 +66,22 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             chainId: chainId,
           },
         },
+        poolId:
+          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
+        sender:
+          swapCriteriaFilterRequest.tokenIn &&
+          swapCriteriaFilterRequest.tokenIn,
+        recipient:
+          swapCriteriaFilterRequest.tokenOut &&
+          swapCriteriaFilterRequest.tokenOut,
+        swapAt: {
+          gte:
+            swapCriteriaFilterRequest.startDate &&
+            swapCriteriaFilterRequest.startDate,
+          lte:
+            swapCriteriaFilterRequest.endDate &&
+            swapCriteriaFilterRequest.endDate,
+        },
       },
       take: limit,
       skip: offset,
@@ -56,7 +92,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
     const swapDomains = this.swapMapper.mapEntitiesToDomains(entities);
 
-    const currentPage = Math.ceil((offset + 1) / limit);
     const totalPages = Math.ceil(totalCount / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
@@ -65,7 +100,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       payload: swapDomains,
       pagination: {
         totalCount,
-        page: currentPage,
+        page: page,
         limit: limit,
         totalPages,
         nextPage: hasNextPage ? page + 1 : null,

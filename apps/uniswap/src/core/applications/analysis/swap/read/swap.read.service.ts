@@ -5,6 +5,7 @@ import { Swap } from '../../../../../core/domains/analysis/swap';
 import { PaginationContext } from '../../../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../../../core/domains/analysis/factory';
 import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.service';
+import { SwapCriteriaRequest } from './requests/swap.criteria.request';
 
 @Injectable()
 export class SwapReadService implements ISwapReadService {
@@ -16,12 +17,8 @@ export class SwapReadService implements ISwapReadService {
     private readonly poolReadService: IPoolReadService
   ) {}
 
-  async findSwapsWithPagination(
-    chainId: number,
-    page: number,
-    limit: number
-  ): Promise<PaginationContext<Swap>> {
-    return this.swapProvider.findSwapsWithPagination(chainId, page, limit);
+  async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<Swap>> {
+    return this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
   }
 
   async getTopActivePools(
