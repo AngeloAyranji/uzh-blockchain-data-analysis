@@ -27,6 +27,7 @@ export class PoolControllerReadMapper implements IPoolControllerReadMapper {
     return response.map((res) => {
       return {
         token: res.token,
+        symbol: res.symbol,
         count: res.count,
         percentage: res.percentage,
       };

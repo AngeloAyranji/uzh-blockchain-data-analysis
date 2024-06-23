@@ -53,6 +53,8 @@ import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.prov
 import { SwapReadController } from './api/swap/read/swap.read.controller';
 import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.mapper';
 import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
+import { UNISWAP_CONTRACT_EXTERNAL_SERVICE } from './external/uniswap-contract/iuniswap-contract.external.service';
+import { UniswapContractExternalService } from './external/uniswap-contract/uniswap-contract.external.service';
 
 @Module({
   imports: [
@@ -88,6 +90,10 @@ import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mappe
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
+    },
+    {
+      provide: UNISWAP_CONTRACT_EXTERNAL_SERVICE,
+      useClass: UniswapContractExternalService,
     },
     {
       provide: EXTRACT_PROCESSOR,

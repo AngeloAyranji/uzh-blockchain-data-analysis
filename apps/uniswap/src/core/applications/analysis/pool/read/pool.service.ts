@@ -13,6 +13,7 @@ import {
   PoolCountByDateResponse,
 } from './response/pool.count-by-date.response';
 import { Pool } from '../../../../../core/domains/analysis/pool';
+import { IUniswapContractExternalService, UNISWAP_CONTRACT_EXTERNAL_SERVICE } from '../../../../../external/uniswap-contract/iuniswap-contract.external.service';
 
 @Injectable()
 export class PoolReadService implements IPoolReadService {
@@ -21,7 +22,10 @@ export class PoolReadService implements IPoolReadService {
     private readonly poolProvider: IPoolProvider,
 
     @Inject(FACTORY_READ_SERVICE)
-    private readonly factoryReadService: IFactoryReadService
+    private readonly factoryReadService: IFactoryReadService,
+
+    @Inject(UNISWAP_CONTRACT_EXTERNAL_SERVICE)
+    private readonly UniswapContractExternalService: IUniswapContractExternalService,
   ) {}
   
   async getPoolsWithCursor(chainId: number, pageSize: number, lastId?: string): Promise<Pool[]> {
@@ -64,26 +68,29 @@ export class PoolReadService implements IPoolReadService {
   async getTokensWithMostPools(
     chainId: number,
     version?: VersionEnum
-  ): Promise<PoolTokensWithMostPoolsResponse[]> {
+): Promise<PoolTokensWithMostPoolsResponse[]> {
     const tokensWithMostPools = await this.poolProvider.getTokensWithMostPools(
-      chainId,
-      version
+        chainId,
+        version
     );
     const totalCount = await this.getTotalCount(chainId, version);
 
-    return tokensWithMostPools.map((token) => {
-      const total: number = version
-        ? totalCount.find((count) => count.factoryVersion === version)
-            .totalCount
-        : totalCount.reduce((acc, count) => acc + count.totalCount, 0);
+    const tokensWithSymbols = await Promise.all(tokensWithMostPools.map(async (token) => {
+        const symbol = await this.UniswapContractExternalService.getSymbol(token.token);
+        const total: number = version
+            ? totalCount.find((count) => count.factoryVersion === version)?.totalCount || 0
+            : totalCount.reduce((acc, count) => acc + count.totalCount, 0);
 
-      return {
-        token: token.token,
-        count: token.count,
-        percentage: token.count / total,
-      };
-    });
-  }
+        return {
+            symbol: symbol,
+            token: token.token,
+            count: token.count,
+            percentage: token.count / total,
+        };
+    }));
+
+    return tokensWithSymbols;
+}
 
   async getPoolCountByDate(
     chainId: number,

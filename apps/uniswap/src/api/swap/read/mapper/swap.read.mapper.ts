@@ -68,6 +68,7 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
                 poolAddress: activePool.poolAddress,
                 count: activePool.count,
                 percentage: activePool.percentage,
+                poolTokens: activePool.poolTokens,
             }
         });
     }

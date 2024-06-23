@@ -35,7 +35,7 @@ export class SwapReadController {
     private readonly swapControllerReadMapper: ISwapControllerReadMapper
   ) {}
 
-  // @CacheTTL(600)
+  @CacheTTL(600)
   @Get('/all')
   async getAllSwaps(
     @Query() query: SwapGetAllWithPaginationApiRequest
