@@ -116,7 +116,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     const totalPages = Math.ceil(totalCount / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
-    console.log(swaps);
+
     return {
       payload: swaps,
       pagination: {

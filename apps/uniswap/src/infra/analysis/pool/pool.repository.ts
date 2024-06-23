@@ -132,7 +132,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
     const sortedTokens = Object.entries(combinedCounts)
       .map(([token, count]) => ({ token, count }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
+      .slice(0, 5);
 
     return sortedTokens;
   }
@@ -152,7 +152,6 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
   WHERE "Factory"."chainId" = ${chainId}
   GROUP BY date, "Factory"."version"
   ORDER BY date DESC, "Factory"."version"`;
-    console.log(counts);
 
     return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(
       counts,

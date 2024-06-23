@@ -47,7 +47,7 @@ export class PoolMapper implements IPoolMapper {
       const date = count.date.toISOString().split('T')[0]; // Convert date to string format
       const version = count.version;
       const totalCount = count.totalcount;
-      console.log(date, version, totalCount)
+      
       if (!dateMap.has(date)) {
         dateMap.set(date, { totalCountV2: 0n, totalCountV3: 0n });
       }
