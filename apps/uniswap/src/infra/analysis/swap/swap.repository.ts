@@ -15,7 +15,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     @Inject(SWAP_MAPPER)
     private readonly swapMapper: ISwapMapper,
     private readonly uniswapDbHandler: UniswapDbHandler
-  ) {}
+  ) { }
 
   async createMany(swaps: Swap[]): Promise<void> {
     const entities = this.swapMapper.mapDomainsToEntities(swaps);
@@ -67,7 +67,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
-          OR: [
+          OR: swapCriteriaFilterRequest.token && [
             {
               token0: swapCriteriaFilterRequest.token,
             },
@@ -110,6 +110,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         swapAt: 'desc',
       },
     });
+    console.log(entities)
 
     const swaps = this.swapMapper.mapSwapWithPoolEntitytoSwapWithPool(entities);
 
