@@ -110,7 +110,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         swapAt: 'desc',
       },
     });
-    console.log(entities)
 
     const swaps = this.swapMapper.mapSwapWithPoolEntitytoSwapWithPool(entities);
 
