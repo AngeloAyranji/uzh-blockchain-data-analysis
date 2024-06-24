@@ -93,6 +93,11 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           select: {
             token0: true,
             token1: true,
+            factory: {
+              select: {
+                version: true,
+              },
+            },
           },
         },
         transactionHash: true,

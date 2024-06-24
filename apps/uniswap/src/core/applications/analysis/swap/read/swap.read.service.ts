@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import Big from 'big.js';
 import { ISwapReadService } from './iswap.read.service';
 import { ISwapProvider, SWAP_PROVIDER } from './iswap.provider.service';
 import { PaginationContext } from '../../../../../core/domains/valueobject/paginationContext';
@@ -22,7 +23,32 @@ export class SwapReadService implements ISwapReadService {
   ) {}
 
   async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>> {
-    return this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
+    const swaps = await this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
+
+    const swapsWithTokenInfo = await Promise.all(
+      swaps.payload.map(async (swap) => {
+
+        const [tokenIn, tokenOut] = await Promise.all([
+          this.UniswapContractExternalService.getDecimalsAndSymbol(swap.pool.tokenIn),
+          this.UniswapContractExternalService.getDecimalsAndSymbol(swap.pool.tokenOut),
+        ]);
+        return {
+          ...swap,
+          amountIn: new Big(swap.amountIn).div(new Big(10).pow(tokenIn.decimals)).toString(),
+          amountOut: new Big(swap.amountOut).div(new Big(10).pow(tokenOut.decimals)).toString(),
+          pool: {
+            ...swap.pool,
+            tokenInSymbol: tokenIn.symbol,
+            tokenOutSymbol: tokenOut.symbol,
+          }
+        };
+      })
+    );
+
+    return {
+      payload: swapsWithTokenInfo,
+      pagination: swaps.pagination,
+    };
   }
 
   async getTopActivePools(

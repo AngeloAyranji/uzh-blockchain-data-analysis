@@ -6,4 +6,5 @@ export interface IUniswapContractExternalService {
         token0: string,
         token1: string
     }>;
+    getDecimalsAndSymbol(address: string): Promise<{ decimals: number; symbol: string; }>
 };

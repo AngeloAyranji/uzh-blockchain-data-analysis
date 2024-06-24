@@ -35,6 +35,24 @@ export class UniswapContractExternalService implements IUniswapContractExternalS
         return symbol;
     }
 
+    async getDecimalsAndSymbol(address: string): Promise<{ decimals: number; symbol: string; }> {
+        const contract = new ethers.Contract(
+            address,
+            this.erc20Interface,
+            this.provider
+        );
+
+        const [decimals, symbol] = await Promise.all([
+            contract.decimals(),
+            contract.symbol()
+        ]);
+
+        return {
+            decimals,
+            symbol
+        };
+    }
+
     async getPoolTokens(address: string): Promise<{ token0: string; token1: string; }> {
         const contract = new ethers.Contract(
             address,

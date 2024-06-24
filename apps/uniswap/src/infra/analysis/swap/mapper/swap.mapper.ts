@@ -61,6 +61,9 @@ export class SwapMapper implements ISwapMapper {
         pool: {
           tokenIn: !entity.reversed ? entity.pool.token0 : entity.pool.token1,
           tokenOut: !entity.reversed ? entity.pool.token1 : entity.pool.token0,
+          factory: {
+            version: entity.pool.factory.version,
+          }
         },
       };
     });

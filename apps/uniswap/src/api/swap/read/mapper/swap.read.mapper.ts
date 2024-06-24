@@ -37,11 +37,12 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
                 amountOut: swap.amountOut,
                 reversed: swap.reversed,
                 price: swap.price,
-                swapAt: swap.swapAt,
-                pool: {
-                    tokenIn: swap.pool.tokenIn,
-                    tokenOut: swap.pool.tokenOut,
-                }
+                swapAt: new Date(swap.swapAt).toLocaleDateString(),
+                tokenIn: swap.pool.tokenIn,
+                tokenOut: swap.pool.tokenOut,
+                tokenInSymbol: swap.pool.tokenInSymbol,
+                tokenOutSymbol: swap.pool.tokenOutSymbol,
+                version: swap.pool.factory.version,
             }
         });
     }

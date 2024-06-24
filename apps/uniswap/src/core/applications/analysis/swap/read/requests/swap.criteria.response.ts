@@ -11,5 +11,10 @@ export class SwapCriteriaResponse {
     pool: {
         tokenIn: string;
         tokenOut: string;
+        tokenInSymbol: string;
+        tokenOutSymbol: string;
+        factory: {
+            version: string;
+        }
     };
 }

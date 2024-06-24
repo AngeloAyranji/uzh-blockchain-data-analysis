@@ -17,6 +17,7 @@
     "@nestjs/platform-express": "^10.0.2",
     "@prisma/client": "5.4.2",
     "axios": "^1.6.0",
+    "big.js": "^6.2.1",
     "bignumber.js": "^9.1.2",
     "bull": "^4.12.9",
     "cache-manager": "4.1.0",

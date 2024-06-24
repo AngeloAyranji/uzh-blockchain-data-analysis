@@ -16,11 +16,12 @@ export class SwapWithPoolApiResponse {
     amountOut: string;
     reversed: boolean;
     price: string | null;
-    swapAt: Date;
-    pool: {
-        tokenIn: string;
-        tokenOut: string;
-    };
+    swapAt: string;
+    tokenIn: string;
+    tokenOut: string;
+    tokenInSymbol: string;
+    tokenOutSymbol: string;
+    version: string;
 }
 
 export class PaginationApiResponse {
