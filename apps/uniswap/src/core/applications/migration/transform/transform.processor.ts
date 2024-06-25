@@ -1,16 +1,17 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
 import { ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
+import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { ArithmeticService } from "@uzh/arithmetic";
 import { ITransformProcessor } from './itransform.processor';
 import { PoolCreatedTransformRequest } from './requests/poolCreated.transform.request';
 import { Log } from '../../../domains/collection/log';
 import { PoolAddRequest } from '../../analysis/pool/write/request/pool.add.request';
 import { SwapTransformRequest } from './requests/swap.transform.request';
 import { SwapAddRequest } from '../../analysis/swap/write/request/swap.add.request';
-import BigNumber from 'bignumber.js';
-import { Inject } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 
 @Processor('transform')
 export class TransformProcessor implements ITransformProcessor {
@@ -19,8 +20,10 @@ export class TransformProcessor implements ITransformProcessor {
     private readonly loadQueue: Queue,
 
     @Inject(CACHE_MANAGER)
-    private cacheManager: Cache
-  ) {}
+    private readonly cacheManager: Cache,
+
+    private readonly arithmeticService: ArithmeticService,
+  ) { }
 
   @Process('POOL_CREATED_V2')
   async transformPoolCreatedV2(
@@ -87,6 +90,9 @@ export class TransformProcessor implements ITransformProcessor {
         const amount1Out = decodedValues[3].toString();
         const reversed = amount0In === '0' && amount1Out === '0';
 
+        const priceWithoutDecimal = this.arithmeticService.gt(amount0In, '0') &&
+          this.arithmeticService.gt(amount1Out, '0') ? this.arithmeticService.div(amount0In, amount1Out) : this.arithmeticService.div(amount1In, amount0Out);
+
         swaps.push({
           poolId: poolId,
           transactionHash: log.transactionHash,
@@ -99,7 +105,7 @@ export class TransformProcessor implements ITransformProcessor {
           amountIn: reversed ? amount1In : amount0In,
           amountOut: reversed ? amount0Out : amount1Out,
           reversed: reversed,
-          price: null,
+          price: priceWithoutDecimal,
           swapAt: new Date(log.timestamp),
         });
       }
