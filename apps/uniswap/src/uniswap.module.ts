@@ -6,6 +6,7 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import type { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
 import { CollectionDbModule } from '@uzh/collection-db';
+import { ArithmeticService } from '@uzh/arithmetic';
 import { UniswapDbHandler } from './infra/db/uniswap-db.handler';
 import { FACTORY_READ_SERVICE } from './core/applications/analysis/factory/read/ifactory.read.service';
 import { FactoryReadService } from './core/applications/analysis/factory/read/factory.read.service';
@@ -55,7 +56,6 @@ import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.m
 import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
 import { UNISWAP_CONTRACT_EXTERNAL_SERVICE } from './external/uniswap-contract/iuniswap-contract.external.service';
 import { UniswapContractExternalService } from './external/uniswap-contract/uniswap-contract.external.service';
-
 @Module({
   imports: [
     CollectionDbModule,
@@ -87,6 +87,7 @@ import { UniswapContractExternalService } from './external/uniswap-contract/unis
   ],
   providers: [
     UniswapDbHandler,
+    ArithmeticService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,

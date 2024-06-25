@@ -1,0 +1,19 @@
+{
+  "name": "arithmetic",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/arithmetic/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/arithmetic",
+        "main": "libs/arithmetic/src/index.ts",
+        "tsConfig": "libs/arithmetic/tsconfig.lib.json",
+        "assets": ["libs/arithmetic/*.md"]
+      }
+    }
+  }
+}

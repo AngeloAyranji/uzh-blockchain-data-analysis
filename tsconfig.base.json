@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@uzh/collection-db": ["libs/collection-db/src/index.ts"]
+      "@uzh/collection-db": ["libs/collection-db/src/index.ts"],
+      "@uzh/arithmetic": ["libs/arithmetic/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
