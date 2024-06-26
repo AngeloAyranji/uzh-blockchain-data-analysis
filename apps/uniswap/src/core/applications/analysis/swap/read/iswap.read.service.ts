@@ -9,5 +9,5 @@ export interface ISwapReadService {
   findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>>;
   getTopActivePools(chainId: number, version?: VersionEnum): Promise<any>;
   getTopActiveAddresses(chainId: number, version?: VersionEnum): Promise<any>;
-  getDailyPriceOfPool(chainId: number, poolAddress: string): Promise<any>;
+  getDailyPriceOfPool(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
 }

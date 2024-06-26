@@ -85,15 +85,13 @@ export class SwapReadService implements ISwapReadService {
     return activePools;
   }
 
+  // TODO: check if pool address and chainid exists
   async getDailyPriceOfPool(
     chainId: number,
-    poolAddress: string
+    poolAddress: string,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
-    const poolExists = await this.poolReadService.checkIfPoolIsVersion(chainId, poolAddress, VersionEnum.V3);
-
-    if (!poolExists) {
-      throw new Error('Pool does not exist');
-    }
 
     const dailyPriceOfPool = await this.swapProvider.getDailyPriceOfPool(
       chainId,

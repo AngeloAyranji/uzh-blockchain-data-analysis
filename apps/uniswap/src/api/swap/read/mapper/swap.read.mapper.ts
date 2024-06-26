@@ -88,7 +88,7 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
         return price.map((price) => {
             return {
                 date: price.date,
-                averagePrice: price.averagePrice,
+                averagePrice: price.averageprice,
             }
         });
     }

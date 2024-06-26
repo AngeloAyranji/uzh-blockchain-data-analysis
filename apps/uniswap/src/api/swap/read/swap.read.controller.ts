@@ -85,7 +85,9 @@ export class SwapReadController {
   ): Promise<SwapGetPriceApiResponse[]> {
     const response = await this.swapReadService.getDailyPriceOfPool(
       Number(query.chainId),
-      query.poolAddress
+      query.poolAddress,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapPricetoPriceApiResponse(response);
   }

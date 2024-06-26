@@ -249,6 +249,8 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       DATE("Swap"."swapAt");
   `;
 
+  console.log(result)
+
     return result;
   }
 }
