@@ -31,14 +31,14 @@ model Pool {
   factoryId      String
   token0         String
   token1         String
-  deployedAt     DateTime @db.Date
+  deployedAt     DateTime @db.Timestamptz()
   swaps          Swap[]
 
   @@unique([poolAddress, factoryId], name: "unique_pool_address_factory_id")
 }
 
 model Swap {
-  id              String   @id
+  id              String
   pool            Pool     @relation(fields: [poolId], references: [id])
   poolId          String
   transactionHash String
@@ -48,9 +48,10 @@ model Swap {
   amountOut       String
   reversed        Boolean
   price           String?
-  swapAt          DateTime @db.Date
+  swapAt          DateTime @db.Timestamptz()
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  @@unique([id, swapAt])
 }
 
 enum Version {

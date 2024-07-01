@@ -124,6 +124,15 @@ await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transh
   console.log('Indexes created');
 }
 
+// Time range for hypertable partition is 1 week by default
+async function setupTimeScaleDB() {
+  console.log('Creating hypertable for SWAP');
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('swapAt'), if_not_exists => TRUE);`;
+
+  console.log('Creating hypertable for POOL');
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Pool"', by_range('deployedAt'), if_not_exists => TRUE);`;
+}
+
 async function main() {
   let chainId: number;
   let factoryV2Address: string;
@@ -147,6 +156,7 @@ async function main() {
   }
 
   try {
+    await setupTimeScaleDB();
     await seedAnalysisDB(chainId, factoryV2Address, factoryV3Address);
     await seedCollectionDB();
     await analysisPrisma.$disconnect();
