@@ -128,9 +128,6 @@ await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transh
 async function setupTimeScaleDB() {
   console.log('Creating hypertable for SWAP');
   await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('swapAt'), if_not_exists => TRUE);`;
-
-  console.log('Creating hypertable for POOL');
-  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Pool"', by_range('deployedAt'), if_not_exists => TRUE);`;
 }
 
 async function main() {
