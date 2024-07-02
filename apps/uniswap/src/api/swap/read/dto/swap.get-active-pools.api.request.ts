@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { VersionEnum } from "../../../../core/domains/analysis/factory";
 
 export class SwapGetActivePoolsApiRequest {
@@ -6,8 +6,11 @@ export class SwapGetActivePoolsApiRequest {
     @IsString()
     chainId: number;
 
-    @IsNotEmpty()
     @IsOptional()
     @IsEnum(VersionEnum)
     version?: VersionEnum;
+
+    @IsOptional()
+    @IsNumber()
+    limit?: number;
 }

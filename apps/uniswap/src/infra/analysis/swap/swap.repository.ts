@@ -15,7 +15,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     @Inject(SWAP_MAPPER)
     private readonly swapMapper: ISwapMapper,
     private readonly uniswapDbHandler: UniswapDbHandler
-  ) { }
+  ) {}
 
   async createMany(swaps: Swap[]): Promise<void> {
     const entities = this.swapMapper.mapDomainsToEntities(swaps);
@@ -41,10 +41,14 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           },
           OR: [
             {
-              token0: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+              token0:
+                swapCriteriaFilterRequest.token &&
+                swapCriteriaFilterRequest.token,
             },
             {
-              token1: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+              token1:
+                swapCriteriaFilterRequest.token &&
+                swapCriteriaFilterRequest.token,
             },
           ],
         },
@@ -139,7 +143,8 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async getTopActivePools(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    limit?: number,
   ): Promise<any> {
     const totalCount = await this.uniswapDbHandler.swap.count({
       where: {
@@ -151,29 +156,31 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         },
       },
     });
-
+    console.log("limit", limit)
     const query = `
-    SELECT 
-        p."id" AS poolId, 
-        p."poolAddress" AS poolAddress, 
-        COUNT(s."id") AS swapCount
-    FROM 
-        "Swap" s
-    JOIN 
-        "Pool" p ON s."poolId" = p."id"
-    JOIN 
-        "Factory" f ON p."factoryId" = f."id"
-    WHERE 
-        f."chainId" = ${chainId}
-        ${version ? `AND f."version" = '${version}'` : ''}
-    GROUP BY 
-        p."id"
-    ORDER BY 
-        swapCount DESC
-    LIMIT 5
-`;
+      WITH swap_counts AS (
+          SELECT
+              time_bucket('1 day', s."swapAt") AS bucket, 
+              p."poolAddress" AS poolAddress,
+              count("poolId") AS swapCount
+          FROM "Swap" s
+          JOIN "Pool" p ON s."poolId" = p."id"
+          JOIN "Factory" f ON p."factoryId" = f."id"
+          WHERE 
+            f."chainId" = ${chainId}
+            ${version ? `AND f."version" = '${version}'` : ''}
+          GROUP BY bucket, poolAddress
+      )
+      SELECT
+          poolAddress,
+          SUM(swapCount) AS swapCount
+      FROM swap_counts
+      GROUP BY poolAddress 
+      ORDER BY swapCount DESC
+      LIMIT ${limit ? limit : 5};
+    `;
     const pools: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
-
+    console.log(pools);
     return pools.map((pool) => {
       return {
         poolAddress: pool.pooladdress,
@@ -249,7 +256,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       DATE("Swap"."swapAt");
   `;
 
-  console.log(result)
+    console.log(result);
 
     return result;
   }

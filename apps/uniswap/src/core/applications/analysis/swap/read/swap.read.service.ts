@@ -53,11 +53,13 @@ export class SwapReadService implements ISwapReadService {
 
   async getTopActivePools(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    limit?: number
   ): Promise<any> {
     const activePools = await this.swapProvider.getTopActivePools(
       chainId,
-      version
+      version,
+      limit
     );
 
     const activePoolsWithTokenInfo = await Promise.all(

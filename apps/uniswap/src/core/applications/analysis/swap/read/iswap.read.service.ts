@@ -7,7 +7,7 @@ export const SWAP_READ_SERVICE = 'SWAP_READ_SERVICE';
 
 export interface ISwapReadService {
   findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>>;
-  getTopActivePools(chainId: number, version?: VersionEnum): Promise<any>;
+  getTopActivePools(chainId: number, version?: VersionEnum, limit?: number): Promise<any>;
   getTopActiveAddresses(chainId: number, version?: VersionEnum): Promise<any>;
   getDailyPriceOfPool(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
 }
