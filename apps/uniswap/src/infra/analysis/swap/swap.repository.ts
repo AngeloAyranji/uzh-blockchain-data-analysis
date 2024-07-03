@@ -182,6 +182,10 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
       },
     });
 
