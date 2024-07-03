@@ -141,7 +141,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     };
   }
 
-  async getSwapsByPoolAddress(chainId: number, poolAddress: string): Promise<any> {
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any> {
     const query = `
       SELECT
         time_bucket('1 day', s."swapAt") AS date,
@@ -152,6 +152,8 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       WHERE
         f."chainId" = ${chainId} AND
         p."poolAddress" = '${poolAddress}'
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
       GROUP BY date
     `;
 
@@ -169,6 +171,8 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     chainId: number,
     version?: VersionEnum,
     limit?: number,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const totalCount = await this.uniswapDbHandler.swap.count({
       where: {
@@ -193,6 +197,8 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           WHERE 
             f."chainId" = ${chainId}
             ${version ? `AND f."version" = '${version}'` : ''}
+            ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+            ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
           GROUP BY bucket, poolAddress
       )
       SELECT
@@ -204,7 +210,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       LIMIT ${limit ? limit : 5};
     `;
     const pools: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
-    console.log(pools);
+
     return pools.map((pool) => {
       return {
         poolAddress: pool.pooladdress,

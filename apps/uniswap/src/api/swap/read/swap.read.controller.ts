@@ -59,7 +59,9 @@ export class SwapReadController {
     const response = await this.swapReadService.getTopActivePools(
       Number(query.chainId),
       query.version,
-      query.limit
+      query.limit,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapTopActivePoolsToTopActivePoolsApiResponse(
       response
@@ -101,7 +103,9 @@ export class SwapReadController {
   ): Promise<any[]> {
     const response = await this.swapReadService.getSwapsByPoolAddress(
       Number(query.chainId),
-      query.poolAddress
+      query.poolAddress,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(response);
   }

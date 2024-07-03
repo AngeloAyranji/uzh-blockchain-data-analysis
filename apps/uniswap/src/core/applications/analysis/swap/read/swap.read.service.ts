@@ -22,8 +22,8 @@ export class SwapReadService implements ISwapReadService {
     private readonly UniswapContractExternalService: IUniswapContractExternalService,
   ) {}
 
-  async getSwapsByPoolAddress(chainId: number, poolAddress: string): Promise<any> {
-    return await this.swapProvider.getSwapsByPoolAddress(chainId, poolAddress);
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any> {
+    return await this.swapProvider.getSwapsByPoolAddress(chainId, poolAddress, startDate, endDate);
   }
 
   async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>> {
@@ -58,12 +58,16 @@ export class SwapReadService implements ISwapReadService {
   async getTopActivePools(
     chainId: number,
     version?: VersionEnum,
-    limit?: number
+    limit?: number,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const activePools = await this.swapProvider.getTopActivePools(
       chainId,
       version,
-      limit
+      limit,
+      startDate,
+      endDate
     );
 
     const activePoolsWithTokenInfo = await Promise.all(

@@ -7,8 +7,8 @@ export const SWAP_PROVIDER = 'SWAP_PROVIDER';
 
 export interface ISwapProvider {
   findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>>;
-  getTopActivePools(chainId: number, version?: VersionEnum, limit?: number): Promise<any>;
+  getTopActivePools(chainId: number, version?: VersionEnum, limit?: number, startDate?: Date, endDate?: Date): Promise<any>;
   getTopActiveAddresses(chainId: number, version?: VersionEnum): Promise<any>;
   getDailyPriceOfPool(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
-  getSwapsByPoolAddress(chainId: number, poolAddress: string): Promise<any>;
+  getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
 }
