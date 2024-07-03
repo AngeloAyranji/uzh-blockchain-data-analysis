@@ -22,6 +22,10 @@ export class SwapReadService implements ISwapReadService {
     private readonly UniswapContractExternalService: IUniswapContractExternalService,
   ) {}
 
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string): Promise<any> {
+    return await this.swapProvider.getSwapsByPoolAddress(chainId, poolAddress);
+  }
+
   async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>> {
     const swaps = await this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
 

@@ -7,6 +7,7 @@ import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
 import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pagination.api.request";
 import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
 import { SwapCriteriaResponse } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.response";
+import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
 
 export const SWAP_CONTROLLER_READ_MAPPER = 'SWAP_CONTROLLER_READ_MAPPER';
 
@@ -17,4 +18,5 @@ export interface ISwapControllerReadMapper {
     mapTopActiveAddressesToTopActiveAddressesApiResponse(activeAddresses: any[]): SwapGetActiveAddressesApiResponse[];
     mapPricetoPriceApiResponse(price: any[]): SwapGetPriceApiResponse[];
     mapSwapGetAllWithPaginationApiRequestToSwapCriteriaRequest(request: SwapGetAllWithPaginationApiRequest): SwapCriteriaRequest;
+    mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(swaps: any[]): SwapGetByPoolAddressApiResponse[];
 }

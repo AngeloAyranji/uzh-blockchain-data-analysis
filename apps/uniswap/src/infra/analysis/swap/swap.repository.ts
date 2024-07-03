@@ -15,7 +15,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     @Inject(SWAP_MAPPER)
     private readonly swapMapper: ISwapMapper,
     private readonly uniswapDbHandler: UniswapDbHandler
-  ) {}
+  ) { }
 
   async createMany(swaps: Swap[]): Promise<void> {
     const entities = this.swapMapper.mapDomainsToEntities(swaps);
@@ -141,6 +141,30 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     };
   }
 
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string): Promise<any> {
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        count("poolId") AS count
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."poolAddress" = '${poolAddress}'
+      GROUP BY date
+    `;
+
+    const swapCount: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return swapCount.map((swap) => {
+      return {
+        date: swap.date,
+        count: Number(swap.count),
+      }
+    });
+  }
+
   async getTopActivePools(
     chainId: number,
     version?: VersionEnum,
@@ -156,7 +180,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
         },
       },
     });
-    console.log("limit", limit)
+
     const query = `
       WITH swap_counts AS (
           SELECT

@@ -9,6 +9,7 @@ import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
 import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pagination.api.request";
 import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
 import { SwapCriteriaResponse } from "apps/uniswap/src/core/applications/analysis/swap/read/requests/swap.criteria.response";
+import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -103,6 +104,15 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
             page: request.page,
             limit: request.limit,
         }
+    }
+
+    mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(swaps: any[]): SwapGetByPoolAddressApiResponse[] {
+        return swaps.map((swap) => {
+            return {
+                date: swap.date,
+                swapCount: swap.count,
+            }
+        });
     }
 
 }

@@ -23,6 +23,7 @@ import { SwapGetActiveAddressesApiResponse } from './dto/swap.get-active-address
 import { SwapGetActiveAddressesApiRequest } from './dto/swap.get-active-addresses.api.request';
 import { SwapGetPriceApiRequest } from './dto/swap.get-price.api.request';
 import { SwapGetPriceApiResponse } from './dto/swap.get-price.api.response';
+import { SwapGetSwapsByPoolAddressApiRequest } from './dto/swap.get-swaps-by-pool-address.request';
 
 @UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
 @Controller('swap')
@@ -91,5 +92,17 @@ export class SwapReadController {
       query.endDate
     );
     return this.swapControllerReadMapper.mapPricetoPriceApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/pool-swap-count')
+  async getSwapsByPoolAddress(
+    @Query() query: SwapGetSwapsByPoolAddressApiRequest
+  ): Promise<any[]> {
+    const response = await this.swapReadService.getSwapsByPoolAddress(
+      Number(query.chainId),
+      query.poolAddress
+    );
+    return this.swapControllerReadMapper.mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(response);
   }
 }
