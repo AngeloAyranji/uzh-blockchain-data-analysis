@@ -226,7 +226,9 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async getTopActiveAddresses(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const totalCount = await this.uniswapDbHandler.swap.count({
       where: {
@@ -236,7 +238,11 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
-      },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
+      }
     });
 
     const addresses = await this.uniswapDbHandler.swap.groupBy({
@@ -251,6 +257,10 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
       },
     });
 

@@ -86,11 +86,15 @@ export class SwapReadService implements ISwapReadService {
 
   async getTopActiveAddresses(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const activePools = await this.swapProvider.getTopActiveAddresses(
       chainId,
-      version
+      version,
+      startDate,
+      endDate
     );
     return activePools;
   }

@@ -75,7 +75,9 @@ export class SwapReadController {
   ): Promise<SwapGetActiveAddressesApiResponse[]> {
     const response = await this.swapReadService.getTopActiveAddresses(
       Number(query.chainId),
-      query.version
+      query.version,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapTopActiveAddressesToTopActiveAddressesApiResponse(
       response
