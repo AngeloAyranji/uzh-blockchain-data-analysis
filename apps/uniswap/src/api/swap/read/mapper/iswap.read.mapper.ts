@@ -10,6 +10,7 @@ import { SwapCriteriaResponse } from "../../../../core/applications/analysis/swa
 import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
 import { SwapGetPriceByPairApiResponse } from "../dto/swap.get-price-by-pair.response";
 import { SwapGetNewUsersByDateApiResponse } from "../dto/swap.get-new-users-by-data.api.response";
+import { SwapGetDistinctUsersByDateApiResponse } from "../dto/swap.get-distinct-users.api.response";
 
 export const SWAP_CONTROLLER_READ_MAPPER = 'SWAP_CONTROLLER_READ_MAPPER';
 
@@ -23,4 +24,5 @@ export interface ISwapControllerReadMapper {
     mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(swaps: any[]): SwapGetByPoolAddressApiResponse[];
     mapPriceByPairtoPriceByPairApiResponse(price: any[]): SwapGetPriceByPairApiResponse[];
     mapNewUsersByDatetoNewUsersByDateApiResponse(newUsers: any[]): SwapGetNewUsersByDateApiResponse[];
+    mapDistinctUsersByDatetoDistinctUsersByDateApiResponse(newUsers: any[]): SwapGetDistinctUsersByDateApiResponse[];
 }

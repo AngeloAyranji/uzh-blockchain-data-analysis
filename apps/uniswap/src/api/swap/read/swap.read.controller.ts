@@ -28,6 +28,8 @@ import { SwapGetPriceByPairApiRequest } from './dto/swap.get-price-by-pair.reque
 import { SwapGetPriceByPairApiResponse } from './dto/swap.get-price-by-pair.response';
 import { SwapGetNewUsersByDateApiRequest } from './dto/swap.get-new-users-by-date.request';
 import { SwapGetNewUsersByDateApiResponse } from './dto/swap.get-new-users-by-data.api.response';
+import { SwapGetDistinctUsersByDateApiRequest } from './dto/swap.get-distinct-users.api.request';
+import { SwapGetDistinctUsersByDateApiResponse } from './dto/swap.get-distinct-users.api.response';
 
 @UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
 @Controller('swap')
@@ -143,5 +145,18 @@ export class SwapReadController {
       query.endDate
     );
     return this.swapControllerReadMapper.mapNewUsersByDatetoNewUsersByDateApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/distinct-users')
+  async getDistinctUsers(
+    @Query() query: SwapGetDistinctUsersByDateApiRequest
+  ): Promise<SwapGetDistinctUsersByDateApiResponse[]> {
+    const response = await this.swapReadService.getDistinctUsersByDate(
+      Number(query.chainId),
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapDistinctUsersByDatetoDistinctUsersByDateApiResponse(response);
   }
 }

@@ -11,6 +11,8 @@ import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap
 import { SwapCriteriaResponse } from "apps/uniswap/src/core/applications/analysis/swap/read/requests/swap.criteria.response";
 import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
 import { SwapGetPriceByPairApiResponse } from "../dto/swap.get-price-by-pair.response";
+import { SwapGetDistinctUsersByDateApiResponse } from "../dto/swap.get-distinct-users.api.response";
+import { SwapGetNewUsersByDateApiResponse } from "../dto/swap.get-new-users-by-data.api.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -129,11 +131,20 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
         });
     }
 
-    mapNewUsersByDatetoNewUsersByDateApiResponse(newUsers: any[]): any[] {
+    mapNewUsersByDatetoNewUsersByDateApiResponse(newUsers: any[]): SwapGetNewUsersByDateApiResponse[] {
         return newUsers.map((newUser) => {
             return {
                 date: newUser.date,
-                newUserCount: newUser.count,
+                newUsers: newUser.count,
+            }
+        });
+    }
+
+    mapDistinctUsersByDatetoDistinctUsersByDateApiResponse(distinctUsers: any[]): SwapGetDistinctUsersByDateApiResponse[] {
+        return distinctUsers.map((distinctUser) => {
+            return {
+                date: distinctUser.date,
+                distinctUsers: distinctUser.count,
             }
         });
     }
