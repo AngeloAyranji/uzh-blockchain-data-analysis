@@ -99,7 +99,6 @@ export class SwapReadService implements ISwapReadService {
     return activePools;
   }
 
-  // TODO: check if pool address and chainid exists
   async getDailyPriceOfPool(
     chainId: number,
     poolAddress: string,
@@ -109,7 +108,9 @@ export class SwapReadService implements ISwapReadService {
 
     const dailyPriceOfPool = await this.swapProvider.getDailyPriceOfPool(
       chainId,
-      poolAddress
+      poolAddress,
+      startDate,
+      endDate
     );
     return dailyPriceOfPool;
   }

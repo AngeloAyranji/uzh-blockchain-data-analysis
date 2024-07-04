@@ -276,28 +276,30 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async getDailyPriceOfPool(
     chainId: number,
-    poolAddress: string
+    poolAddress: string,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
-    const result = await this.uniswapDbHandler.$queryRaw`
-    SELECT
-      DATE("Swap"."swapAt") as date,
-      AVG(CAST("Swap"."price" as FLOAT)) as averagePrice
-    FROM
-      "Swap"
-    JOIN
-      "Pool" ON "Swap"."poolId" = "Pool"."id"
-    JOIN
-      "Factory" ON "Pool"."factoryId" = "Factory"."id"
-    WHERE
-      "Pool"."poolAddress" = ${poolAddress} AND
-      "Factory"."chainId" = ${chainId}
-    GROUP BY
-      DATE("Swap"."swapAt")
-    ORDER BY
-      DATE("Swap"."swapAt");
-  `;
 
-    console.log(result);
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        max(s."price"::numeric) AS max_price,
+        avg(s."price"::numeric) AS average_price,
+        min(s."price"::numeric) AS min_price
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."poolAddress" = ${poolAddress}
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+      ORDER BY date ASC
+    `;
+
+    const result = await this.uniswapDbHandler.$queryRawUnsafe(query);
 
     return result;
   }
