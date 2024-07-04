@@ -8,6 +8,7 @@ import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.
 import { SwapCriteriaRequest } from './requests/swap.criteria.request';
 import { SwapCriteriaResponse } from './requests/swap.criteria.response';
 import { IUniswapContractExternalService, UNISWAP_CONTRACT_EXTERNAL_SERVICE } from '../../../../../external/uniswap-contract/iuniswap-contract.external.service';
+import { TimeframeEnum } from 'apps/uniswap/src/core/domains/analysis/swap';
 
 @Injectable()
 export class SwapReadService implements ISwapReadService {
@@ -113,5 +114,24 @@ export class SwapReadService implements ISwapReadService {
       endDate
     );
     return dailyPriceOfPool;
+  }
+
+  async getPriceOfPair(
+    chainId: number,
+    token0: string,
+    token1: string,
+    timeframe: TimeframeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any> {
+    const priceOfPair = await this.swapProvider.getPriceOfPair(
+      chainId,
+      token0,
+      token1,
+      timeframe,
+      startDate,
+      endDate
+    );
+    return priceOfPair;
   }
 }

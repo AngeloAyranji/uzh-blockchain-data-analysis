@@ -2,6 +2,7 @@ import { PaginationContext } from '../../../../../core/domains/valueobject/pagin
 import { VersionEnum } from '../../../../../core/domains/analysis/factory';
 import { SwapCriteriaRequest } from './requests/swap.criteria.request';
 import { SwapCriteriaResponse } from './requests/swap.criteria.response';
+import { TimeframeEnum } from '../../../../../core/domains/analysis/swap';
 
 export const SWAP_READ_SERVICE = 'SWAP_READ_SERVICE';
 
@@ -11,4 +12,12 @@ export interface ISwapReadService {
   getTopActiveAddresses(chainId: number, version?: VersionEnum, startDate?: Date, endDate?: Date): Promise<any>;
   getDailyPriceOfPool(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
   getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
+  getPriceOfPair(
+    chainId: number,
+    token0: string,
+    token1: string,
+    timeframe: TimeframeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any>
 }

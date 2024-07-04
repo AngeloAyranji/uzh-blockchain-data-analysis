@@ -10,6 +10,7 @@ import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pag
 import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
 import { SwapCriteriaResponse } from "apps/uniswap/src/core/applications/analysis/swap/read/requests/swap.criteria.response";
 import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
+import { SwapGetPriceByPairApiResponse } from "../dto/swap.get-price-by-pair.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -86,6 +87,17 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
     }
 
     mapPricetoPriceApiResponse(price: any[]): SwapGetPriceApiResponse[] {
+        return price.map((price) => {
+            return {
+                date: price.date,
+                average_price: price.average_price,
+                max_price: price.max_price,
+                min_price: price.min_price,
+            }
+        });
+    }
+
+    mapPriceByPairtoPriceByPairApiResponse(price: any[]): SwapGetPriceByPairApiResponse[] {
         return price.map((price) => {
             return {
                 date: price.date,

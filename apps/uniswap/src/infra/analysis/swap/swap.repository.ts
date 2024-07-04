@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ISwapModifier } from '../../../core/applications/analysis/swap/write/iswap.modifier';
 import { ISwapMapper, SWAP_MAPPER } from './mapper/iswap.mapper';
 import { UniswapDbHandler } from '../../db/uniswap-db.handler';
-import { Swap } from '../../../core/domains/analysis/swap';
+import { Swap, TimeframeEnum } from '../../../core/domains/analysis/swap';
 import { ISwapProvider } from '../../../core/applications/analysis/swap/read/iswap.provider.service';
 import { PaginationContext } from '../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../core/domains/analysis/factory';
@@ -293,6 +293,39 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
       WHERE
         f."chainId" = ${chainId} AND
         p."poolAddress" = ${poolAddress}
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+      ORDER BY date ASC
+    `;
+
+    const result = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return result;
+  }
+
+  async getPriceOfPair(
+    chainId: number,
+    token0: string,
+    token1: string,
+    timeframe?: TimeframeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any> {
+
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        max(s."price"::numeric) AS max_price,
+        avg(s."price"::numeric) AS average_price,
+        min(s."price"::numeric) AS min_price
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."token0" = ${token0} AND
+        p."token1" = ${token1}
         ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
         ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
       GROUP BY date
