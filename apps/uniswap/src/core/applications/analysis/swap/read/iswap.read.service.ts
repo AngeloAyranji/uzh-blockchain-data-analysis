@@ -19,5 +19,6 @@ export interface ISwapReadService {
     timeframe: TimeframeEnum,
     startDate?: Date,
     endDate?: Date
-  ): Promise<any>
+  ): Promise<any>;
+  getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any>;
 }

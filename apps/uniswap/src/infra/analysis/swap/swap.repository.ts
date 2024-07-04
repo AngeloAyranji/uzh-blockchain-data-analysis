@@ -336,4 +336,43 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
     return result;
   }
+
+  async getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const query = `
+      WITH FirstSwaps AS (
+          SELECT 
+              sender,
+              MIN("swapAt") AS first_swap_at
+          FROM 
+              "Swap"
+          GROUP BY 
+              sender
+      ),
+      NewSendersByDate AS (
+          SELECT
+              first_swap_at::date AS date,
+              COUNT(sender) AS count
+          FROM 
+              FirstSwaps
+          GROUP BY 
+              first_swap_at::date
+      )
+      SELECT 
+          date,
+          count
+      FROM 
+          NewSendersByDate
+      ORDER BY 
+          date;
+    `;
+    
+    const result: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return result.map((newUser) => {
+      return {
+        date: newUser.date,
+        count: Number(newUser.count),
+      }
+    });
+  }
 }

@@ -134,4 +134,13 @@ export class SwapReadService implements ISwapReadService {
     );
     return priceOfPair;
   }
+
+  async getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const newUsers = await this.swapProvider.getNewUsersByDate(
+      chainId,
+      startDate,
+      endDate
+    );
+    return newUsers;
+  }
 }

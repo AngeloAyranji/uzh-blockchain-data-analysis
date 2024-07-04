@@ -26,6 +26,8 @@ import { SwapGetPriceApiResponse } from './dto/swap.get-price.api.response';
 import { SwapGetSwapsByPoolAddressApiRequest } from './dto/swap.get-swaps-by-pool-address.request';
 import { SwapGetPriceByPairApiRequest } from './dto/swap.get-price-by-pair.request';
 import { SwapGetPriceByPairApiResponse } from './dto/swap.get-price-by-pair.response';
+import { SwapGetNewUsersByDateApiRequest } from './dto/swap.get-new-users-by-date.request';
+import { SwapGetNewUsersByDateApiResponse } from './dto/swap.get-new-users-by-data.api.response';
 
 @UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
 @Controller('swap')
@@ -128,5 +130,18 @@ export class SwapReadController {
       query.endDate
     );
     return this.swapControllerReadMapper.mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/new-users')
+  async getNewUsersByDate(
+    @Query() query: SwapGetNewUsersByDateApiRequest
+  ): Promise<SwapGetNewUsersByDateApiResponse[]> {
+    const response = await this.swapReadService.getNewUsersByDate(
+      Number(query.chainId),
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapNewUsersByDatetoNewUsersByDateApiResponse(response);
   }
 }

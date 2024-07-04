@@ -129,4 +129,12 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
         });
     }
 
+    mapNewUsersByDatetoNewUsersByDateApiResponse(newUsers: any[]): any[] {
+        return newUsers.map((newUser) => {
+            return {
+                date: newUser.date,
+                newUserCount: newUser.count,
+            }
+        });
+    }
 }
