@@ -97,7 +97,7 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
     mapSwapGetAllWithPaginationApiRequestToSwapCriteriaRequest(request: SwapGetAllWithPaginationApiRequest): SwapCriteriaRequest {
         return {
             chainId: request.chainId,
-            poolId: request.poolId,
+            poolAddress: request.poolAddress,
             token: request.token,
             startDate: request.startDate,
             endDate: request.endDate,

@@ -1,6 +1,6 @@
 export class SwapCriteriaRequest {
   chainId: number;
-  poolId: string;
+  poolAddress: string;
   token: string;
   startDate: Date;
   endDate: Date;

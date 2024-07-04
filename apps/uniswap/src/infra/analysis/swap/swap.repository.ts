@@ -39,6 +39,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
+          poolAddress: swapCriteriaFilterRequest.poolAddress && swapCriteriaFilterRequest.poolAddress,
           OR: swapCriteriaFilterRequest.token && [
             {
               token0: swapCriteriaFilterRequest.token,
@@ -48,8 +49,6 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             },
           ],
         },
-        poolId:
-          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -76,9 +75,9 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
               token1: swapCriteriaFilterRequest.token,
             },
           ],
+          poolAddress:
+            swapCriteriaFilterRequest.poolAddress && swapCriteriaFilterRequest.poolAddress,
         },
-        poolId:
-          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
