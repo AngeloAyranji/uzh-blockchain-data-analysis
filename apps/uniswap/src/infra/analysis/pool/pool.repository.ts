@@ -151,7 +151,7 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
   JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
   WHERE "Factory"."chainId" = ${chainId}
   GROUP BY date, "Factory"."version"
-  ORDER BY date DESC, "Factory"."version"`;
+  ORDER BY date ASC, "Factory"."version"`;
 
     return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(
       counts,
