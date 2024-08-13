@@ -20,6 +20,8 @@ import {
   BURN_SIGNATURE_V2,
   BURN_SIGNATURE_V3,
 } from '../../../../../utils/topic0';
+import { LiquidityAddRequest } from '../../analysis/liquidity/write/request/liquidity.add.request';
+import { LiquidityTypeEnum } from '../../../domains/analysis/liquidity';
 
 @Processor('transform')
 export class TransformProcessor implements ITransformProcessor {
@@ -82,6 +84,7 @@ export class TransformProcessor implements ITransformProcessor {
   @Process('ACTIVITY')
   async transformActivity(job: Job<ActivityTransformRequest>): Promise<void> {
     const swaps: SwapAddRequest[] = [];
+    const liquidities: LiquidityAddRequest[] = [];
 
     for (const log of job.data.logs) {
       const poolId = await this.cacheManager.get(log.address.toLowerCase());
@@ -96,11 +99,30 @@ export class TransformProcessor implements ITransformProcessor {
             const swapAddRequestV3 = await this.transformSwapV3(log, poolId);
             swaps.push(swapAddRequestV3);
             break;
+          case MINT_SIGNATURE_V2:
+            const mintAddRequestV2 = await this.transformMintV2(log, poolId);
+            liquidities.push(mintAddRequestV2);
+            break;
+          case MINT_SIGNATURE_V3:
+            const mintAddRequestV3 = await this.transformMintV3(log, poolId);
+            liquidities.push(mintAddRequestV3);
+            break;
+          case BURN_SIGNATURE_V2:
+            const burnAddRequestV2 = await this.transformBurnV2(log, poolId);
+            liquidities.push(burnAddRequestV2);
+            break;
+          case BURN_SIGNATURE_V3:
+            const burnAddRequestV3 = await this.transformBurnV3(log, poolId);
+            liquidities.push(burnAddRequestV3);
+            break;
         }
       }
     }
 
     await this.loadQueue.add('SWAP', swaps, { removeOnComplete: true });
+    await this.loadQueue.add('LIQUIDITY', liquidities, {
+      removeOnComplete: true,
+    });
   }
 
   async transformSwapV2(log: Log, poolId: string): Promise<SwapAddRequest> {
@@ -156,6 +178,114 @@ export class TransformProcessor implements ITransformProcessor {
       reversed: new BigNumber(decodedValues[0].toString()).isNegative(),
       price: this.priceFromPriceSqrtX96(decodedValues[2].toString()),
       swapAt: new Date(log.timestamp),
+    };
+  }
+
+  async transformMintV2(
+    log: Log,
+    poolId: string
+  ): Promise<LiquidityAddRequest> {
+    const decodedValues = ethers.utils.defaultAbiCoder.decode(
+      ['uint', 'uint'],
+      log.data
+    );
+
+    const amount0 = decodedValues[0].toString();
+    const amount1 = decodedValues[1].toString();
+
+    const owner = ethers.utils
+      .getAddress('0x' + log.topics[0].slice(26))
+      .toLowerCase();
+
+    return {
+      poolId: poolId,
+      transactionHash: log.transactionHash,
+      owner: owner,
+      amount0: amount0,
+      amount1: amount1,
+      type: LiquidityTypeEnum.ADD,
+      timestamp: new Date(log.timestamp),
+    };
+  }
+
+  async transformMintV3(
+    log: Log,
+    poolId: string
+  ): Promise<LiquidityAddRequest> {
+    const decodedValues = ethers.utils.defaultAbiCoder.decode(
+      ['address', 'uint128', 'uint128'],
+      log.data
+    );
+
+    const amount0 = decodedValues[1].toString();
+    const amount1 = decodedValues[2].toString();
+
+    const owner = ethers.utils
+      .getAddress('0x' + log.topics[0].slice(26))
+      .toLowerCase();
+
+    return {
+      poolId: poolId,
+      transactionHash: log.transactionHash,
+      owner: owner,
+      amount0: amount0,
+      amount1: amount1,
+      type: LiquidityTypeEnum.ADD,
+      timestamp: new Date(log.timestamp),
+    };
+  }
+
+  async transformBurnV2(
+    log: Log,
+    poolId: string
+  ): Promise<LiquidityAddRequest> {
+    const decodedValues = ethers.utils.defaultAbiCoder.decode(
+      ['uint', 'uint'],
+      log.data
+    );
+
+    const amount0 = decodedValues[0].toString();
+    const amount1 = decodedValues[1].toString();
+
+    const owner = ethers.utils
+      .getAddress('0x' + log.topics[0].slice(26))
+      .toLowerCase();
+
+    return {
+      poolId: poolId,
+      transactionHash: log.transactionHash,
+      owner: owner,
+      amount0: amount0,
+      amount1: amount1,
+      type: LiquidityTypeEnum.REMOVE,
+      timestamp: new Date(log.timestamp),
+    };
+  }
+
+  async transformBurnV3(
+    log: Log,
+    poolId: string
+  ): Promise<LiquidityAddRequest> {
+    const decodedValues = ethers.utils.defaultAbiCoder.decode(
+      ['uint128', 'uint256', 'uint256'],
+      log.data
+    );
+
+    const amount0 = decodedValues[1].toString();
+    const amount1 = decodedValues[2].toString();
+
+    const owner = ethers.utils
+      .getAddress('0x' + log.topics[0].slice(26))
+      .toLowerCase();
+
+    return {
+      poolId: poolId,
+      transactionHash: log.transactionHash,
+      owner: owner,
+      amount0: amount0,
+      amount1: amount1,
+      type: LiquidityTypeEnum.REMOVE,
+      timestamp: new Date(log.timestamp),
     };
   }
 

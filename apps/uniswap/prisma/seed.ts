@@ -12,6 +12,12 @@ import {
 } from '../utils/topic0';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
+import {
+  FACTORY_V2_BSC_ADDRESS,
+  FACTORY_V2_ETH_ADDRESS,
+  FACTORY_V3_BSC_ADDRESS,
+  FACTORY_V3_ETH_ADDRESS,
+} from '../utils/addresses';
 dotenv.config();
 
 const analysisPrisma = new PrismaClientAnalysis();
@@ -138,6 +144,8 @@ async function seedCollectionDB() {
 async function setupTimeScaleDB() {
   console.log('Creating hypertable for SWAP');
   await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('swapAt'), if_not_exists => TRUE);`;
+  console.log('Creating hypertable for LIQUIDITY');
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Liquidity"', by_range('timestamp'), if_not_exists => TRUE);`;
 }
 
 async function main() {
@@ -148,18 +156,18 @@ async function main() {
   switch (process.env.CHAIN_ID) {
     case 'eth':
       chainId = 1;
-      factoryV2Address = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
-      factoryV3Address = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+      factoryV2Address = FACTORY_V2_ETH_ADDRESS;
+      factoryV3Address = FACTORY_V3_ETH_ADDRESS;
       break;
     case 'bsc':
       chainId = 61;
-      factoryV2Address = '0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6';
-      factoryV3Address = '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7';
+      factoryV2Address = FACTORY_V2_BSC_ADDRESS;
+      factoryV3Address = FACTORY_V3_BSC_ADDRESS;
       break;
     default:
       chainId = 1;
-      factoryV2Address = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
-      factoryV3Address = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+      factoryV2Address = FACTORY_V2_ETH_ADDRESS;
+      factoryV3Address = FACTORY_V3_ETH_ADDRESS;
   }
 
   try {
