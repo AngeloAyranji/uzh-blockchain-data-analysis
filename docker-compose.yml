@@ -10,9 +10,25 @@ services:
   #   depends_on:
   #     - collection-db
   #     - analysis-db
+  #     - redis
   #   env_file:
   #     - ./apps/uniswap/.env
     # profiles: ["uniswap", "all"]
+
+  dashboard:
+    extends:
+      file: docker-compose.base.yml
+      service: uzh-blockchain-data-analysis-base
+    command: nx serve dashboard
+    ports:
+      - '4200:4200'
+    depends_on:
+      - collection-db
+      - analysis-db
+      - redis
+    env_file:
+      - ./apps/dashboard/.env
+    # profiles: ["dashboard", "all"]
   
   collection-db:
     image: postgres
