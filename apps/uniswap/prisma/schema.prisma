@@ -36,6 +36,7 @@ model Pool {
   token1         String
   deployedAt     DateTime @db.Timestamptz()
   swaps          Swap[]
+  liquidity      Liquidity[]
 
   @@unique([poolAddress, factoryId], name: "unique_pool_address_factory_id")
 }
@@ -57,7 +58,27 @@ model Swap {
   @@unique([id, swapAt])
 }
 
+model Liquidity {
+  id              String
+  pool            Pool     @relation(fields: [poolId], references: [id])
+  poolId          String
+  transactionHash String
+  owner           String
+  amount0         String
+  amount1         String
+  type            LiquidityType
+  timestamp       DateTime @db.Timestamptz()
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  @@unique([id, timestamp])
+}
+
 enum Version {
   V2
   V3
+}
+
+enum LiquidityType {
+  ADD
+  REMOVE
 }
