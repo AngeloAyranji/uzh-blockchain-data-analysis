@@ -68,4 +68,26 @@ export class LogRepository implements ILogProvider {
     const logs: LogEntity[] = await this.collectionDbHandler.$queryRawUnsafe(query);
     return this.logMapper.mapEntitiesToDomains(logs);
   }
+
+  async findLogsByManyTopic0(
+    topic0s: string[],
+    pageSize = 50,
+    lastTransactionHash?: string,
+    lastLogIndex?: number
+  ): Promise<Log[]> {
+    let query = `
+        SELECT * FROM "eth_transaction_logs_with_timestamp"
+        WHERE "topic_0" IN (${topic0s.map(topic0 => `'${topic0}'`).join(', ')})
+    `;
+
+    if (lastTransactionHash && lastLogIndex) {
+        query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
+    }
+
+    query += ` ORDER BY "transaction_hash", "log_index" ASC
+               LIMIT ${pageSize}`;
+
+    const logs: LogEntity[] = await this.collectionDbHandler.$queryRawUnsafe(query);
+    return this.logMapper.mapEntitiesToDomains(logs);
+  }
 }
