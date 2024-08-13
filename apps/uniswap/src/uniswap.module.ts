@@ -56,6 +56,10 @@ import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.m
 import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
 import { UNISWAP_CONTRACT_EXTERNAL_SERVICE } from './external/uniswap-contract/iuniswap-contract.external.service';
 import { UniswapContractExternalService } from './external/uniswap-contract/uniswap-contract.external.service';
+import { LIQUIDITY_REQUEST_MAPPER } from './core/applications/analysis/liquidity/write/mapper/iliquidity.request.mapper';
+import { LiquidityRequestMapper } from './core/applications/analysis/liquidity/write/mapper/liquidity.request.mapper';
+import { LIQUIDITY_WRITE_SERVICE } from './core/applications/analysis/liquidity/write/iliquidity.write.service';
+import { LiquidityWriteService } from './core/applications/analysis/liquidity/write/liquidity.write.service';
 @Module({
   imports: [
     CollectionDbModule,
@@ -191,6 +195,14 @@ import { UniswapContractExternalService } from './external/uniswap-contract/unis
     {
       provide: LOG_MAPPER,
       useClass: LogMapper,
+    },
+    {
+      provide: LIQUIDITY_REQUEST_MAPPER,
+      useClass: LiquidityRequestMapper,
+    },
+    {
+      provide: LIQUIDITY_WRITE_SERVICE,
+      useClass: LiquidityWriteService,
     },
   ],
 })
