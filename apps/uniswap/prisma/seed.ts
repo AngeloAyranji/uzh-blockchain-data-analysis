@@ -1,5 +1,15 @@
 import { PrismaClient as PrismaClientAnalysis } from '@prisma/client-uniswap';
 import { PrismaClient as PrismaClientCollection } from '@prisma/client-collection';
+import {
+  POOL_CREATED_V2,
+  POOL_CREATED_V3,
+  SWAP_SIGNATURE_V2,
+  SWAP_SIGNATURE_V3,
+  MINT_SIGNATURE_V2,
+  MINT_SIGNATURE_V3,
+  BURN_SIGNATURE_V2,
+  BURN_SIGNATURE_V3,
+} from '../utils/topic0';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -25,14 +35,10 @@ async function seedAnalysisDB(
       address: factoryV2Address,
       version: 'V2',
       chainId: chainId,
-      swapSignature:
-        '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822',
-      poolCreatedSignature:
-        '0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9',
-      mintSignature:
-        '0x4c209b5fc8ad50758f13e2e1088ba56a560dff690a1c6fef26394f4c03821c4f',
-      burnSignature:
-        '0xdccd412f0b1252819cb1fd330b93224ca42612892bb3f4f789976e6d81936496',
+      swapSignature: SWAP_SIGNATURE_V2,
+      poolCreatedSignature: POOL_CREATED_V2,
+      mintSignature: MINT_SIGNATURE_V2,
+      burnSignature: BURN_SIGNATURE_V2,
     },
   });
 
@@ -49,14 +55,10 @@ async function seedAnalysisDB(
       address: factoryV3Address,
       version: 'V3',
       chainId: chainId,
-      swapSignature:
-        '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67',
-      poolCreatedSignature:
-        '0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118',
-      burnSignature:
-        '0x0c396cd989a39f4459b5fa1aed6a9a8dcdbc45908acfd67e028cd568da98982c',
-      mintSignature:
-        '0x7a53080ba414158be7ec69b987b5fb7d07dee101fe85488f0853ae16239d0bde',
+      swapSignature: SWAP_SIGNATURE_V3,
+      poolCreatedSignature: POOL_CREATED_V3,
+      burnSignature: BURN_SIGNATURE_V3,
+      mintSignature: MINT_SIGNATURE_V3,
     },
   });
 }
@@ -118,13 +120,13 @@ async function seedCollectionDB() {
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_address_topic_0
     ON bsc_transaction_logs (address, topic_0);
     `;
-  
+
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_eth_topic_transhash_logindex_partial
   ON eth_transaction_logs (topic_0, transaction_hash, log_index)
   WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
   `;
 
-await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
+  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
   ON bsc_transaction_logs (topic_0, transaction_hash, log_index)
   WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
   `;
@@ -175,4 +177,3 @@ async function main() {
 }
 
 main();
-

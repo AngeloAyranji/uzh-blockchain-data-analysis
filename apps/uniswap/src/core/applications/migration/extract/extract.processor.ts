@@ -62,11 +62,13 @@ export class ExtractProcessor implements IExtractProcessor {
       if (transformCount === 0 && loadCount === 0) {
         if (phase === 'ACTIVITY') {
           const chainId = this.retreiveChainId();
-          const factories = await this.factoryReadService.findAllByChainId(chainId);
+          const factories = await this.factoryReadService.findAllByChainId(
+            chainId
+          );
           await this.extractActivity(factories);
         }
       }
-    }, 15000)
+    }, 15000);
   }
 
   async extractPools(factories: Factory[]): Promise<void> {
@@ -134,10 +136,10 @@ export class ExtractProcessor implements IExtractProcessor {
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-        console.log(logs.length)
+        console.log(logs.length);
         if (logs.length > 0) {
           this.transformQueue.add(
-            `SWAP_${factory.version}`,
+            `ACTIVITY`,
             {
               logs: logs,
             },
@@ -145,8 +147,10 @@ export class ExtractProcessor implements IExtractProcessor {
               removeOnComplete: true,
             }
           );
+
           const lastTransactionHash = logs[logs.length - 1].transactionHash;
           const lastLogIndex = logs[logs.length - 1].logIndex;
+
           this.setCursor('activity', {
             lastTransactionHash,
             lastLogIndex,
@@ -156,6 +160,7 @@ export class ExtractProcessor implements IExtractProcessor {
         moreLogs = logs.length === pageSize;
       }
     }
+
     Logger.log('Activity extraction finished');
   }
 
