@@ -143,9 +143,9 @@ async function seedCollectionDB() {
 // Time range for hypertable partition is 1 week by default
 async function setupTimeScaleDB() {
   console.log('Creating hypertable for SWAP');
-  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('swapAt'), if_not_exists => TRUE);`;
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('"swapAt"'), if_not_exists => TRUE);`;
   console.log('Creating hypertable for LIQUIDITY');
-  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Liquidity"', by_range('timestamp'), if_not_exists => TRUE);`;
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Liquidity"', by_range('"timestamp"'), if_not_exists => TRUE);`;
 }
 
 async function main() {
@@ -171,9 +171,9 @@ async function main() {
   }
 
   try {
-    await setupTimeScaleDB();
     await seedAnalysisDB(chainId, factoryV2Address, factoryV3Address);
     await seedCollectionDB();
+    await setupTimeScaleDB();
     await analysisPrisma.$disconnect();
     await collectionPrisma.$disconnect();
   } catch (e) {
