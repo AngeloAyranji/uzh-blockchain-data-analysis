@@ -4,6 +4,7 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
+// TODO: this should be from env
 datasource db {
   provider = "postgresql"
   url      = "postgresql://user:postgres@localhost:13339/uniswap"
@@ -15,6 +16,8 @@ model Factory {
   version              Version
   swapSignature        String
   poolCreatedSignature String
+  mintSignature String
+  burnSignature String
   chainId              Int
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt

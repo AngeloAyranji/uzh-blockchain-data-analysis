@@ -120,6 +120,7 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log('Extracting swaps');
     for (const factory of factories) {
       let moreLogs = true;
+      // TODO: this should be from env
       const pageSize = 250;
 
       while (moreLogs) {

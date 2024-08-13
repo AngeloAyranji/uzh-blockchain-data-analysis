@@ -6,6 +6,8 @@ export class FactoryEntity implements Factory {
   version: $Enums.Version;
   swapSignature: string;
   poolCreatedSignature: string;
+  mintSignature: string;
+  burnSignature: string;
   chainId: number;
   createdAt: Date;
   updatedAt: Date;

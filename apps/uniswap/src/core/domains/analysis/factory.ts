@@ -2,8 +2,10 @@ export class Factory {
     id: string;
     address: string;
     version: VersionEnum;
-    swapSignature: string;
     poolCreatedSignature: string;
+    swapSignature: string;
+    mintSignature: string;
+    burnSignature: string;
     chainId: number;
 }
 
