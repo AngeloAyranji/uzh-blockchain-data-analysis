@@ -23,6 +23,13 @@ import { SwapGetActiveAddressesApiResponse } from './dto/swap.get-active-address
 import { SwapGetActiveAddressesApiRequest } from './dto/swap.get-active-addresses.api.request';
 import { SwapGetPriceApiRequest } from './dto/swap.get-price.api.request';
 import { SwapGetPriceApiResponse } from './dto/swap.get-price.api.response';
+import { SwapGetSwapsByPoolAddressApiRequest } from './dto/swap.get-swaps-by-pool-address.request';
+import { SwapGetPriceByPairApiRequest } from './dto/swap.get-price-by-pair.request';
+import { SwapGetPriceByPairApiResponse } from './dto/swap.get-price-by-pair.response';
+import { SwapGetNewUsersByDateApiRequest } from './dto/swap.get-new-users-by-date.request';
+import { SwapGetNewUsersByDateApiResponse } from './dto/swap.get-new-users-by-data.api.response';
+import { SwapGetDistinctUsersByDateApiRequest } from './dto/swap.get-distinct-users.api.request';
+import { SwapGetDistinctUsersByDateApiResponse } from './dto/swap.get-distinct-users.api.response';
 
 @UseInterceptors(ResponseTransformInterceptor, CacheInterceptor)
 @Controller('swap')
@@ -57,7 +64,10 @@ export class SwapReadController {
   ): Promise<SwapGetActivePoolsApiResponse[]> {
     const response = await this.swapReadService.getTopActivePools(
       Number(query.chainId),
-      query.version
+      query.version,
+      query.limit,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapTopActivePoolsToTopActivePoolsApiResponse(
       response
@@ -71,7 +81,9 @@ export class SwapReadController {
   ): Promise<SwapGetActiveAddressesApiResponse[]> {
     const response = await this.swapReadService.getTopActiveAddresses(
       Number(query.chainId),
-      query.version
+      query.version,
+      query.startDate,
+      query.endDate
     );
     return this.swapControllerReadMapper.mapTopActiveAddressesToTopActiveAddressesApiResponse(
       response
@@ -79,7 +91,7 @@ export class SwapReadController {
   }
 
   @CacheTTL(600)
-  @Get('/daily-price')
+  @Get('/price-by-pool')
   async getDailyPriceOfPool(
     @Query() query: SwapGetPriceApiRequest
   ): Promise<SwapGetPriceApiResponse[]> {
@@ -90,5 +102,61 @@ export class SwapReadController {
       query.endDate
     );
     return this.swapControllerReadMapper.mapPricetoPriceApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/price-by-pair')
+  async getPriceByPair(
+    @Query() query: SwapGetPriceByPairApiRequest
+  ): Promise<SwapGetPriceByPairApiResponse[]> {
+    const response = await this.swapReadService.getPriceOfPair(
+      Number(query.chainId),
+      query.token0,
+      query.token1,
+      query.timeframe,
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapPriceByPairtoPriceByPairApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/pool-swap-count')
+  async getSwapsByPoolAddress(
+    @Query() query: SwapGetSwapsByPoolAddressApiRequest
+  ): Promise<any[]> {
+    const response = await this.swapReadService.getSwapsByPoolAddress(
+      Number(query.chainId),
+      query.poolAddress,
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/new-users')
+  async getNewUsersByDate(
+    @Query() query: SwapGetNewUsersByDateApiRequest
+  ): Promise<SwapGetNewUsersByDateApiResponse[]> {
+    const response = await this.swapReadService.getNewUsersByDate(
+      Number(query.chainId),
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapNewUsersByDatetoNewUsersByDateApiResponse(response);
+  }
+
+  @CacheTTL(600)
+  @Get('/distinct-users')
+  async getDistinctUsers(
+    @Query() query: SwapGetDistinctUsersByDateApiRequest
+  ): Promise<SwapGetDistinctUsersByDateApiResponse[]> {
+    const response = await this.swapReadService.getDistinctUsersByDate(
+      Number(query.chainId),
+      query.startDate,
+      query.endDate
+    );
+    return this.swapControllerReadMapper.mapDistinctUsersByDatetoDistinctUsersByDateApiResponse(response);
   }
 }

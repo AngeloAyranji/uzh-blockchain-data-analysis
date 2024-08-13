@@ -9,6 +9,10 @@ import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
 import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pagination.api.request";
 import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
 import { SwapCriteriaResponse } from "apps/uniswap/src/core/applications/analysis/swap/read/requests/swap.criteria.response";
+import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
+import { SwapGetPriceByPairApiResponse } from "../dto/swap.get-price-by-pair.response";
+import { SwapGetDistinctUsersByDateApiResponse } from "../dto/swap.get-distinct-users.api.response";
+import { SwapGetNewUsersByDateApiResponse } from "../dto/swap.get-new-users-by-data.api.response";
 
 @Injectable()
 export class SwapControllerReadMapper implements ISwapControllerReadMapper {
@@ -88,7 +92,20 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
         return price.map((price) => {
             return {
                 date: price.date,
-                averagePrice: price.averageprice,
+                average_price: price.average_price,
+                max_price: price.max_price,
+                min_price: price.min_price,
+            }
+        });
+    }
+
+    mapPriceByPairtoPriceByPairApiResponse(price: any[]): SwapGetPriceByPairApiResponse[] {
+        return price.map((price) => {
+            return {
+                date: price.date,
+                average_price: price.average_price,
+                max_price: price.max_price,
+                min_price: price.min_price,
             }
         });
     }
@@ -96,7 +113,7 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
     mapSwapGetAllWithPaginationApiRequestToSwapCriteriaRequest(request: SwapGetAllWithPaginationApiRequest): SwapCriteriaRequest {
         return {
             chainId: request.chainId,
-            poolId: request.poolId,
+            poolAddress: request.poolAddress,
             token: request.token,
             startDate: request.startDate,
             endDate: request.endDate,
@@ -105,4 +122,30 @@ export class SwapControllerReadMapper implements ISwapControllerReadMapper {
         }
     }
 
+    mapSwapsByPoolAddressToSwapsByPoolAddressApiResponse(swaps: any[]): SwapGetByPoolAddressApiResponse[] {
+        return swaps.map((swap) => {
+            return {
+                date: swap.date,
+                swapCount: swap.count,
+            }
+        });
+    }
+
+    mapNewUsersByDatetoNewUsersByDateApiResponse(newUsers: any[]): SwapGetNewUsersByDateApiResponse[] {
+        return newUsers.map((newUser) => {
+            return {
+                date: newUser.date,
+                newUsers: newUser.count,
+            }
+        });
+    }
+
+    mapDistinctUsersByDatetoDistinctUsersByDateApiResponse(distinctUsers: any[]): SwapGetDistinctUsersByDateApiResponse[] {
+        return distinctUsers.map((distinctUser) => {
+            return {
+                date: distinctUser.date,
+                distinctUsers: distinctUser.count,
+            }
+        });
+    }
 }

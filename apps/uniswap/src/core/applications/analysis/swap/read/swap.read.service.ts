@@ -8,6 +8,7 @@ import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.
 import { SwapCriteriaRequest } from './requests/swap.criteria.request';
 import { SwapCriteriaResponse } from './requests/swap.criteria.response';
 import { IUniswapContractExternalService, UNISWAP_CONTRACT_EXTERNAL_SERVICE } from '../../../../../external/uniswap-contract/iuniswap-contract.external.service';
+import { TimeframeEnum } from 'apps/uniswap/src/core/domains/analysis/swap';
 
 @Injectable()
 export class SwapReadService implements ISwapReadService {
@@ -21,6 +22,10 @@ export class SwapReadService implements ISwapReadService {
     @Inject(UNISWAP_CONTRACT_EXTERNAL_SERVICE)
     private readonly UniswapContractExternalService: IUniswapContractExternalService,
   ) {}
+
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any> {
+    return await this.swapProvider.getSwapsByPoolAddress(chainId, poolAddress, startDate, endDate);
+  }
 
   async findSwapsWithPagination(swapCriteriaRequest: SwapCriteriaRequest): Promise<PaginationContext<SwapCriteriaResponse>> {
     const swaps = await this.swapProvider.findSwapsWithPagination(swapCriteriaRequest);
@@ -53,11 +58,17 @@ export class SwapReadService implements ISwapReadService {
 
   async getTopActivePools(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    limit?: number,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const activePools = await this.swapProvider.getTopActivePools(
       chainId,
-      version
+      version,
+      limit,
+      startDate,
+      endDate
     );
 
     const activePoolsWithTokenInfo = await Promise.all(
@@ -76,16 +87,19 @@ export class SwapReadService implements ISwapReadService {
 
   async getTopActiveAddresses(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const activePools = await this.swapProvider.getTopActiveAddresses(
       chainId,
-      version
+      version,
+      startDate,
+      endDate
     );
     return activePools;
   }
 
-  // TODO: check if pool address and chainid exists
   async getDailyPriceOfPool(
     chainId: number,
     poolAddress: string,
@@ -95,8 +109,47 @@ export class SwapReadService implements ISwapReadService {
 
     const dailyPriceOfPool = await this.swapProvider.getDailyPriceOfPool(
       chainId,
-      poolAddress
+      poolAddress,
+      startDate,
+      endDate
     );
     return dailyPriceOfPool;
+  }
+
+  async getPriceOfPair(
+    chainId: number,
+    token0: string,
+    token1: string,
+    timeframe: TimeframeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any> {
+    const priceOfPair = await this.swapProvider.getPriceOfPair(
+      chainId,
+      token0,
+      token1,
+      timeframe,
+      startDate,
+      endDate
+    );
+    return priceOfPair;
+  }
+
+  async getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const newUsers = await this.swapProvider.getNewUsersByDate(
+      chainId,
+      startDate,
+      endDate
+    );
+    return newUsers;
+  }
+
+  async getDistinctUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const distinctUsers = await this.swapProvider.getDistinctUsersByDate(
+      chainId,
+      startDate,
+      endDate
+    );
+    return distinctUsers;
   }
 }

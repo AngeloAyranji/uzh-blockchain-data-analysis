@@ -10,3 +10,10 @@ export class Swap {
     price: string | null;
     swapAt: Date;
 }
+
+export enum TimeframeEnum {
+    DAY = 'day',
+    WEEK = 'week',
+    MONTH = 'month',
+    YEAR = 'year',
+}

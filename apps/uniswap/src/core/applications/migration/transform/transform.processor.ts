@@ -90,8 +90,7 @@ export class TransformProcessor implements ITransformProcessor {
         const amount1Out = decodedValues[3].toString();
         const reversed = amount0In === '0' && amount1Out === '0';
 
-        const priceWithoutDecimal = this.arithmeticService.gt(amount0In, '0') &&
-          this.arithmeticService.gt(amount1Out, '0') ? this.arithmeticService.div(amount0In, amount1Out) : this.arithmeticService.div(amount1In, amount0Out);
+        const priceWithoutDecimal = !reversed ? this.arithmeticService.div(amount1Out, amount0In) : this.arithmeticService.div(amount1In, amount0Out);
 
         swaps.push({
           poolId: poolId,

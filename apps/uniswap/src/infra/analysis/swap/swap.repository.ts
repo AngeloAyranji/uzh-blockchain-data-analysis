@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ISwapModifier } from '../../../core/applications/analysis/swap/write/iswap.modifier';
 import { ISwapMapper, SWAP_MAPPER } from './mapper/iswap.mapper';
 import { UniswapDbHandler } from '../../db/uniswap-db.handler';
-import { Swap } from '../../../core/domains/analysis/swap';
+import { Swap, TimeframeEnum } from '../../../core/domains/analysis/swap';
 import { ISwapProvider } from '../../../core/applications/analysis/swap/read/iswap.provider.service';
 import { PaginationContext } from '../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../core/domains/analysis/factory';
@@ -39,17 +39,16 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
           factory: {
             chainId: chainId,
           },
-          OR: [
+          poolAddress: swapCriteriaFilterRequest.poolAddress && swapCriteriaFilterRequest.poolAddress,
+          OR: swapCriteriaFilterRequest.token && [
             {
-              token0: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+              token0: swapCriteriaFilterRequest.token,
             },
             {
-              token1: swapCriteriaFilterRequest.token && swapCriteriaFilterRequest.token,
+              token1: swapCriteriaFilterRequest.token,
             },
           ],
         },
-        poolId:
-          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -58,6 +57,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             swapCriteriaFilterRequest.endDate &&
             swapCriteriaFilterRequest.endDate,
         },
+        sender: swapCriteriaFilterRequest.sender && swapCriteriaFilterRequest.sender,
       },
     });
 
@@ -75,9 +75,9 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
               token1: swapCriteriaFilterRequest.token,
             },
           ],
+          poolAddress:
+            swapCriteriaFilterRequest.poolAddress && swapCriteriaFilterRequest.poolAddress,
         },
-        poolId:
-          swapCriteriaFilterRequest.poolId && swapCriteriaFilterRequest.poolId,
         swapAt: {
           gte:
             swapCriteriaFilterRequest.startDate &&
@@ -86,6 +86,7 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             swapCriteriaFilterRequest.endDate &&
             swapCriteriaFilterRequest.endDate,
         },
+        sender: swapCriteriaFilterRequest.sender && swapCriteriaFilterRequest.sender,
       },
       select: {
         id: true,
@@ -137,9 +138,38 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     };
   }
 
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any> {
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        count("poolId") AS count
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."poolAddress" = '${poolAddress}'
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+    `;
+
+    const swapCount: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return swapCount.map((swap) => {
+      return {
+        date: swap.date,
+        count: Number(swap.count),
+      }
+    });
+  }
+
   async getTopActivePools(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    limit?: number,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const totalCount = await this.uniswapDbHandler.swap.count({
       where: {
@@ -149,29 +179,37 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
       },
     });
 
     const query = `
-    SELECT 
-        p."id" AS poolId, 
-        p."poolAddress" AS poolAddress, 
-        COUNT(s."id") AS swapCount
-    FROM 
-        "Swap" s
-    JOIN 
-        "Pool" p ON s."poolId" = p."id"
-    JOIN 
-        "Factory" f ON p."factoryId" = f."id"
-    WHERE 
-        f."chainId" = ${chainId}
-        ${version ? `AND f."version" = '${version}'` : ''}
-    GROUP BY 
-        p."id"
-    ORDER BY 
-        swapCount DESC
-    LIMIT 5
-`;
+      WITH swap_counts AS (
+          SELECT
+              time_bucket('1 day', s."swapAt") AS bucket, 
+              p."poolAddress" AS poolAddress,
+              count("poolId") AS swapCount
+          FROM "Swap" s
+          JOIN "Pool" p ON s."poolId" = p."id"
+          JOIN "Factory" f ON p."factoryId" = f."id"
+          WHERE 
+            f."chainId" = ${chainId}
+            ${version ? `AND f."version" = '${version}'` : ''}
+            ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+            ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+          GROUP BY bucket, poolAddress
+      )
+      SELECT
+          poolAddress,
+          SUM(swapCount) AS swapCount
+      FROM swap_counts
+      GROUP BY poolAddress 
+      ORDER BY swapCount DESC
+      LIMIT ${limit ? limit : 5};
+    `;
     const pools: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
 
     return pools.map((pool) => {
@@ -185,7 +223,9 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async getTopActiveAddresses(
     chainId: number,
-    version?: VersionEnum
+    version?: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
     const totalCount = await this.uniswapDbHandler.swap.count({
       where: {
@@ -195,7 +235,11 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
-      },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
+      }
     });
 
     const addresses = await this.uniswapDbHandler.swap.groupBy({
@@ -210,6 +254,10 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
             version: version && version,
           },
         },
+        swapAt: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        }
       },
     });
 
@@ -228,29 +276,126 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
 
   async getDailyPriceOfPool(
     chainId: number,
-    poolAddress: string
+    poolAddress: string,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<any> {
-    const result = await this.uniswapDbHandler.$queryRaw`
-    SELECT
-      DATE("Swap"."swapAt") as date,
-      AVG(CAST("Swap"."price" as FLOAT)) as averagePrice
-    FROM
-      "Swap"
-    JOIN
-      "Pool" ON "Swap"."poolId" = "Pool"."id"
-    JOIN
-      "Factory" ON "Pool"."factoryId" = "Factory"."id"
-    WHERE
-      "Pool"."poolAddress" = ${poolAddress} AND
-      "Factory"."chainId" = ${chainId}
-    GROUP BY
-      DATE("Swap"."swapAt")
-    ORDER BY
-      DATE("Swap"."swapAt");
-  `;
 
-  console.log(result)
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        max(s."price"::numeric) AS max_price,
+        avg(s."price"::numeric) AS average_price,
+        min(s."price"::numeric) AS min_price
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."poolAddress" = ${poolAddress}
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+      ORDER BY date ASC
+    `;
+
+    const result = await this.uniswapDbHandler.$queryRawUnsafe(query);
 
     return result;
+  }
+
+  async getPriceOfPair(
+    chainId: number,
+    token0: string,
+    token1: string,
+    timeframe?: TimeframeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any> {
+
+    const query = `
+      SELECT
+        time_bucket('1 day', s."swapAt") AS date,
+        max(s."price"::numeric) AS max_price,
+        avg(s."price"::numeric) AS average_price,
+        min(s."price"::numeric) AS min_price
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId} AND
+        p."token0" = ${token0} AND
+        p."token1" = ${token1}
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+      ORDER BY date ASC
+    `;
+
+    const result = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return result;
+  }
+
+  async getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const query = `
+      WITH FirstSwaps AS (
+          SELECT 
+              sender,
+              MIN("swapAt") AS first_swap_at
+          FROM 
+              "Swap"
+          GROUP BY 
+              sender
+      ),
+      NewSendersByDate AS (
+          SELECT
+              first_swap_at::date AS date,
+              COUNT(sender) AS count
+          FROM 
+              FirstSwaps
+          GROUP BY 
+              first_swap_at::date
+      )
+      SELECT 
+          date,
+          count
+      FROM 
+          NewSendersByDate
+      ORDER BY 
+          date;
+    `;
+
+    const result: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return result.map((newUser) => {
+      return {
+        date: newUser.date,
+        count: Number(newUser.count),
+      }
+    });
+  }
+
+  async getDistinctUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+    const query = `
+      SELECT
+          time_bucket('1 day', "swapAt") AS date,
+          COUNT(DISTINCT sender) AS count
+      FROM
+          "Swap"
+      GROUP BY
+          time_bucket('1 day', "swapAt")
+      ORDER BY
+          date;
+    `;
+
+    const result: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
+
+    return result.map((distinctUser) => {
+      return {
+        date: distinctUser.date,
+        count: Number(distinctUser.count),
+      }
+    });
   }
 }

@@ -1,4 +1,6 @@
 export class SwapGetPriceApiResponse {
     date: Date;
-    averagePrice: number;
+    average_price: number;
+    max_price: number;
+    min_price: number;
 }

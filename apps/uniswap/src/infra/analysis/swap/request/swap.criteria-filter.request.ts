@@ -1,6 +1,7 @@
 export class SwapCriteriaFilterRequest {
   chainId: number;
-  poolId: string;
+  poolAddress: string;
+  sender: string;
   token: string;
   startDate: Date;
   endDate: Date;

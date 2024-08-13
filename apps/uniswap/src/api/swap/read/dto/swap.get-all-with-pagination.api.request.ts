@@ -7,7 +7,7 @@ export class SwapGetAllWithPaginationApiRequest {
 
     @IsOptional()
     @IsString()
-    poolId?: string;
+    poolAddress?: string;
 
     @IsOptional()
     @IsString()
