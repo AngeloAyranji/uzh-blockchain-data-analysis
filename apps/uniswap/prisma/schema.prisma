@@ -4,10 +4,9 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
-// TODO: this should be from env
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://user:postgres@localhost:13339/uniswap"
+  url      = env("DATA_ANALYSIS_DATABASE_URL")
 }
 
 model Factory {

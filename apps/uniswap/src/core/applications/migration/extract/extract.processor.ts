@@ -124,8 +124,7 @@ export class ExtractProcessor implements IExtractProcessor {
 
     for (const factory of factories) {
       let moreLogs = true;
-      // TODO: this should be from env
-      const pageSize = 250;
+      const pageSize = Number(this.config.get<string>('ACTIVITY_EXTRACT_BATCH_SIZE'));
 
       while (moreLogs) {
         const cursor = this.getCursor('activity');
@@ -168,7 +167,7 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log('Caching pools');
     for (const factory of factories) {
       let morePools = true;
-      const pageSize = 250;
+      const pageSize = Number(this.config.get<string>('ACTIVITY_EXTRACT_BATCH_SIZE'));
       let lastId = undefined;
 
       await this.cacheManager.reset();

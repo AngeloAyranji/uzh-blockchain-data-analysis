@@ -118,7 +118,8 @@ export class TransformProcessor implements ITransformProcessor {
         }
       }
     }
-
+    console.log('Swaps:', swaps.length);
+    console.log('Liquidities:', liquidities.length);
     await this.loadQueue.add('SWAP', swaps, { removeOnComplete: true });
     await this.loadQueue.add('LIQUIDITY', liquidities, {
       removeOnComplete: true,

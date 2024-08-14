@@ -24,7 +24,6 @@ export class FactoryReadService implements IFactoryReadService {
     );
 
     if (!factory) {
-      // TODO: Create a custom exception
       throw new Error('Factory not found');
     }
 
