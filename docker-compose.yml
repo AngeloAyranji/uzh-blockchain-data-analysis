@@ -1,35 +1,21 @@
 version: '3.7'
-services:
-  # uniswap:
-  #   extends:
-  #     file: docker-compose.base.yml
-  #     service: uzh-blockchain-data-analysis-base
-  #   command: npm run uniswap:dev
-  #   ports:
-  #     - '4000:4000'
-  #   depends_on:
-  #     - collection-db
-  #     - analysis-db
-  #     - redis
-  #   env_file:
-  #     - ./apps/uniswap/.env
-    # profiles: ["uniswap", "all"]
 
+services:
   dashboard:
-    extends:
-      file: docker-compose.base.yml
-      service: uzh-blockchain-data-analysis-base
-    command: nx serve dashboard
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
     ports:
       - '4200:4200'
+    command: npm run dashboard:docker
     depends_on:
       - collection-db
       - analysis-db
       - redis
-    env_file:
-      - ./apps/dashboard/.env
-    # profiles: ["dashboard", "all"]
-  
+    environment:
+      - DEV_PLATFORM=DOCKER
+
   collection-db:
     image: postgres
     restart: always

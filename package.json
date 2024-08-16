@@ -5,7 +5,8 @@
   "scripts": {
     "setup:collection-db": "prisma db pull --schema=libs/collection-db/prisma/schema.prisma && prisma generate --schema=libs/collection-db/prisma/schema.prisma",
     "setup:uniswap:analysis-db": "prisma db push --schema=apps/uniswap/prisma/schema.prisma",
-    "uniswap:dev": "npm run uniswap:collection-db && npm run uniswap:analysis-db && nx serve uniswap"
+    "uniswap:dev": "npm run uniswap:collection-db && npm run uniswap:analysis-db && nx serve uniswap",
+    "dashboard:docker": "NX_REJECT_UNKNOWN_LOCAL_CACHE=0 nx serve dashboard --configuration=production --verbose"
   },
   "private": true,
   "dependencies": {
