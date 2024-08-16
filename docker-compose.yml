@@ -1,19 +1,21 @@
 version: '3.7'
+
 services:
-  # uniswap:
-  #   extends:
-  #     file: docker-compose.base.yml
-  #     service: uzh-blockchain-data-analysis-base
-  #   command: npm run uniswap:dev
-  #   ports:
-  #     - '4000:4000'
-  #   depends_on:
-  #     - collection-db
-  #     - analysis-db
-  #   env_file:
-  #     - ./apps/uniswap/.env
-    # profiles: ["uniswap", "all"]
-  
+  dashboard:
+    restart: always
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    ports:
+      - '4200:4200'
+    command: npm run dashboard:docker
+    depends_on:
+      - collection-db
+      - analysis-db
+      - redis
+    environment:
+      - DEV_PLATFORM=DOCKER
+
   collection-db:
     image: postgres
     restart: always
@@ -57,7 +59,3 @@ services:
       - "6379:6379"
     volumes:
       - ${REDIS_DATA_DIR}:/var/lib/redis/data
-
-volumes:
-  uzh-blockchain-data-analysis-node-modules: null
-  nx-cache: null
