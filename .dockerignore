@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dumps/
+pg-data/
+redis-data/
+.nx/
+.vscode/
