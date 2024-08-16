@@ -32,7 +32,7 @@ services:
       - ${DATA_DIR}:/var/lib/postgresql/data
   
   analysis-db:
-    image: timescale/timescaledb:latest-pg16
+    image: timescale/timescaledb:2.15.3-pg16
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_ANALYSIS_USER}
