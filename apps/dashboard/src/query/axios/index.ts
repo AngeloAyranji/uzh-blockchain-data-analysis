@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosPromise } from "axios";
 import { BaseResponse } from "../types";
 
 export const backendInstance = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: process.env.UNISWAP_BACKEND_URL,
 });
 
 export type ControlledAxiosPromise<T extends NonNullable<unknown>> =
