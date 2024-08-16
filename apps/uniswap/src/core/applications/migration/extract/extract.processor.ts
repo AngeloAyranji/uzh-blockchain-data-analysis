@@ -60,17 +60,19 @@ export class ExtractProcessor implements IExtractProcessor {
       const transformCount = await this.transformQueue.count();
       const loadCount = await this.loadQueue.count();
       if (transformCount === 0 && loadCount === 0) {
-        if (phase === 'SWAP') {
+        if (phase === 'ACTIVITY') {
           const chainId = this.retreiveChainId();
-          const factories = await this.factoryReadService.findAllByChainId(chainId);
-          await this.extractSwaps(factories);
+          const factories = await this.factoryReadService.findAllByChainId(
+            chainId
+          );
+          await this.extractActivity(factories);
         }
       }
-    }, 15000)
+    }, 15000);
   }
 
   async extractPools(factories: Factory[]): Promise<void> {
-    Logger.log('Extracting pools');
+    Logger.log('Extracting Pools');
     for (const factory of factories) {
       let moreLogs = true;
       const pageSize = 20;
@@ -87,7 +89,6 @@ export class ExtractProcessor implements IExtractProcessor {
         );
 
         if (logs.length > 0) {
-          // TODO: map logs to PairCreatedRequest
           this.transformQueue.add(
             `POOL_CREATED_${factory.version}`,
             {
@@ -110,30 +111,34 @@ export class ExtractProcessor implements IExtractProcessor {
         moreLogs = logs.length === pageSize;
       }
     }
-    Logger.log('Pools extraction finished');
-    await this.handleNextExtraction('SWAP');
+    Logger.log('Pools Extraction Finished');
+    await this.handleNextExtraction('ACTIVITY');
   }
 
-  async extractSwaps(factories: Factory[]): Promise<void> {
+  async extractActivity(factories: Factory[]): Promise<void> {
     clearInterval(this.nextPhaseIntervalId);
+
     await this.cachePools(factories);
-    Logger.log('Extracting swaps');
+
+    Logger.log('Extracting Activity');
+
     for (const factory of factories) {
       let moreLogs = true;
-      const pageSize = 250;
+      const pageSize = Number(this.config.get<string>('ACTIVITY_EXTRACT_BATCH_SIZE'));
 
       while (moreLogs) {
-        const cursor = this.getCursor('swap');
-        const logs = await this.logReadService.findLogsByTopic0(
-          factory.swapSignature,
+        const cursor = this.getCursor('activity');
+
+        const logs = await this.logReadService.findLogsByManyTopic0(
+          [factory.swapSignature, factory.mintSignature, factory.burnSignature],
           pageSize,
           cursor?.lastTransactionHash,
           cursor?.lastLogIndex
         );
-        console.log(logs.length)
+        console.log(logs.length);
         if (logs.length > 0) {
           this.transformQueue.add(
-            `SWAP_${factory.version}`,
+            `ACTIVITY`,
             {
               logs: logs,
             },
@@ -141,9 +146,11 @@ export class ExtractProcessor implements IExtractProcessor {
               removeOnComplete: true,
             }
           );
+
           const lastTransactionHash = logs[logs.length - 1].transactionHash;
           const lastLogIndex = logs[logs.length - 1].logIndex;
-          this.setCursor('swap', {
+
+          this.setCursor('activity', {
             lastTransactionHash,
             lastLogIndex,
           });
@@ -152,14 +159,15 @@ export class ExtractProcessor implements IExtractProcessor {
         moreLogs = logs.length === pageSize;
       }
     }
-    Logger.log('Swaps extraction finished');
+
+    Logger.log('Activity extraction finished');
   }
 
   private async cachePools(factories: Factory[]): Promise<void> {
     Logger.log('Caching pools');
     for (const factory of factories) {
       let morePools = true;
-      const pageSize = 250;
+      const pageSize = Number(this.config.get<string>('ACTIVITY_EXTRACT_BATCH_SIZE'));
       let lastId = undefined;
 
       await this.cacheManager.reset();

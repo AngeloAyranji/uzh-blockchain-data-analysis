@@ -46,4 +46,18 @@ export class LogReadService implements ILogReadService {
       lastLogIndex
     );
   }
+
+  async findLogsByManyTopic0(
+    topic0s: string[],
+    pageSize: number,
+    lastTransactionHash?: string,
+    lastLogIndex?: number
+  ): Promise<Log[]> {
+    return this.logProvider.findLogsByManyTopic0(
+      topic0s,
+      pageSize,
+      lastTransactionHash,
+      lastLogIndex
+    );
+  }
 }

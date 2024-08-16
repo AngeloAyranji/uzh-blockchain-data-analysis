@@ -12,6 +12,8 @@ export class FactoryMapper implements IFactoryMapper {
       version: VersionEnum[entity.version],
       swapSignature: entity.swapSignature,
       poolCreatedSignature: entity.poolCreatedSignature,
+      mintSignature: entity.mintSignature,
+      burnSignature: entity.burnSignature,
       chainId: entity.chainId,
     };
     return domain;

@@ -1,7 +1,23 @@
 import { PrismaClient as PrismaClientAnalysis } from '@prisma/client-uniswap';
 import { PrismaClient as PrismaClientCollection } from '@prisma/client-collection';
+import {
+  POOL_CREATED_V2,
+  POOL_CREATED_V3,
+  SWAP_SIGNATURE_V2,
+  SWAP_SIGNATURE_V3,
+  MINT_SIGNATURE_V2,
+  MINT_SIGNATURE_V3,
+  BURN_SIGNATURE_V2,
+  BURN_SIGNATURE_V3,
+} from '../utils/topic0';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
+import {
+  FACTORY_V2_BSC_ADDRESS,
+  FACTORY_V2_ETH_ADDRESS,
+  FACTORY_V3_BSC_ADDRESS,
+  FACTORY_V3_ETH_ADDRESS,
+} from '../utils/addresses';
 dotenv.config();
 
 const analysisPrisma = new PrismaClientAnalysis();
@@ -25,10 +41,10 @@ async function seedAnalysisDB(
       address: factoryV2Address,
       version: 'V2',
       chainId: chainId,
-      swapSignature:
-        '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822',
-      poolCreatedSignature:
-        '0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9',
+      swapSignature: SWAP_SIGNATURE_V2,
+      poolCreatedSignature: POOL_CREATED_V2,
+      mintSignature: MINT_SIGNATURE_V2,
+      burnSignature: BURN_SIGNATURE_V2,
     },
   });
 
@@ -45,10 +61,10 @@ async function seedAnalysisDB(
       address: factoryV3Address,
       version: 'V3',
       chainId: chainId,
-      swapSignature:
-        '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67',
-      poolCreatedSignature:
-        '0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118',
+      swapSignature: SWAP_SIGNATURE_V3,
+      poolCreatedSignature: POOL_CREATED_V3,
+      burnSignature: BURN_SIGNATURE_V3,
+      mintSignature: MINT_SIGNATURE_V3,
     },
   });
 }
@@ -110,13 +126,13 @@ async function seedCollectionDB() {
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_address_topic_0
     ON bsc_transaction_logs (address, topic_0);
     `;
-  
+
   await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_eth_topic_transhash_logindex_partial
   ON eth_transaction_logs (topic_0, transaction_hash, log_index)
   WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
   `;
 
-await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
+  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
   ON bsc_transaction_logs (topic_0, transaction_hash, log_index)
   WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
   `;
@@ -128,6 +144,8 @@ await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transh
 async function setupTimeScaleDB() {
   console.log('Creating hypertable for SWAP');
   await analysisPrisma.$executeRaw`SELECT create_hypertable('"Swap"', by_range('swapAt'), if_not_exists => TRUE);`;
+  console.log('Creating hypertable for LIQUIDITY');
+  await analysisPrisma.$executeRaw`SELECT create_hypertable('"Liquidity"', by_range('timestamp'), if_not_exists => TRUE);`;
 }
 
 async function main() {
@@ -138,24 +156,24 @@ async function main() {
   switch (process.env.CHAIN_ID) {
     case 'eth':
       chainId = 1;
-      factoryV2Address = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
-      factoryV3Address = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+      factoryV2Address = FACTORY_V2_ETH_ADDRESS;
+      factoryV3Address = FACTORY_V3_ETH_ADDRESS;
       break;
     case 'bsc':
       chainId = 61;
-      factoryV2Address = '0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6';
-      factoryV3Address = '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7';
+      factoryV2Address = FACTORY_V2_BSC_ADDRESS;
+      factoryV3Address = FACTORY_V3_BSC_ADDRESS;
       break;
     default:
       chainId = 1;
-      factoryV2Address = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
-      factoryV3Address = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+      factoryV2Address = FACTORY_V2_ETH_ADDRESS;
+      factoryV3Address = FACTORY_V3_ETH_ADDRESS;
   }
 
   try {
-    await setupTimeScaleDB();
     await seedAnalysisDB(chainId, factoryV2Address, factoryV3Address);
     await seedCollectionDB();
+    await setupTimeScaleDB();
     await analysisPrisma.$disconnect();
     await collectionPrisma.$disconnect();
   } catch (e) {
@@ -167,4 +185,3 @@ async function main() {
 }
 
 main();
-
