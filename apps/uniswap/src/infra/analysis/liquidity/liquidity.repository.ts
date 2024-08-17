@@ -3,9 +3,10 @@ import { ILiquidityMapper, LIQUIDITY_MAPPER } from './mapper/iliquidity.mapper';
 import { ILiquidityModifier } from '../../../core/applications/analysis/liquidity/write/iliquidity.modifier';
 import { UniswapDbHandler } from '../../db/uniswap-db.handler';
 import { Liquidity } from '../../../core/domains/analysis/liquidity';
+import { ILiquidityProvider } from '../../../core/applications/analysis/liquidity/read/iliquidity.provider';
 
 @Injectable()
-export class LiquidityRepository implements ILiquidityModifier {
+export class LiquidityRepository implements ILiquidityModifier, ILiquidityProvider {
 
   constructor(
     @Inject(LIQUIDITY_MAPPER)

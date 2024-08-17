@@ -2,22 +2,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import Big from 'big.js';
 import { ISwapReadService } from './iswap.read.service';
 import { ISwapProvider, SWAP_PROVIDER } from './iswap.provider';
-import { PaginationContext } from '../../../../../core/domains/valueobject/paginationContext';
-import { VersionEnum } from '../../../../../core/domains/analysis/factory';
+import { PaginationContext } from '../../../..//domains/valueobject/paginationContext';
+import { VersionEnum } from '../../../../domains/analysis/factory';
 import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.service';
 import { SwapCriteriaRequest } from './requests/swap.criteria.request';
 import { SwapCriteriaResponse } from './requests/swap.criteria.response';
 import { IUniswapContractExternalService, UNISWAP_CONTRACT_EXTERNAL_SERVICE } from '../../../../../external/uniswap-contract/iuniswap-contract.external.service';
-import { TimeframeEnum } from 'apps/uniswap/src/core/domains/analysis/swap';
+import { TimeframeEnum } from '../../../../domains/analysis/swap';
 
 @Injectable()
 export class SwapReadService implements ISwapReadService {
   constructor(
     @Inject(SWAP_PROVIDER)
     private readonly swapProvider: ISwapProvider,
-
-    @Inject(POOL_READ_SERVICE)
-    private readonly poolReadService: IPoolReadService,
 
     @Inject(UNISWAP_CONTRACT_EXTERNAL_SERVICE)
     private readonly UniswapContractExternalService: IUniswapContractExternalService,

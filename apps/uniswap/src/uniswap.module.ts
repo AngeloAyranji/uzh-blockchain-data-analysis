@@ -64,6 +64,11 @@ import { LIQUIDITY_MAPPER } from './infra/analysis/liquidity/mapper/iliquidity.m
 import { LiquidityMapper } from './infra/analysis/liquidity/mapper/liquidity.mapper';
 import { LIQUIDITY_MODIFIER } from './core/applications/analysis/liquidity/write/iliquidity.modifier';
 import { LiquidityRepository } from './infra/analysis/liquidity/liquidity.repository';
+import { LIQUIDITY_PROVIDER } from './core/applications/analysis/liquidity/read/iliquidity.provider';
+import { LIQUIDITY_READ_SERVICE } from './core/applications/analysis/liquidity/read/iliquidity.read.service';
+import { LiquidityReadService } from './core/applications/analysis/liquidity/read/liquidity.read.service';
+import { LIQUIDITY_CONTROLLER_READ_MAPPER } from './api/liquidity/read/mapper/iliquidity.read.mapper';
+import { LiquidityReadController } from './api/liquidity/read/liquidity.read.controller';
 @Module({
   imports: [
     CollectionDbModule,
@@ -92,6 +97,7 @@ import { LiquidityRepository } from './infra/analysis/liquidity/liquidity.reposi
   controllers: [
     PoolReadController,
     SwapReadController,
+    LiquidityReadController,
   ],
   providers: [
     UniswapDbHandler,
@@ -200,6 +206,7 @@ import { LiquidityRepository } from './infra/analysis/liquidity/liquidity.reposi
       provide: LOG_MAPPER,
       useClass: LogMapper,
     },
+    // LIQUIDITY
     {
       provide: LIQUIDITY_REQUEST_MAPPER,
       useClass: LiquidityRequestMapper,
@@ -216,6 +223,18 @@ import { LiquidityRepository } from './infra/analysis/liquidity/liquidity.reposi
       provide: LIQUIDITY_MODIFIER,
       useClass: LiquidityRepository,
     },
+    {
+      provide: LIQUIDITY_PROVIDER,
+      useClass: LiquidityRepository,
+    },
+    {
+      provide: LIQUIDITY_READ_SERVICE,
+      useClass: LiquidityReadService,
+    },
+    {
+      provide: LIQUIDITY_CONTROLLER_READ_MAPPER,
+      useClass: LiquidityReadController,
+    }
   ],
 })
 export class UniswapModule {}
