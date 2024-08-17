@@ -1,6 +1,21 @@
 version: '3.7'
 
 services:
+  uniswap:
+    restart: always
+    build:
+      context: .
+      dockerfile: apps/uniswap/Dockerfile
+    ports:
+      - '4000:4000'
+    command: npm run uniswap:docker
+    depends_on:
+      - collection-db
+      - analysis-db
+      - redis
+    environment:
+      - DEV_PLATFORM=DOCKER
+
   dashboard:
     restart: always
     build:
