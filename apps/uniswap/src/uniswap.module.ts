@@ -69,6 +69,7 @@ import { LIQUIDITY_READ_SERVICE } from './core/applications/analysis/liquidity/r
 import { LiquidityReadService } from './core/applications/analysis/liquidity/read/liquidity.read.service';
 import { LIQUIDITY_CONTROLLER_READ_MAPPER } from './api/liquidity/read/mapper/iliquidity.read.mapper';
 import { LiquidityReadController } from './api/liquidity/read/liquidity.read.controller';
+import { LiquidityControllerReadMapper } from './api/liquidity/read/mapper/liquidity.read.mapper';
 @Module({
   imports: [
     CollectionDbModule,
@@ -233,7 +234,7 @@ import { LiquidityReadController } from './api/liquidity/read/liquidity.read.con
     },
     {
       provide: LIQUIDITY_CONTROLLER_READ_MAPPER,
-      useClass: LiquidityReadController,
+      useClass: LiquidityControllerReadMapper,
     }
   ],
 })

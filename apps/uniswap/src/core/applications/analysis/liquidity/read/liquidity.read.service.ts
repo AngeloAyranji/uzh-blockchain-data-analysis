@@ -10,6 +10,16 @@ export class LiquidityReadService implements ILiquidityReadService {
     private readonly liquidityProvider: ILiquidityProvider,
 
     @Inject(UNISWAP_CONTRACT_EXTERNAL_SERVICE)
-    private readonly UniswapContractExternalService: IUniswapContractExternalService,
+    private readonly uniswapContractExternalService: IUniswapContractExternalService,
   ) {}
+
+  async getTopActiveLiquidityProvidersByPool(
+    chainId: number,
+    poolAddress: string,
+    limit?: number,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<any> {
+    return await this.liquidityProvider.getTopActiveLiquidityProvidersByPool(chainId, poolAddress, limit, startDate, endDate);
+  }
 }
