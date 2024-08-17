@@ -98,6 +98,7 @@ export class SwapReadController {
     const response = await this.swapReadService.getDailyPriceOfPool(
       Number(query.chainId),
       query.poolAddress,
+      query.timeframe,
       query.startDate,
       query.endDate
     );

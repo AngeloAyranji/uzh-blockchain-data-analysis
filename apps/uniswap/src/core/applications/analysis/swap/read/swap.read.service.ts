@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Big from 'big.js';
 import { ISwapReadService } from './iswap.read.service';
-import { ISwapProvider, SWAP_PROVIDER } from './iswap.provider.service';
+import { ISwapProvider, SWAP_PROVIDER } from './iswap.provider';
 import { PaginationContext } from '../../../../../core/domains/valueobject/paginationContext';
 import { VersionEnum } from '../../../../../core/domains/analysis/factory';
 import { IPoolReadService, POOL_READ_SERVICE } from '../../pool/read/ipool.read.service';
@@ -103,6 +103,7 @@ export class SwapReadService implements ISwapReadService {
   async getDailyPriceOfPool(
     chainId: number,
     poolAddress: string,
+    timeframe: TimeframeEnum,
     startDate?: Date,
     endDate?: Date
   ): Promise<any> {
@@ -110,6 +111,7 @@ export class SwapReadService implements ISwapReadService {
     const dailyPriceOfPool = await this.swapProvider.getDailyPriceOfPool(
       chainId,
       poolAddress,
+      timeframe,
       startDate,
       endDate
     );

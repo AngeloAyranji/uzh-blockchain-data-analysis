@@ -50,7 +50,7 @@ import { SWAP_MAPPER } from './infra/analysis/swap/mapper/iswap.mapper';
 import { SwapMapper } from './infra/analysis/swap/mapper/swap.mapper';
 import { SWAP_READ_SERVICE } from './core/applications/analysis/swap/read/iswap.read.service';
 import { SwapReadService } from './core/applications/analysis/swap/read/swap.read.service';
-import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.provider.service';
+import { SWAP_PROVIDER } from './core/applications/analysis/swap/read/iswap.provider';
 import { SwapReadController } from './api/swap/read/swap.read.controller';
 import { SWAP_CONTROLLER_READ_MAPPER } from './api/swap/read/mapper/iswap.read.mapper';
 import { SwapControllerReadMapper } from './api/swap/read/mapper/swap.read.mapper';
