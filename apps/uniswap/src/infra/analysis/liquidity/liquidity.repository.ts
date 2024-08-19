@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ILiquidityMapper, LIQUIDITY_MAPPER } from './mapper/iliquidity.mapper';
 import { ILiquidityModifier } from '../../../core/applications/analysis/liquidity/write/iliquidity.modifier';
 import { UniswapDbHandler } from '../../db/uniswap-db.handler';
-import { Liquidity } from '../../../core/domains/analysis/liquidity';
+import { Liquidity, LiquidityTypeEnum } from '../../../core/domains/analysis/liquidity';
 import { ILiquidityProvider } from '../../../core/applications/analysis/liquidity/read/iliquidity.provider';
 
 @Injectable()
@@ -56,8 +56,8 @@ export class LiquidityRepository
         WHERE 
           f."chainId" = ${chainId} AND
           p."poolAddress" = '${poolAddress}'
-          ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
-          ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+          ${startDate ? `AND s."timestamp" >= '${startDate}'` : ''}
+          ${endDate ? `AND s."timestamp" <= '${endDate}'` : ''}
         GROUP BY bucket, poolAddress
     )
     SELECT
@@ -77,6 +77,38 @@ export class LiquidityRepository
         poolAddress: liquidity.pooladdress,
         count: Number(liquidity.liquidityCount),
         percentage: Number(liquidity.liquidityCount) / totalCount,
+      };
+    });
+  }
+
+  async getPoolFlow(
+    chainId: number,
+    poolAddress: string,
+    liquidityType: LiquidityTypeEnum,
+    startDate?: Date,
+    endDate?: Date
+  ) {
+    const liquidities = await this.uniswapDbHandler.liquidity.findMany({
+      where: {
+        pool: {
+          factory: {
+            chainId: chainId,
+          },
+          poolAddress: poolAddress,
+        },
+        type: liquidityType,
+        timestamp: {
+          gte: startDate && startDate,
+          lte: endDate && endDate,
+        },
+      },
+    });
+    
+    return liquidities.map((liquidity) => {
+      return {
+        timestamp: liquidity.timestamp,
+        amount0: liquidity.amount0,
+        amount1: liquidity.amount1,
       };
     });
   }

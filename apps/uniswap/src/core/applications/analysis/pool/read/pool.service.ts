@@ -27,6 +27,19 @@ export class PoolReadService implements IPoolReadService {
     @Inject(UNISWAP_CONTRACT_EXTERNAL_SERVICE)
     private readonly UniswapContractExternalService: IUniswapContractExternalService,
   ) {}
+
+  async getTokensOfPool(
+    chainId: number,
+    poolAddress: string
+  ): Promise<string[]> {
+    const tokens = await this.poolProvider.getTokensOfPool(chainId, poolAddress);
+
+    if (tokens.length === 0) {
+      throw new Error('No tokens found for pool');
+    }
+
+    return tokens;
+  }
   
   async getPoolsWithCursor(chainId: number, pageSize: number, lastId?: string): Promise<Pool[]> {
       return this.poolProvider.getPoolsWithCursor(chainId, pageSize, lastId);

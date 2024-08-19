@@ -160,4 +160,17 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
       dateEnum
     );
   }
+
+  async getTokensOfPool(chainId: number, poolAddress: string): Promise<string[]> {
+    const pool = await this.uniswapDbHandler.pool.findFirst({
+      where: {
+        factory: {
+          chainId: chainId,
+        },
+        poolAddress: poolAddress,
+      },
+    });
+
+    return [pool.token0, pool.token1];
+  }
 }

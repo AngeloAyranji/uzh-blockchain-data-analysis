@@ -33,4 +33,8 @@ export interface IPoolReadService {
     poolAddress: string,
     version: VersionEnum
   ): Promise<boolean>;
+  getTokensOfPool(
+    chainId: number,
+    poolAddress: string
+  ): Promise<string[]>;
 }
