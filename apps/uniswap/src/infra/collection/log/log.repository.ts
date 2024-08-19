@@ -4,6 +4,7 @@ import { Log } from '../../../core/domains/collection/log';
 import { ILogMapper, LOG_MAPPER } from './mapper/ilog.mapper';
 import { ILogProvider } from '../../../core/applications/collection/log/read/ilog.provider';
 import { LogEntity } from './log.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class LogRepository implements ILogProvider {
@@ -11,8 +12,10 @@ export class LogRepository implements ILogProvider {
     @Inject(LOG_MAPPER)
     private readonly logMapper: ILogMapper,
 
+    private readonly config: ConfigService,
+
     private readonly collectionDbHandler: CollectionDbHandler
-  ) {}
+  ) { }
 
   async findLogsByTopic0AndAddress(
     address: string,
@@ -22,12 +25,12 @@ export class LogRepository implements ILogProvider {
     lastLogIndex?: number
   ): Promise<Log[]> {
     let query = `
-        SELECT * FROM "eth_transaction_logs_with_timestamp"
+        SELECT * FROM "${this.getViewNameByNetwork()}"
         WHERE "address" = '${address}' AND "topic_0" = '${topic0}' 
     `;
 
     if (lastTransactionHash && lastLogIndex) {
-        query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
+      query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
     }
 
     query += ` ORDER BY "transaction_hash", "log_index" ASC
@@ -41,9 +44,10 @@ export class LogRepository implements ILogProvider {
     address: string,
     topic0: string
   ): Promise<number> {
+    const query = `SELECT COUNT(*) FROM "${this.getViewNameByNetwork()}" WHERE address = ${address} AND topic_0 = ${topic0}`;
     const result = await this.collectionDbHandler
-      .$queryRaw`SELECT COUNT(*) FROM eth_transaction_logs_with_timestamp WHERE address = ${address} AND topic_0 = ${topic0}`;
-    
+      .$queryRawUnsafe(query);
+
     return Number(result[0].count);
   }
 
@@ -54,12 +58,12 @@ export class LogRepository implements ILogProvider {
     lastLogIndex?: number
   ): Promise<Log[]> {
     let query = `
-        SELECT * FROM "eth_transaction_logs_with_timestamp"
+        SELECT * FROM "${this.getViewNameByNetwork()}"
         WHERE "topic_0" = '${topic0}'
     `;
 
     if (lastTransactionHash && lastLogIndex) {
-        query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
+      query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
     }
 
     query += ` ORDER BY "transaction_hash", "log_index" ASC
@@ -76,18 +80,23 @@ export class LogRepository implements ILogProvider {
     lastLogIndex?: number
   ): Promise<Log[]> {
     let query = `
-        SELECT * FROM "eth_transaction_logs_with_timestamp"
+        SELECT * FROM "${this.getViewNameByNetwork()}"
         WHERE "topic_0" IN (${topic0s.map(topic0 => `'${topic0}'`).join(', ')})
     `;
 
     if (lastTransactionHash && lastLogIndex) {
-        query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
+      query += ` AND ("transaction_hash", "log_index") > ('${lastTransactionHash}', ${lastLogIndex})`;
     }
 
     query += ` ORDER BY "transaction_hash", "log_index" ASC
                LIMIT ${pageSize}`;
-               
+
     const logs: LogEntity[] = await this.collectionDbHandler.$queryRawUnsafe(query);
     return this.logMapper.mapEntitiesToDomains(logs);
+  }
+
+  private getViewNameByNetwork(): string {
+    const network = this.config.get<string>('NETWORK');
+    return network === 'bsc' ? 'bsc_transaction_logs_with_timestamp' : 'eth_transaction_logs_with_timestamp';
   }
 }

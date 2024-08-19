@@ -194,12 +194,14 @@ export class ExtractProcessor implements IExtractProcessor {
   }
 
   private getCursor(key: string): any {
-    const cursorDb = new JSONdb('./apps/uniswap/json-db.json');
+    const path = `./apps/uniswap/${this.config.get<string>('NETWORK')}-db.json`;
+    const cursorDb = new JSONdb(path);
     return cursorDb.get(key);
   }
 
   private setCursor(key: string, value: any): void {
-    const cursorDb = new JSONdb('./apps/uniswap/json-db.json');
+    const path = `./apps/uniswap/${this.config.get<string>('NETWORK')}-db.json`;
+    const cursorDb = new JSONdb(path);
     cursorDb.set(key, value);
   }
 
@@ -210,7 +212,7 @@ export class ExtractProcessor implements IExtractProcessor {
       case 'eth':
         return 1;
       case 'bsc':
-        return 61;
+        return 56;
       default:
         return 1;
     }

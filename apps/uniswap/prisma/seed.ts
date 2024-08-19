@@ -188,7 +188,7 @@ async function main() {
       factoryV3Address = FACTORY_V3_ETH_ADDRESS;
       break;
     case 'bsc':
-      chainId = 61;
+      chainId = 56;
       factoryV2Address = FACTORY_V2_BSC_ADDRESS;
       factoryV3Address = FACTORY_V3_BSC_ADDRESS;
       break;

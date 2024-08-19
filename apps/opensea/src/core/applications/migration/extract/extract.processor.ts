@@ -47,7 +47,7 @@ export class ExtractProcessor implements IExtractProcessor {
       case 'eth':
         return 1;
       case 'bsc':
-        return 61;
+        return 56;
       default:
         return 1;
     }
