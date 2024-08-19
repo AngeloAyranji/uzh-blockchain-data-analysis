@@ -8,7 +8,7 @@ import { SwapGetActiveAddressesApiResponse } from "../dto/swap.get-active-addres
 import { SwapGetPriceApiResponse } from "../dto/swap.get-price.api.response";
 import { SwapGetAllWithPaginationApiRequest } from "../dto/swap.get-all-with-pagination.api.request";
 import { SwapCriteriaRequest } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.request";
-import { SwapCriteriaResponse } from "apps/uniswap/src/core/applications/analysis/swap/read/requests/swap.criteria.response";
+import { SwapCriteriaResponse } from "../../../../core/applications/analysis/swap/read/requests/swap.criteria.response";
 import { SwapGetByPoolAddressApiResponse } from "../dto/swap.get-swaps-get-by-pool-address.response";
 import { SwapGetPriceByPairApiResponse } from "../dto/swap.get-price-by-pair.response";
 import { SwapGetDistinctUsersByDateApiResponse } from "../dto/swap.get-distinct-users.api.response";

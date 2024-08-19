@@ -91,30 +91,36 @@ export class TransformProcessor implements ITransformProcessor {
 
       if (poolId != null) {
         switch (log.topic0) {
-          case SWAP_SIGNATURE_V2:
+          case SWAP_SIGNATURE_V2: {
             const swapAddRequestV2 = await this.transformSwapV2(log, poolId);
             swaps.push(swapAddRequestV2);
             break;
-          case SWAP_SIGNATURE_V3:
+          }
+          case SWAP_SIGNATURE_V3: {
             const swapAddRequestV3 = await this.transformSwapV3(log, poolId);
             swaps.push(swapAddRequestV3);
             break;
-          case MINT_SIGNATURE_V2:
+          }
+          case MINT_SIGNATURE_V2: {
             const mintAddRequestV2 = await this.transformMintV2(log, poolId);
             liquidities.push(mintAddRequestV2);
             break;
-          case MINT_SIGNATURE_V3:
+          }
+          case MINT_SIGNATURE_V3: {
             const mintAddRequestV3 = await this.transformMintV3(log, poolId);
             liquidities.push(mintAddRequestV3);
             break;
-          case BURN_SIGNATURE_V2:
+          }
+          case BURN_SIGNATURE_V2: {
             const burnAddRequestV2 = await this.transformBurnV2(log, poolId);
             liquidities.push(burnAddRequestV2);
             break;
-          case BURN_SIGNATURE_V3:
+          }
+          case BURN_SIGNATURE_V3: {
             const burnAddRequestV3 = await this.transformBurnV3(log, poolId);
             liquidities.push(burnAddRequestV3);
             break;
+          }
         }
       }
     }
