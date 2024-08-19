@@ -86,7 +86,7 @@ export class LogRepository implements ILogProvider {
 
     query += ` ORDER BY "transaction_hash", "log_index" ASC
                LIMIT ${pageSize}`;
-
+               
     const logs: LogEntity[] = await this.collectionDbHandler.$queryRawUnsafe(query);
     return this.logMapper.mapEntitiesToDomains(logs);
   }

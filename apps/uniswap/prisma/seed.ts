@@ -70,6 +70,7 @@ async function seedAnalysisDB(
 }
 
 async function seedCollectionDB() {
+  console.log('Creating views');
   await collectionPrisma.$queryRaw`CREATE OR REPLACE VIEW eth_transaction_logs_with_timestamp AS
       SELECT
           t.transaction_hash,
@@ -107,37 +108,64 @@ async function seedCollectionDB() {
   JOIN
       bsc_transaction_logs l ON t.transaction_hash = l.transaction_hash;
   `;
-  console.log('Creating indexes');
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS eth_idx_topic_0
-    ON eth_transaction_logs (topic_0)
-    WHERE topic_0 = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822' 
-       OR topic_0 = '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67';
-    `;
 
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_topic_0
-    ON bsc_transaction_logs (topic_0)
-    WHERE topic_0 = '0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822' 
-       OR topic_0 = '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67';
-    `;
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS eth_idx_address_topic_0
-    ON eth_transaction_logs (address, topic_0);
-    `;
 
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS bsc_idx_address_topic_0
-    ON bsc_transaction_logs (address, topic_0);
+  // address & topic_0 index in eth_transaction_logs table
+  console.log('Creating address & topic_0 index in eth_transaction_logs table');
+  const eth_idx_address_topic_0 = `CREATE INDEX IF NOT EXISTS eth_idx_address_topic_0
+    ON eth_transaction_logs (address, topic_0, transaction_hash, log_index) where topic_0 IN ('${POOL_CREATED_V2}', '${POOL_CREATED_V3}') AND address IN ('${FACTORY_V2_ETH_ADDRESS}', '${FACTORY_V3_ETH_ADDRESS}');
     `;
+  await collectionPrisma.$queryRawUnsafe(eth_idx_address_topic_0);
 
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_eth_topic_transhash_logindex_partial
+  const bsc_idx_address_topic_0 = `CREATE INDEX IF NOT EXISTS bsc_idx_address_topic_0
+  ON bsc_transaction_logs (address, topic_0, transaction_hash, log_index) where topic_0 IN ('${POOL_CREATED_V2}', '${POOL_CREATED_V3}') AND address IN ('${FACTORY_V2_BSC_ADDRESS}', '${FACTORY_V3_BSC_ADDRESS}');
+  `;
+  await collectionPrisma.$queryRawUnsafe(bsc_idx_address_topic_0);
+
+  // topic_0 index in eth_transaction_logs table
+  console.log('Creating topic_0 index in eth_transaction_logs table');
+  const eth_idx_topic_0 = `CREATE INDEX IF NOT EXISTS eth_idx_topic_0
   ON eth_transaction_logs (topic_0, transaction_hash, log_index)
-  WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
+  WHERE topic_0 IN ('${SWAP_SIGNATURE_V2}', '${SWAP_SIGNATURE_V3}', '${MINT_SIGNATURE_V2}', '${MINT_SIGNATURE_V3}', '${BURN_SIGNATURE_V2}', '${BURN_SIGNATURE_V3}');
   `;
+  await collectionPrisma.$queryRawUnsafe(eth_idx_topic_0);
 
-  await collectionPrisma.$queryRaw`CREATE INDEX IF NOT EXISTS idx_bsc_topic_transhash_logindex_partial
+  const bsc_idx_topic_0 = `CREATE INDEX IF NOT EXISTS bsc_idx_topic_0
   ON bsc_transaction_logs (topic_0, transaction_hash, log_index)
-  WHERE topic_0 IN ('0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822', '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67');
+  WHERE topic_0 IN ('${SWAP_SIGNATURE_V2}', '${SWAP_SIGNATURE_V3}', '${MINT_SIGNATURE_V2}', '${MINT_SIGNATURE_V3}', '${BURN_SIGNATURE_V2}', '${BURN_SIGNATURE_V3}');
   `;
+  await collectionPrisma.$queryRawUnsafe(bsc_idx_topic_0);
 
-  console.log('Indexes created');
+  // transaction_hash & log_index index in eth_transaction_logs table
+  // console.log('Creating transaction_hash & log_index index in eth_transaction_logs table');
+  // const eth_idx_transaction_hash_log_index = `CREATE INDEX IF NOT EXISTS eth_idx_transaction_hash_log_index ON eth_transaction_logs (transaction_hash, log_index);`;
+  // await collectionPrisma.$queryRawUnsafe(eth_idx_transaction_hash_log_index);
+  // const bsc_idx_transaction_hash_log_index = `CREATE INDEX IF NOT EXISTS bsc_idx_transaction_hash_log_index ON bsc_transaction_logs (transaction_hash, log_index);`;
+  // await collectionPrisma.$queryRawUnsafe(bsc_idx_transaction_hash_log_index);
+
+  // block_number index in eth_block and eth_transaction table
+  console.log('Creating block_number index in eth_block table and eth_transaction table');
+  const idx_eth_block_block_number = `CREATE INDEX IF NOT EXISTS idx_eth_block_block_number ON eth_block (block_number);`;
+  await collectionPrisma.$queryRawUnsafe(idx_eth_block_block_number);
+  const idx_bsc_block_block_number = `CREATE INDEX IF NOT EXISTS idx_bsc_block_block_number ON bsc_block (block_number);`;
+  await collectionPrisma.$queryRawUnsafe(idx_bsc_block_block_number);
+
+  const idx_eth_transaction_block_number = `CREATE INDEX IF NOT EXISTS idx_eth_transaction_block_number ON eth_transaction (block_number);`;
+  await collectionPrisma.$queryRawUnsafe(idx_eth_transaction_block_number);
+  const idx_bsc_transaction_block_number = `CREATE INDEX IF NOT EXISTS idx_bsc_transaction_block_number ON bsc_transaction (block_number);`;
+  await collectionPrisma.$queryRawUnsafe(idx_bsc_transaction_block_number);
+
+  // transaction_hash index in eth_transaction_logs and eth_transaction table
+  console.log('Creating transaction_hash index in eth_transaction_logs table and eth_transaction table');
+  const idx_eth_transaction_transaction_hash = `CREATE INDEX IF NOT EXISTS idx_eth_transaction_transaction_hash ON eth_transaction (transaction_hash);`;
+  await collectionPrisma.$queryRawUnsafe(idx_eth_transaction_transaction_hash);
+  const idx_bsc_transaction_transaction_hash = `CREATE INDEX IF NOT EXISTS idx_bsc_transaction_transaction_hash ON bsc_transaction (transaction_hash);`;
+  await collectionPrisma.$queryRawUnsafe(idx_bsc_transaction_transaction_hash);
+
+  const idx_eth_transaction_logs_transaction_hash = `CREATE INDEX IF NOT EXISTS idx_eth_transaction_logs_transaction_hash ON eth_transaction_logs (transaction_hash);`;
+  await collectionPrisma.$queryRawUnsafe(idx_eth_transaction_logs_transaction_hash);
+  const idx_bsc_transaction_logs_transaction_hash = `CREATE INDEX IF NOT EXISTS idx_bsc_transaction_logs_transaction_hash ON bsc_transaction_logs (transaction_hash);`;
+  await collectionPrisma.$queryRawUnsafe(idx_bsc_transaction_logs_transaction_hash);
 }
 
 // Time range for hypertable partition is 1 week by default
