@@ -15,6 +15,10 @@ services:
       - redis
     environment:
       - DEV_PLATFORM=DOCKER
+    env_file:
+      - .env
+    volumes:
+      - ${UNISWAP_NODE_MODULES}:/app/node_modules
 
   dashboard:
     restart: always
@@ -30,6 +34,10 @@ services:
       - redis
     environment:
       - DEV_PLATFORM=DOCKER
+    env_file:
+      - .env
+    volumes:
+      - ${DASHBOARD_NODE_MODULES}:/app/node_modules
 
   collection-db:
     image: postgres
