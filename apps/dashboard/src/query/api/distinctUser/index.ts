@@ -10,20 +10,20 @@ export const DISTINCT_USER_BY_DATE_RANGE_KEY = [
 
 const query = (
   chainId: number,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ) =>
   qs.stringify({
     chainId: chainId,
-    date: date,
+    timeframe: timeframe,
     startDate: startDate,
     endDate: endDate,
   });
 
 export const getDistinctUsers = async (
   chainId: number,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ): Promise<DistinctUsersByDate[]> =>
@@ -31,19 +31,19 @@ export const getDistinctUsers = async (
     backendInstance.get(
       ROUTES.DISTINCT_USERS_BY_DATE_RANGE +
         "?" +
-        query(chainId, date, startDate, endDate)
+        query(chainId, timeframe, startDate, endDate)
     )
   );
 
 export const useDistinctUsersByDateRange = (
   chainId: number,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ) => {
   const query = useQuery({
-    queryKey: [DISTINCT_USER_BY_DATE_RANGE_KEY, date, startDate, endDate],
-    queryFn: () => getDistinctUsers(chainId || 1, date, startDate, endDate),
+    queryKey: [DISTINCT_USER_BY_DATE_RANGE_KEY, timeframe, startDate, endDate],
+    queryFn: () => getDistinctUsers(chainId || 1, timeframe, startDate, endDate),
   });
 
   return {

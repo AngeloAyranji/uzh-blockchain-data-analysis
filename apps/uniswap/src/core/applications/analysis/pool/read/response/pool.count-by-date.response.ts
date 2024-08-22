@@ -1,5 +1,3 @@
-import { VersionEnum } from "../../../../../domains/analysis/factory";
-
 export class PoolCountByDateResponse {
     totalCountV2: bigint;
     totalCountV3: bigint;

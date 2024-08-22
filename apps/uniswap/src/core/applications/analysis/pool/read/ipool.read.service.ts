@@ -21,7 +21,9 @@ export interface IPoolReadService {
   getPoolCountByDate(
     chainId: number,
     dateEnum: PoolCountDateEnum,
-    version: VersionEnum
+    version: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<PoolCountByDateResponse[]>;
   getPoolsWithCursor(
     chainId: number,

@@ -143,9 +143,10 @@ export class SwapReadService implements ISwapReadService {
     return newUsers;
   }
 
-  async getDistinctUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+  async getDistinctUsersByDate(chainId: number, timeframe?: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any> {
     const distinctUsers = await this.swapProvider.getDistinctUsersByDate(
       chainId,
+      timeframe,
       startDate,
       endDate
     );

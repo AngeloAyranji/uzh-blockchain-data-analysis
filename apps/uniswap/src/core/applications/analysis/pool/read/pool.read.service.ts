@@ -12,7 +12,7 @@ import {
   PoolCountDateEnum,
   PoolCountByDateResponse,
 } from './response/pool.count-by-date.response';
-import { Pool } from '../../../../../core/domains/analysis/pool';
+import { Pool } from '../../../../domains/analysis/pool';
 import { IUniswapContractExternalService, UNISWAP_CONTRACT_EXTERNAL_SERVICE } from '../../../../../external/uniswap-contract/iuniswap-contract.external.service';
 
 @Injectable()
@@ -108,12 +108,16 @@ export class PoolReadService implements IPoolReadService {
   async getPoolCountByDate(
     chainId: number,
     dateEnum: PoolCountDateEnum,
-    version: VersionEnum
+    version: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<PoolCountByDateResponse[]> {
     const result = await this.poolProvider.getPoolCountByDate(
       chainId,
       dateEnum,
-      version
+      version,
+      startDate,
+      endDate
     );
     
     return result;

@@ -140,18 +140,24 @@ export class PoolRepository implements IPoolModifier, IPoolProvider {
   async getPoolCountByDate(
     chainId: number,
     dateEnum: PoolCountDateEnum,
-    version: VersionEnum
+    version: VersionEnum,
+    startDate?: Date,
+    endDate?: Date
   ): Promise<PoolCountByDateResponse[]> {
-    const counts: any[] = await this.uniswapDbHandler.$queryRaw`
-  SELECT 
-    DATE_TRUNC(${dateEnum}, "deployedAt") AS date, 
-    "Factory"."version" AS version, 
-    COUNT(*) AS totalCount 
-  FROM "Pool"
-  JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
-  WHERE "Factory"."chainId" = ${chainId}
-  GROUP BY date, "Factory"."version"
-  ORDER BY date ASC, "Factory"."version"`;
+    const query = `
+      SELECT 
+        DATE_TRUNC('${dateEnum}', "deployedAt") AS date, 
+        "Factory"."version" AS version, 
+        COUNT(*) AS totalCount 
+      FROM "Pool"
+      JOIN "Factory" ON "Pool"."factoryId" = "Factory"."id"
+      WHERE "Factory"."chainId" = ${chainId}
+        ${startDate ? `AND "Pool"."deployedAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND "Pool"."deployedAt" <= '${endDate}'` : ''}
+      GROUP BY date, "Factory"."version"
+      ORDER BY date ASC, "Factory"."version"`;
+
+    const counts: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
 
     return this.poolMapper.mapPoolCountByDateToPoolCountByDateResponse(
       counts,

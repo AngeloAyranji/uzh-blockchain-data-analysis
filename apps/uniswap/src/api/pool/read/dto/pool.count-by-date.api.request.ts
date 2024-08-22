@@ -1,6 +1,6 @@
 import { VersionEnum } from "../../../../core/domains/analysis/factory";
 import { PoolCountDateEnum } from "../../../../core/applications/analysis/pool/read/response/pool.count-by-date.response";
-import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 
 export class PoolCountByDateApiRequest {
     @IsNotEmpty()
@@ -13,4 +13,12 @@ export class PoolCountByDateApiRequest {
     @IsNotEmpty()
     @IsEnum(VersionEnum)
     version: VersionEnum;
+
+    @IsOptional()
+    @IsDate()
+    startDate?: Date;
+
+    @IsOptional()
+    @IsDate()
+    endDate?: Date;
 }

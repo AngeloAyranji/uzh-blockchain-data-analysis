@@ -47,7 +47,7 @@ export class PoolReadController {
   @CacheTTL(600)
   @Get('/count-by-date')
   async getPoolCountByDate(@Query() query: PoolCountByDateApiRequest): Promise<PoolCountByDateApiResponse[]> {
-    const response = await this.poolReadService.getPoolCountByDate(Number(query.chainId), query.date, query.version);
+    const response = await this.poolReadService.getPoolCountByDate(Number(query.chainId), query.date, query.version, query.startDate, query.endDate);
     return this.poolControllerReadMapper.mapPoolCountByDateToPoolCountByDateApiResponse(response);
   }
 }

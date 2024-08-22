@@ -155,6 +155,7 @@ export class SwapReadController {
   ): Promise<SwapGetDistinctUsersByDateApiResponse[]> {
     const response = await this.swapReadService.getDistinctUsersByDate(
       Number(query.chainId),
+      query.timeframe,
       query.startDate,
       query.endDate
     );

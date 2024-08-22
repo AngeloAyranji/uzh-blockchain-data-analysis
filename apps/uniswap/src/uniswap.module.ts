@@ -36,7 +36,7 @@ import { POOL_MAPPER } from './infra/analysis/pool/mapper/ipool.mapper';
 import { PoolMapper } from './infra/analysis/pool/mapper/pool.mapper';
 import { PoolReadController } from './api/pool/read/pool.read.controller';
 import { POOL_READ_SERVICE } from './core/applications/analysis/pool/read/ipool.read.service';
-import { PoolReadService } from './core/applications/analysis/pool/read/pool.service';
+import { PoolReadService } from './core/applications/analysis/pool/read/pool.read.service';
 import { POOL_PROVIDER } from './core/applications/analysis/pool/read/ipool.provider';
 import { POOL_CONTROLLER_READ_MAPPER } from './api/pool/read/mapper/ipool.read.mapper';
 import { PoolControllerReadMapper } from './api/pool/read/mapper/pool.read.mapper';

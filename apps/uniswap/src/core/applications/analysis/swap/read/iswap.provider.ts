@@ -21,5 +21,5 @@ export interface ISwapProvider {
     endDate?: Date
   ): Promise<any>;
   getNewUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any>;
-  getDistinctUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any>;
+  getDistinctUsersByDate(chainId: number, timeframe?: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any>;
 }

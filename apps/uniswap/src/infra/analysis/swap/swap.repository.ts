@@ -376,17 +376,21 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     });
   }
 
-  async getDistinctUsersByDate(chainId: number, startDate?: Date, endDate?: Date): Promise<any> {
+  async getDistinctUsersByDate(chainId: number, timeframe?: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any> {
+    
     const query = `
       SELECT
-          time_bucket('1 day', "swapAt") AS date,
+          time_bucket('1 ${timeframe ? timeframe : 'day'}', "swapAt") AS date,
           COUNT(DISTINCT sender) AS count
-      FROM
-          "Swap"
-      GROUP BY
-          time_bucket('1 day', "swapAt")
-      ORDER BY
-          date;
+      FROM "Swap" s
+      JOIN "Pool" p ON s."poolId" = p."id"
+      JOIN "Factory" f ON p."factoryId" = f."id"
+      WHERE
+        f."chainId" = ${chainId}
+        ${startDate ? `AND s."swapAt" >= '${startDate}'` : ''}
+        ${endDate ? `AND s."swapAt" <= '${endDate}'` : ''}
+      GROUP BY date
+      ORDER BY date ASC
     `;
 
     const result: any[] = await this.uniswapDbHandler.$queryRawUnsafe(query);
