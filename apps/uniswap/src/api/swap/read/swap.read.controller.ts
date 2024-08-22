@@ -129,6 +129,7 @@ export class SwapReadController {
     const response = await this.swapReadService.getSwapsByPoolAddress(
       Number(query.chainId),
       query.poolAddress,
+      query.timeframe,
       query.startDate,
       query.endDate
     );

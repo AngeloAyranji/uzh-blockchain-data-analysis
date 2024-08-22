@@ -138,10 +138,10 @@ export class SwapRepository implements ISwapModifier, ISwapProvider {
     };
   }
 
-  async getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any> {
+  async getSwapsByPoolAddress(chainId: number, poolAddress: string, timeframe?: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any> {
     const query = `
       SELECT
-        time_bucket('1 day', s."swapAt") AS date,
+        time_bucket('1 ${timeframe ? timeframe : 'day'}', s."swapAt") AS date,
         count("poolId") AS count
       FROM "Swap" s
       JOIN "Pool" p ON s."poolId" = p."id"

@@ -11,7 +11,7 @@ export interface ISwapReadService {
   getTopActivePools(chainId: number, version?: VersionEnum, limit?: number, startDate?: Date, endDate?: Date): Promise<any>;
   getTopActiveAddresses(chainId: number, version?: VersionEnum, startDate?: Date, endDate?: Date): Promise<any>;
   getDailyPriceOfPool(chainId: number, poolAddress: string, timeframe: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any>;
-  getSwapsByPoolAddress(chainId: number, poolAddress: string, startDate?: Date, endDate?: Date): Promise<any>;
+  getSwapsByPoolAddress(chainId: number, poolAddress: string, timeframe?: TimeframeEnum, startDate?: Date, endDate?: Date): Promise<any>;
   getPriceOfPair(
     chainId: number,
     token0: string,

@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { TimeframeEnum } from "../../../../core/domains/analysis/swap";
+import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class SwapGetSwapsByPoolAddressApiRequest {
     @IsNotEmpty()
@@ -8,6 +9,10 @@ export class SwapGetSwapsByPoolAddressApiRequest {
     @IsNotEmpty()
     @IsString()
     poolAddress: string;
+
+    @IsOptional()
+    @IsEnum(TimeframeEnum)
+    timeframe?: TimeframeEnum
 
     @IsOptional()
     @IsDate()

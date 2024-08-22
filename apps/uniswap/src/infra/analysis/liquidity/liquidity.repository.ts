@@ -102,6 +102,9 @@ export class LiquidityRepository
           lte: endDate && endDate,
         },
       },
+      orderBy: {
+        timestamp: 'asc',
+      }
     });
     
     return liquidities.map((liquidity) => {

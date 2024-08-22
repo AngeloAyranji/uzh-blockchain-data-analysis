@@ -11,13 +11,13 @@ export const POOL_SWAP_COUNT_BY_DATE_ADDRESS_KEY = [
 const query = (
   chainId: number,
   poolAddress: string,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ) =>
   qs.stringify({
     chainId: chainId,
-    date: date,
+    timeframe: timeframe,
     startDate: startDate,
     endDate: endDate,
     poolAddress: poolAddress,
@@ -26,7 +26,7 @@ const query = (
 export const getPoolSwapCount = async (
   chainId: number,
   poolAddress: string,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ): Promise<PoolSwapCountByAddressDate[]> =>
@@ -34,14 +34,14 @@ export const getPoolSwapCount = async (
     backendInstance.get(
       ROUTES.POOL_SWAP_COUNT +
         "?" +
-        query(chainId, poolAddress, date, startDate, endDate)
+        query(chainId, poolAddress, timeframe, startDate, endDate)
     )
   );
 
 export const usePoolSwapCountByDateRangeAddress = (
   chainId: number,
   poolAddress: string,
-  date: DateEnum,
+  timeframe: DateEnum,
   startDate?: Date,
   endDate?: Date
 ) => {
@@ -49,12 +49,12 @@ export const usePoolSwapCountByDateRangeAddress = (
     queryKey: [
       POOL_SWAP_COUNT_BY_DATE_ADDRESS_KEY,
       poolAddress,
-      date,
+      timeframe,
       startDate,
       endDate,
     ],
     queryFn: () =>
-      getPoolSwapCount(chainId || 1, poolAddress, date, startDate, endDate),
+      getPoolSwapCount(chainId || 1, poolAddress, timeframe, startDate, endDate),
     enabled: !!poolAddress,
   });
 
