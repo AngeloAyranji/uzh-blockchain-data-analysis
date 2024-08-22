@@ -79,12 +79,12 @@ import { LiquidityControllerReadMapper } from './api/liquidity/read/mapper/liqui
     CacheModule.register<RedisClientOptions>({
       isGlobal: true,
       store: redisStore,
-      host: 'localhost',
+      host: 'redis',
       port: 6379,
     }),
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: 'redis',
         port: 6379,
       },
     }),
