@@ -17,6 +17,8 @@ import TotalPoolCount from "./components/TotalPoolCount";
 import { DatePickerWithRange } from "./components/ui/datePicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import PoolFlowByTypeAndDate from "./components/PoolFlowCard";
+import TotalPoolFlowByTypeAndDate from "./components/TotalPoolFlowCard";
 
 function Uniswap() {
   const [queryClient] = useState(
@@ -39,14 +41,14 @@ function Uniswap() {
   })
 
   useEffect(() => {
-    const date = Date.now();
+    let date = Date.now();
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
       day: "numeric",
       month: "long",
       year: "numeric",
     };
-    const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(date);
+    let formattedDate = new Intl.DateTimeFormat("en-GB", options).format(date);
     setCurrDate(formattedDate);
   }, []);
 
@@ -82,9 +84,10 @@ function Uniswap() {
         {/* Body */}
         <div className="p-12 w-full">
           <Tabs defaultValue="general" >
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="trades">Trades</TabsTrigger>
+              <TabsTrigger value="liquidity">Liquidity</TabsTrigger>
             </TabsList>
             {/* Filters */}
             <div className="flex flex-col  mt-5 items-center py-5 bg-white rounded-2xl shadow-md sm:w-[70%] mx-auto">
@@ -128,17 +131,17 @@ function Uniswap() {
               </div>
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className="col-span-12">
-                  <PoolCreatedCard title="Pool Created Count" frequency={timeframe} />
+                  <PoolCreatedCard title="Pool Created Count" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className="col-span-12">
-                  <NewUsersCountByDateRange title="New User Count" startDate={date?.from} endDate={date?.to} />
+                  <NewUsersCountByDateRange title="New User Count" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className="col-span-12">
-                  <DistinctUsersCountByDateRange title="Distinct User Count" startDate={date?.from} />
+                  <DistinctUsersCountByDateRange title="Distinct User Count" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
                 </div>
               </div>
 
@@ -147,15 +150,15 @@ function Uniswap() {
             <TabsContent value="trades">
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className="col-span-6">
-                  <TopActivePools title="Top Active Pools (V2/V3)" />
+                  <TopActivePools title="Top Active Pools (V2/V3)" startDate={date?.from} endDate={date?.to} />
                 </div>
                 <div className="col-span-6">
-                  <TopActiveAddresses title="Top Active Adresses (V2/V3)" />
+                  <TopActiveAddresses title="Top Active Adresses (V2/V3)" startDate={date?.from} endDate={date?.to} />
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className=" col-span-12">
-                  <SwapPoolCountCardByDateAddress title="Swap Pool Count By Address and Date Range" startDate={date?.from} endDate={date?.to} />
+                  <SwapPoolCountCardByDateAddress title="Swap Pool Count By Address and Date Range" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
                 </div>
               </div>
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
@@ -171,9 +174,27 @@ function Uniswap() {
 
               <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
                 <div className="col-span-12">
-                  <TableCard />
+                  <TableCard title="Total Swaps" startDate={date?.from} endDate={date?.to} />
                 </div>
               </div>
+            </TabsContent>
+            <TabsContent value="liquidity">
+              <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
+                <div className=" col-span-12">
+                  <PoolFlowByTypeAndDate title="Liquidity Pool Inflow" type="ADD" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
+                </div>
+              </div>
+              <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
+                <div className=" col-span-12">
+                  <PoolFlowByTypeAndDate title="Liquidity Pool Outflow" type="REMOVE" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
+                </div>
+              </div>
+              <div className="grid grid-cols-12 gap-8 lg:gap-12 w-full mt-10 mb-10">
+                <div className=" col-span-12">
+                  <TotalPoolFlowByTypeAndDate title="Liquidity Total Pool Flow" startDate={date?.from} endDate={date?.to} frequency={timeframe} />
+                </div>
+              </div>
+
             </TabsContent>
           </Tabs>
         </div>

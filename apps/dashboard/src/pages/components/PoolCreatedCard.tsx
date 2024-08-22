@@ -4,17 +4,23 @@ import { DateEnum, PoolCreatedByDate } from "../../query/types";
 import {
   dateToDayMonth,
   dateToMonthYear,
-  dateToYear,
+  dateToWeek
 } from "../../utilities/dateUtils";
+import { useEffect } from "react";
 
 interface PoolCreatedProps {
   title: string;
   frequency: DateEnum;
+  startDate?: Date;
+  endDate?: Date;
 }
 
-function PoolCreatedCountByDate({ title, frequency }: PoolCreatedProps) {
-  const { data, isLoading } = usePoolCountByDate(1, frequency);
+function PoolCreatedCountByDate({ title, frequency, startDate, endDate }: PoolCreatedProps) {
+  const { data, isLoading, refetchPoolCount } = usePoolCountByDate(1, frequency, startDate, endDate);
 
+  useEffect(() => {
+    refetchPoolCount();
+  }, [startDate, endDate, frequency]);
   return (
     <div className="card-container px-[10%]">
       {!isLoading && data && (
@@ -99,7 +105,7 @@ function PoolCreatedCountByDate({ title, frequency }: PoolCreatedProps) {
                       case DateEnum.MONTH:
                         return dateToMonthYear(date);
                       case DateEnum.WEEK:
-                        return dateToYear(date);
+                        return dateToWeek(date);
                       default:
                         break;
                     }

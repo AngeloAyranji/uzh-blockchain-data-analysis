@@ -30,7 +30,7 @@ export const usePoolPriceAndVolume = (chainId: number, poolAddress: string) => {
 
   return {
     isLoading: query.isPending,
-    poolTotalCount: query.data,
-    refetchAllWorkspaces: query.refetch,
+    poolPriceAndVolume: query.data,
+    refetchPoolPriceAndVolume: query.refetch,
   };
 };

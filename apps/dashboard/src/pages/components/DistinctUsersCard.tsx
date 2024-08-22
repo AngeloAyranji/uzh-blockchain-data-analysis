@@ -1,15 +1,17 @@
 import { BarChart } from "@mui/x-charts";
 import { useEffect } from "react";
 import { useDistinctUsersByDateRange } from "../../query/api/distinctUser";
-import { DistinctUsersByDate } from "../../query/types";
+import { DateEnum, DistinctUsersByDate } from "../../query/types";
 
 interface DistinctUsersCardProps {
   title: string;
+  frequency: DateEnum;
   startDate?: Date;
+  endDate?: Date;
 }
 
-function DistinctUsersCountByDateRange({ title, startDate }: DistinctUsersCardProps) {
-  const { data, isLoading, refetchDistinctUsers } = useDistinctUsersByDateRange(1, startDate);
+function DistinctUsersCountByDateRange({ title, frequency, startDate, endDate }: DistinctUsersCardProps) {
+  const { data, isLoading, refetchDistinctUsers } = useDistinctUsersByDateRange(1, frequency, startDate, endDate);
 
   useEffect(() => {
     refetchDistinctUsers();

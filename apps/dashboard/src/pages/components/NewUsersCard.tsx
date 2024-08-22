@@ -1,20 +1,22 @@
 import { BarChart } from "@mui/x-charts";
 import { useEffect } from "react";
-import { useNewUsersByDateRange } from "../../query/api/newUser";
-import { NewUsersByDate } from "../../query/types";
+import { useDistinctUsersByDateRange } from "../../query/api/distinctUser";
+import { DateEnum, DistinctUsersByDate } from "../../query/types";
+import { dateToDayMonth, dateToMonthYear, dateToWeek } from "../../utilities";
 
-interface NewUsersCardProps {
+interface DistinctUsersCardProps {
   title: string;
+  frequency: DateEnum;
   startDate?: Date;
   endDate?: Date;
 }
 
-function NewUsersCountByDateRange({ title, startDate, endDate }: NewUsersCardProps) {
-  const { data, isLoading, refetchNewUsers } = useNewUsersByDateRange(1, startDate, endDate);
+function DistinctUsersCountByDateRange({ title, startDate, endDate, frequency }: DistinctUsersCardProps) {
+  const { data, isLoading, refetchDistinctUsers } = useDistinctUsersByDateRange(1, frequency, startDate, endDate);
 
   useEffect(() => {
-    refetchNewUsers();
-  }, [startDate, endDate])
+    refetchDistinctUsers();
+  }, [startDate, endDate, frequency])
 
   return (
     <div className="card-container px-[10%]">
@@ -25,65 +27,63 @@ function NewUsersCountByDateRange({ title, startDate, endDate }: NewUsersCardPro
             height={300}
             series={[
               {
-                data: data.map((data: NewUsersByDate) => {
-                  return data.newUsers;
+                data: data.map((data: DistinctUsersByDate) => {
+                  return data.distinctUsers;
                 }),
-                label: "newUsers",
-                id: "newUsers",
+                label: "distinctUsers",
+                id: "distinctUsers",
               },
             ]}
             xAxis={[
               {
-                data: data.map((data: NewUsersByDate) => {
+                data: data.map((data: DistinctUsersByDate) => {
                   return new Date(data.date);
                 }),
                 valueFormatter: (value) => {
                   const date = new Date(value);
                   return date.toLocaleDateString();
                 },
-                // valueFormatter: (value, context) => {
-                //   if (context.location === "tooltip") {
-                //     console.log("maya", value);
-                //     // const date = new Date(value);
-                //     // return date.toLocaleDateString();
-                //   }
-                //   return value;
-                // },
                 scaleType: "point",
                 label: "Time",
               },
             ]}
           /> */}
           <BarChart
-            xAxis={[
-              {
-                data: data.map((data: NewUsersByDate) => {
-                  return new Date(data.date);
-                }),
-                valueFormatter: (value) => {
-                  const date = new Date(value);
-                  return date.toLocaleDateString();
-                },
-                scaleType: 'band'
-                // valueFormatter: (value, context) => {
-                //   if (context.location === "tooltip") {
-                //     console.log("maya", value);
-                //     // const date = new Date(value);
-                //     // return date.toLocaleDateString();
-                //   }
-                //   return value;
-                // },
-                // scaleType: "point",
-                // label: "Time",
-              },
-            ]}
             series={[
               {
-                data: data.map((data: NewUsersByDate) => {
-                  return data.newUsers;
+                data: data.map((data: DistinctUsersByDate) => {
+                  return data.distinctUsers;
                 }),
-                label: "newUsers",
-                id: "newUsers",
+                label: "distinctUsers",
+                id: "distinctUsers",
+              },
+            ]}
+            xAxis={[
+              {
+                data: data.map((data: DistinctUsersByDate) => {
+                  return new Date(data.date);
+                }),
+                valueFormatter: (value, context) => {
+                  if (context.location === "tick") {
+                    const date = new Date(value);
+                    switch (frequency) {
+                      case DateEnum.DAY:
+                        return dateToDayMonth(date);
+                      case DateEnum.MONTH:
+                        return dateToMonthYear(date);
+                      case DateEnum.WEEK:
+                        return dateToWeek(date);
+                      default:
+                        break;
+                    }
+                  }
+                  if (context.location === "tooltip") {
+                    const date = new Date(value);
+                    return date.toLocaleDateString();
+                  }
+                  return value;
+                },
+                scaleType: "band"
               },
             ]}
             height={300}
@@ -94,4 +94,4 @@ function NewUsersCountByDateRange({ title, startDate, endDate }: NewUsersCardPro
   );
 }
 
-export default NewUsersCountByDateRange;
+export default DistinctUsersCountByDateRange;

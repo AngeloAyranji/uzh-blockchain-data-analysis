@@ -5,10 +5,12 @@ import PieChartGraph from "./PieChartGraph";
 
 interface TopActiveAddressesProps {
   title: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
-function TopActiveAddresses({ title }: TopActiveAddressesProps) {
-  const { data, isLoading } = useTopActiveAddresses(1);
+function TopActiveAddresses({ title, endDate, startDate }: TopActiveAddressesProps) {
+  const { data, isLoading } = useTopActiveAddresses(1, startDate, endDate);
 
   return (
     <div className="card-container">

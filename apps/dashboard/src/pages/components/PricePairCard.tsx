@@ -1,8 +1,8 @@
+import { PairPriceByAddresses } from "../../query/types/PairPriceByAddresses";
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
-import { DateEnum } from "../../query/types";
 import { usePairPriceByAddressDateRange } from "../../query/api/pairPrice";
-import { PairPriceByAddresses } from "../../query/types/PairPriceByAddresses";
+import { DateEnum } from "../../query/types";
 import {
   dateToDayMonth,
   dateToMonthYear,
@@ -38,10 +38,24 @@ function PairPriceCardByDateAddress({ title, startDate, endDate, frequency }: Pa
             series={[
               {
                 data: data.map((data: PairPriceByAddresses) => {
-                  return data.price;
+                  return data.average_price;
                 }),
-                label: "price",
-                id: "price",
+                label: "Average Price",
+                id: "average_price",
+              },
+              {
+                data: data.map((data: PairPriceByAddresses) => {
+                  return data.max_price;
+                }),
+                label: "Max Price",
+                id: "max_price",
+              },
+              {
+                data: data.map((data: PairPriceByAddresses) => {
+                  return data.min_price;
+                }),
+                label: "Min Price",
+                id: "min_price",
               },
             ]}
             xAxis={[

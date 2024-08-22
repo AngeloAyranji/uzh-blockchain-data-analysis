@@ -31,10 +31,24 @@ function PoolPriceCardByDateAddress({ title, startDate, endDate, frequency }: Pr
             series={[
               {
                 data: data.map((data: PriceByPool) => {
-                  return data.price;
+                  return data.average_price;
                 }),
-                label: "price",
-                id: "price",
+                label: "Average Price",
+                id: "average_price",
+              },
+              {
+                data: data.map((data: PriceByPool) => {
+                  return data.max_price;
+                }),
+                label: "Max Price",
+                id: "max_price",
+              },
+              {
+                data: data.map((data: PriceByPool) => {
+                  return data.min_price;
+                }),
+                label: "Min Price",
+                id: "min_price",
               },
             ]}
             xAxis={[

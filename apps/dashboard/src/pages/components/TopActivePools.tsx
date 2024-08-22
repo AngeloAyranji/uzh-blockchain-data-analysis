@@ -4,10 +4,12 @@ import { useTopActivePools } from "../../query/api/uniswap/swap";
 
 interface TopActivePoolsProps {
   title: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
-function TopActivePools({ title }: TopActivePoolsProps) {
-  const { data, isLoading } = useTopActivePools(1);
+function TopActivePools({ title, endDate, startDate }: TopActivePoolsProps) {
+  const { data, isLoading } = useTopActivePools(1, "V2", 5, startDate, endDate);
 
   return (
     <div className="card-container">

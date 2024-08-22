@@ -18,6 +18,18 @@ export const dateToYear = (date: Date) => {
   return `${year}`;
 };
 
+export const dateToWeek = (date: Date) => {
+  const firstDayOfWeek = new Date(date);
+  const dayOfWeek = date.getUTCDay();
+  const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  firstDayOfWeek.setDate(date.getDate() + difference);
+
+  const month = Months[firstDayOfWeek.getMonth()];
+  const day = firstDayOfWeek.getDate();
+
+  return `${day}-${month}`;
+};
+
 export const Months: { [key: number]: string } = {
   0: "Jan",
   1: "Feb",

@@ -6,29 +6,39 @@ import { TopActiveAddresses } from "../../../types";
 
 export const TOP_ACTIVE_ADDRESSES_KEY = ["TOP_ACTIVE_ADDRESSES_KEY"];
 
-const query = (chainId: number) =>
+const query = (chainId: number, startDate?: Date, endDate?: Date) =>
   qs.stringify({
     chainId: chainId,
+    startDate: startDate,
+    endDate: endDate,
   });
 
 export const getTopActiveAddresses = async (
-  chainId: number
+  chainId: number,
+  startDate?: Date,
+  endDate?: Date
 ): Promise<TopActiveAddresses[]> =>
   controlledAxiosPromise(
     backendInstance.get(
-      ROUTES.TOP_ACTIVE_ADDRESSES_ROUTE + "?" + query(chainId)
+      ROUTES.TOP_ACTIVE_ADDRESSES_ROUTE +
+        "?" +
+        query(chainId, startDate, endDate)
     )
   );
 
-export const useTopActiveAddresses = (chainId: number) => {
+export const useTopActiveAddresses = (
+  chainId: number,
+  startDate?: Date,
+  endDate?: Date
+) => {
   const query = useQuery({
-    queryKey: [TOP_ACTIVE_ADDRESSES_KEY],
-    queryFn: () => getTopActiveAddresses(chainId || 1),
+    queryKey: [TOP_ACTIVE_ADDRESSES_KEY, startDate, endDate],
+    queryFn: () => getTopActiveAddresses(chainId || 1, startDate, endDate),
   });
 
   return {
     isLoading: query.isPending,
     data: query.data,
-    refetchAllWorkspaces: query.refetch,
+    refetchTopActiveAddresses: query.refetch,
   };
 };

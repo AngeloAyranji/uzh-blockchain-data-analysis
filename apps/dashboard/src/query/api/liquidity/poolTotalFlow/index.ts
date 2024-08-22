@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
 import qs from "qs";
-import { backendInstance, controlledAxiosPromise } from "../../axios";
-import { ROUTES } from "../../routes";
-import { DateEnum, PoolSwapCountByAddressDate } from "../../types";
+import { useQuery } from "@tanstack/react-query";
+import { DateEnum } from "../../../types/uniswap";
+import { backendInstance, controlledAxiosPromise } from "../../../axios";
+import { ROUTES } from "../../../routes";
+import { PoolFlowsByDate } from "../../../types/poolFlows";
 
-export const POOL_SWAP_COUNT_BY_DATE_ADDRESS_KEY = [
-  "POOL_SWAP_COUNT_BY_DATE_ADDRESS_KEY",
+export const POOL_TOTAL_FLOW_BY_DATE_RANGE_KEY = [
+  "POOL_TOTAL_FLOW_BY_DATE_RANGE_KEY",
 ];
 
 const query = (
@@ -17,28 +18,28 @@ const query = (
 ) =>
   qs.stringify({
     chainId: chainId,
+    poolAddress: poolAddress,
     date: date,
     startDate: startDate,
     endDate: endDate,
-    poolAddress: poolAddress,
   });
 
-export const getPoolSwapCount = async (
+export const getPoolTotalFlow = async (
   chainId: number,
   poolAddress: string,
   date: DateEnum,
   startDate?: Date,
   endDate?: Date
-): Promise<PoolSwapCountByAddressDate[]> =>
+): Promise<PoolFlowsByDate[]> =>
   controlledAxiosPromise(
     backendInstance.get(
-      ROUTES.POOL_SWAP_COUNT +
+      ROUTES.POOL_TOTAL_FLOW_ROUTE +
         "?" +
         query(chainId, poolAddress, date, startDate, endDate)
     )
   );
 
-export const usePoolSwapCountByDateRangeAddress = (
+export const usePoolTotalFlowByDateRange = (
   chainId: number,
   poolAddress: string,
   date: DateEnum,
@@ -47,20 +48,20 @@ export const usePoolSwapCountByDateRangeAddress = (
 ) => {
   const query = useQuery({
     queryKey: [
-      POOL_SWAP_COUNT_BY_DATE_ADDRESS_KEY,
+      POOL_TOTAL_FLOW_BY_DATE_RANGE_KEY,
+      chainId,
       poolAddress,
       date,
       startDate,
       endDate,
     ],
     queryFn: () =>
-      getPoolSwapCount(chainId || 1, poolAddress, date, startDate, endDate),
-    enabled: !!poolAddress,
+      getPoolTotalFlow(chainId || 1, poolAddress, date, startDate, endDate),
   });
 
   return {
     isLoading: query.isPending,
     data: query.data,
-    refetchPoolSwapCount: query.refetch,
+    refetchPoolTotalFlow: query.refetch,
   };
 };
