@@ -75,7 +75,7 @@ export class ExtractProcessor implements IExtractProcessor {
     Logger.log('Extracting Pools');
     for (const factory of factories) {
       let moreLogs = true;
-      const pageSize = 20;
+      const pageSize = Number(this.config.get<string>('ACTIVITY_EXTRACT_BATCH_SIZE'));
 
       while (moreLogs) {
         const cursor = this.getCursor('pool');
