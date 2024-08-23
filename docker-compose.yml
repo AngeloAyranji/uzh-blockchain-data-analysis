@@ -15,6 +15,9 @@ services:
       - redis
     environment:
       - DEV_PLATFORM=DOCKER
+    volumes:
+      - ./:/app
+      - mono-node-modules:/app/node_modules
 
   dashboard:
     restart: always
@@ -74,3 +77,6 @@ services:
       - "6379:6379"
     volumes:
       - ${REDIS_DATA_DIR}:/var/lib/redis/data
+
+volumes:
+  mono-node-modules:
